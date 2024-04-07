@@ -7,4 +7,4 @@ COPY ./apps/frontend .
 RUN npm install
 EXPOSE 3000
 # RUN npm install typescript
-RUN ["npm","run","preview"]
+RUN ["npm","run","dev"]
