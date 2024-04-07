@@ -1,6 +1,7 @@
 package com.myapp.app.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @AllArgsConstructor
@@ -8,6 +9,7 @@ import lombok.*;
 @Setter
 @Getter
 @Entity
+@Table(name = "category")
 public class CategoryModel extends BaseModel{
     private String code;
     private String name;

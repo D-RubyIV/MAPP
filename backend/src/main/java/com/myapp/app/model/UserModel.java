@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 @Entity
 @Data
+@Table(name = "user")
 public class UserModel extends BaseModel implements UserDetails {
     private String username;
     private String email;

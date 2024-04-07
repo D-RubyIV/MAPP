@@ -13,10 +13,10 @@ import HomeComponent from './components/HomeComponent.jsx'
 // 
 import AuthProvider from './provider/authProvider.jsx'
 // ADMIN
-import UserManageComponent from "./components/manager/component/User.jsx"
-import CategoryManageComponent from "./components/manager/component/Category.jsx"
-import RoleManageComponent from "./components/manager/component/Role.jsx"
-import LicenseManageComponent from "./components/manager/component/License.jsx"
+import UserManageComponent from "./components/manage/component/User.jsx"
+import CategoryManageComponent from "./components/manage/component/Category.jsx"
+import RoleManageComponent from "./components/manage/component/Role.jsx"
+import LicenseManageComponent from "./components/manage/component/License.jsx"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<RootComponent />}>

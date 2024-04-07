@@ -8,6 +8,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MyAxios from "../../../axios/CustomAxios";
 import { select } from "@material-tailwind/react";
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 const Table = ({ tableName, labelHeaders, config }) => {
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [listModel, setListModel] = useState([]);
@@ -18,7 +19,47 @@ const Table = ({ tableName, labelHeaders, config }) => {
     const [myItem, setmyItem] = useState()
     const [foreignObject, setForeignObject] = useState([])
     const [intersection, setIntersection] = useState()
+    const baseApi = config["indexApi"]
 
+    const handleSubmit = async () => {
+        if (action === "CREATE") {
+            await MyAxios.post(baseApi, myItem).then(function (response) {
+                setOpenDialog(false);
+                console.log(response);
+                if (response.status == 200) {
+                    toast("LOGIN SUCCESS")
+                    setTimeout(() => {
+                        loadInitSetup();
+                    }, 500);
+                }
+            })
+        }
+        else if (action === "UPDATE") {
+            await MyAxios.put(`${baseApi}/${myItem.id}`, myItem).then(function (response) {
+                setOpenDialog(false);
+                console.log(response);
+                if (response.status == 200) {
+                    toast("UPDATE SUCCESS")
+                    setTimeout(() => {
+                        loadInitSetup();
+                    }, 500);
+                }
+            })
+        }
+        else if (action === "DELETE") {
+            await MyAxios.delete(`${baseApi}/${myItem.id}`).then(function (response) {
+                setOpenDialog(false);
+                console.log(response);
+                if (response.status == 200) {
+                    toast("DELETE SUCCESS")
+                    setTimeout(() => {
+                        loadInitSetup();
+                    }, 500);
+                }
+            })
+        }
+
+    }
 
     const reloadTypeItem = (myItem) => {
         console.log("BG: ")
@@ -47,13 +88,17 @@ const Table = ({ tableName, labelHeaders, config }) => {
     }, [myItem])
 
     const handleOnChange = (event) => {
-        console.log(event)
         const { name, value } = event.target;
-        console.log(name, value)
         const labelSelect = labelHeaders.filter(s => (s.nameAttribute === name || s.nameAttribute.replace("Id", "Model") === name.replace("Id", "Model")))[0]
         if (labelSelect.type === "object") {
-            setmyItem({ ...myItem, [name]: parseInt(value) });
+            const modelSelect = foreignObject[labelSelect.nameAttribute].filter(s => s.id === parseInt(value))[0]
+            setmyItem(prevItem => ({
+                ...prevItem,
+                [name]: parseInt(value),
+                [name.replace("Id", "Model")]: modelSelect
+            }));
         }
+
         else {
             setmyItem({ ...myItem, [name]: value });
         }
@@ -70,7 +115,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
             console.log("DETAIL: " + id);
             setmyItem(listModel.filter(model => model.id === id)[0]);
             reloadTypeItem(listModel.filter(model => model.id === id)[0])
-          }
+        }
         else if (action === "UPDATE") {
             console.log("UPDATE: " + id)
             setmyItem(listModel.filter(model => model.id === id)[0]);
@@ -107,31 +152,31 @@ const Table = ({ tableName, labelHeaders, config }) => {
         setCountValidLabel(countValid)
     };
 
+    const loadInitSetup = async () => {
+        try {
+            const response = await MyAxios.get(baseApi);
+            if (response.status === 200 && response.data) {
+                setListModel(response.data);
+            }
+        } catch (error) {
+            console.error("Error loading initial setup:", error);
+        }
+    }
+
     useEffect(() => {
         handleResize();
-        handleForeignObject();;
-        const indexApi = config["indexApi"];
-        const loadInitSetup = async () => {
-            try {
-                const response = await MyAxios.get(indexApi);
-                if (response.status === 200 && response.data) {
-                    setListModel(response.data);
-                }
-            } catch (error) {
-                console.error("Error loading initial setup:", error);
-            }
-        };
+        handleForeignObject();
         loadInitSetup();
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
     const isValidLabel = (label) => {
         return screenWidth > label.media;
     };
 
-    // Function to toggle detail
     const toggleDetail = (index) => {
         setShowDetailIndex(showDetailIndex === index ? null : index);
     };
@@ -143,42 +188,64 @@ const Table = ({ tableName, labelHeaders, config }) => {
     const renderInputRow = (label) => {
         const classNameInput = `text-sm block w-full rounded-md border-0 py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${isDisable(label) ? "bg-blue-100" : ""}`
         if (label.type === "string") {
-            return <input disabled={isDisable(label)} onChange={handleOnChange} name={label.nameAttribute} value={myItem ? myItem[label.nameAttribute] || "" : ""} type="text" className={classNameInput} />
+            return (
+                <div>
+                    <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+                    <input disabled={isDisable(label)} onChange={handleOnChange} name={label.nameAttribute} value={myItem ? myItem[label.nameAttribute] || "" : ""} type="text" className={classNameInput} />
+                </div>
+            )
+        }
+        else if (label.type === "integer") {
+            if (label.nameAttribute === "id" && action !== "CREATE") {
+                return (
+                    <div>
+                        <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+                        <input disabled={isDisable(label)} onChange={handleOnChange} name={label.nameAttribute} value={myItem ? myItem[label.nameAttribute] || "" : ""} type="int" className={classNameInput} />
+                    </div>
+                )
+            }
         }
         else if (label.type === "boolean") {
             return (
-                <select
-                    disabled={isDisable(label)}
-                    name={label.nameAttribute}
-                    onChange={handleOnChange}
-                    value={myItem ? myItem[label.nameAttribute] || "" : ""}
-                    className={classNameInput}
-                >
-                    <option value={true}>True</option>
-                    <option value={false}>False</option>
-                </select>
+                <div>
+                    <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+                    <select
+                        disabled={isDisable(label)}
+                        name={label.nameAttribute}
+                        onChange={handleOnChange}
+                        value={myItem ? myItem[label.nameAttribute] ? 'true' : 'false' || "" : ""}
+                        className={classNameInput}
+                    >
+                        <option>Please select your option</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
             )
         }
         else if (label.type === "object") {
             return (
-                <select
-                    disabled={isDisable(label)}
-                    name={label.nameAttribute.replace("Model","Id")}
-                    onChange={handleOnChange}
-                    value={myItem ? myItem[label.nameAttribute.replace("Model","Id")] || "" : ""}
-                    className={classNameInput}
-                >
-                    {
-                        Array.isArray(foreignObject[label.nameAttribute]) && foreignObject[label.nameAttribute].map((item, index) => (
-                            <option key={index} value={item.id}>{item.name}</option>
-                        ))
-                    }
+                <div>
+                    <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+                    <select
+                        disabled={isDisable(label)}
+                        name={label.nameAttribute.replace("Model", "Id")}
+                        onChange={handleOnChange}
+                        value={myItem ? myItem[label.nameAttribute.replace("Model", "Id")] || "" : ""}
+                        className={classNameInput}
+                    >
+                        <option>Please select your option</option>
+                        {
+                            Array.isArray(foreignObject[label.nameAttribute]) && foreignObject[label.nameAttribute].map((item, index) => (
+                                <option key={index} value={item.id}>{item.name}</option>
+                            ))
+                        }
 
-                </select>
+                    </select>
+                </div>
             )
         }
     }
-
 
     const renderValueCol = (data) => {
         if (typeof data === "boolean") {
@@ -277,19 +344,20 @@ const Table = ({ tableName, labelHeaders, config }) => {
                                 </div>
                             </div>
                             <div>
-                                {labelHeaders.map((label, index) => (
+                                {action !== "DELETE" && labelHeaders.map((label, index) => (
                                     <div className='' key={index}>
-                                        <div>
-                                            <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
-                                        </div>
+
                                         {
                                             renderInputRow(label)
                                         }
                                     </div>
                                 ))}
                             </div>
+
                             <div className="mt-3">
-                                <input type="button" value="Submit" className='p-2 bg-indigo-500 w-full rounded-md text-white' />
+                                {
+                                    action !== "DETAIL" ? <button className='p-2 bg-indigo-500 w-full rounded-md text-white' onClick={() => handleSubmit()}>Submit</button> : ""
+                                }
                             </div>
                         </div>
                     </div>

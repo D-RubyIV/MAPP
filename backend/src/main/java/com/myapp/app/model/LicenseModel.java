@@ -3,6 +3,7 @@ package com.myapp.app.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Table(name = "license")
 public class LicenseModel extends BaseModel{
     private String secret;
     private Long freezeAt;
