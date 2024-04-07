@@ -2,8 +2,8 @@
 FROM node:18-alpine as BUILD
 
 # Set the working directory within the container to /app
-WORKDIR /app
-
+WORKDIR /apps/frontend
+COPY ./apps/frontend .
 # Copy package.json to the container's working directory
 COPY package.json .
 
@@ -21,7 +21,7 @@ FROM node:18-alpine as PROD
 
 # Set the working directory within the container to /app
 WORKDIR /
-COPY ./frontend .
+COPY ./apps/frontend .
 # Copy the build artifacts (dist folder) from the BUILD stage to the current stage
 COPY --from=BUILD /app/dist/ /app/dist/
 
