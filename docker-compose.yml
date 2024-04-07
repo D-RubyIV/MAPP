@@ -67,8 +67,9 @@ services:
       - server
 
   nginx:
-    context: .
-    dockerfile: apps/docker/nginx/Dockerfile
+    build:
+      context: .
+      dockerfile: apps/docker/nginx/Dockerfile
     ports:
       - "80:80"
     depends_on:
