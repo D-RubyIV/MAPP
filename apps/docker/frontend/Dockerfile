@@ -10,7 +10,7 @@ EXPOSE 3000
 RUN npm run build
 
 FROM nginx:stable-alpine
-COPY --from=build /apps/frontend/build /usr/share/nginx/html
+COPY --from=build /apps/frontend/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
