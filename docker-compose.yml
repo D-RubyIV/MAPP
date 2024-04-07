@@ -64,18 +64,18 @@ services:
     depends_on:
       - server
 
-  nginx:
-    build: 
-      context: ./docker/nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./frontend:/client_volumes
-      - ./backend:/server_volumes
-    depends_on:
-      - server
-      - client
-      - database
+  # nginx:
+  #   build: 
+  #     context: ./docker/nginx
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./frontend:/client_volumes
+  #     - ./backend:/server_volumes
+  #   depends_on:
+  #     - server
+  #     - client
+  #     - database
 # Define a volume named mysql_data for persisting MySQL data
 volumes:
   database_volumes:
