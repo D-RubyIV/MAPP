@@ -3,43 +3,17 @@ FROM node:18-alpine as BUILD
 
 # Set the working directory within the container to /app
 WORKDIR /apps/frontend
-COPY ./apps/frontend .
-# Copy package.json to the container's working directory
-COPY package.json .
 
-# Install dependencies based on package.json
+COPY package*.json ./
+COPY package*.js ./
 RUN npm install
-
-# Copy all files from the current directory (.) to the container's working directory (/app)
+# RUN npm install typescript
 COPY . .
-
-# Build the application
 RUN npm run build
-
-# Stage 2: Create a lightweight container for production
-FROM node:18-alpine as PROD
-
-# Set the working directory within the container to /app
-WORKDIR /
-COPY ./apps/frontend .
-# Copy the build artifacts (dist folder) from the BUILD stage to the current stage
-COPY --from=BUILD /app/dist/ /app/dist/
-
-# Expose port 3000 to allow external connections to the application
 EXPOSE 3000
 
-# Copy package.json and vite.config.ts to the container's working directory
-COPY package.json .
-COPY vite.config.js .
-
-# Install TypeScript
-RUN npm install typescript
-
-# Specify the command to run when the container starts - run the application in preview mode
-RUN npm run build
-
 FROM nginx:stable-alpine
-COPY --from=build /frontend/build /usr/share/nginx/html
+COPY --from=build /apps/frontend/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
