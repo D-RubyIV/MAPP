@@ -3,14 +3,12 @@ FROM node:18-alpine as BUILD
 
 # Set the working directory within the container to /app
 WORKDIR /apps/frontend
-
-COPY package*.json ./
-COPY package*.js ./
+COPY package.json .
+COPY vite.config.js .
 RUN npm install
-# RUN npm install typescript
-COPY . .
-RUN npm run build
 EXPOSE 3000
+# RUN npm install typescript
+RUN npm run build
 
 FROM nginx:stable-alpine
 COPY --from=build /apps/frontend/build /usr/share/nginx/html
