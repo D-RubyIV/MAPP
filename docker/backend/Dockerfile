@@ -2,10 +2,10 @@
 FROM maven:3.9.5 AS build
 
 # Set the working directory within the container to /app
-WORKDIR /app
+WORKDIR /
 
 # Copy all files from the current directory (.) to the container's working directory (/app)
-COPY . .
+COPY ./backend .
 
 # Run the Maven clean install command with the option to skip tests
 RUN mvn clean install -DskipTests

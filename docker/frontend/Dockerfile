@@ -20,8 +20,8 @@ RUN npm run build
 FROM node:18-alpine as PROD
 
 # Set the working directory within the container to /app
-WORKDIR /app
-
+WORKDIR /
+COPY ./frontend .
 # Copy the build artifacts (dist folder) from the BUILD stage to the current stage
 COPY --from=BUILD /app/dist/ /app/dist/
 
