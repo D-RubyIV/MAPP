@@ -3,8 +3,7 @@ FROM node:18-alpine as BUILD
 
 # Set the working directory within the container to /app
 WORKDIR /apps/frontend
-COPY package.json .
-COPY vite.config.js .
+COPY ./apps/frontend .
 RUN npm install
 EXPOSE 3000
 # RUN npm install typescript
