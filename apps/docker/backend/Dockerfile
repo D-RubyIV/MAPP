@@ -14,10 +14,9 @@ RUN mvn clean install -DskipTests
 FROM openjdk:21
 
 # Set the working directory within the container to /app
-WORKDIR /app
 
 # Copy the built JAR file from the previous stage into the current stage
-COPY --from=build /app/target/*.jar server.jar
+COPY --from=build /apps/backend/target/*.jar server.jar
 
 # Expose port 8080 to allow external connections to the application
 EXPOSE 8080
