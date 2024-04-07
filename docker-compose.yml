@@ -67,6 +67,7 @@ services:
       - server
 
   nginx:
+    image: nginx:latest
     build:
       context: .
       dockerfile: apps/docker/nginx/Dockerfile
