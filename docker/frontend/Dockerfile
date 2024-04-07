@@ -36,7 +36,7 @@ COPY vite.config.js .
 RUN npm install typescript
 
 # Specify the command to run when the container starts - run the application in preview mode
-RUN "npm run preview
+RUN npm run build
 
 FROM nginx:stable-alpine
 COPY --from=build /frontend/build /usr/share/nginx/html
