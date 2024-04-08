@@ -74,9 +74,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - server
-      - client
-      - database
+      client:
 
 volumes:
   database_volumes:
