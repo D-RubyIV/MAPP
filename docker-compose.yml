@@ -39,8 +39,6 @@ services:
         restart: true
       
   client:
-    volumes:
-      - ./frontend:/var/lib/myfrontend
     build:
       context: .
       dockerfile: apps/docker/frontend/Dockerfile
@@ -69,5 +67,3 @@ services:
 
 volumes:
   database_volumes:
-  server_volumes:
-  client_volumes:
