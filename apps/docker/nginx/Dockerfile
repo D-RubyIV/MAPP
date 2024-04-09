@@ -1,6 +1,6 @@
 FROM nginx:stable-alpine
 WORKDIR /apps/frontend
-COPY /apps/frontend/dist /usr/share/nginx/html
+COPY /apps/frontend/dist /apps/nginx/usr/share/nginx/html
 
 RUN rm /etc/nginx/conf.d/default.conf
 WORKDIR /
