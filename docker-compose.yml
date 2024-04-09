@@ -43,7 +43,7 @@ services:
       # Set the password for connecting to the MySQL database
       SPRING_DATASOURCE_PASSWORD: password
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      test: curl -f http://localhost:8080
       interval: 30s
       timeout: 10s
       retries: 5
@@ -68,7 +68,7 @@ services:
     ports:
       - "3000:3000"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      test: curl -f http://localhost:3000
       interval: 30s
       timeout: 10s
       retries: 5
