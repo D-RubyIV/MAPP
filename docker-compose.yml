@@ -42,6 +42,11 @@ services:
       SPRING_DATASOURCE_USERNAME: product
       # Set the password for connecting to the MySQL database
       SPRING_DATASOURCE_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     # volumes:
     #   - ./backend:/var/lib/mybackend
     # Depend on the database service, ensuring it starts before the server
@@ -62,6 +67,11 @@ services:
     # Expose port 3000 on the host and map it to port 5173 in the container
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     # Depend on the server service, ensuring it starts before the client
     depends_on:
       - server
