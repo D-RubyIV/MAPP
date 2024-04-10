@@ -16,7 +16,9 @@ services:
       timeout: 20s
       retries: 10
       start_period: 10s
-
+    networks:
+      - dev
+      
   server:
     build:
       context: .
@@ -27,32 +29,22 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/product
       SPRING_DATASOURCE_USERNAME: product
       SPRING_DATASOURCE_PASSWORD: password
-    healthcheck:
-      test: curl -f http://localhost:8080
-      interval: 1s
-      timeout: 20s
-      retries: 10
-      start_period: 10s
     depends_on:
       database:
         condition: service_healthy
         restart: true
-      
+    networks:
+      - dev
   client:
     build:
       context: .
       dockerfile: apps/docker/frontend/Dockerfile
     ports:
       - "3000:3000"
-    healthcheck:
-      test: curl -f http://localhost:3000
-      interval: 1s
-      timeout: 20s
-      retries: 10
-      start_period: 10s
     depends_on:
       - server
-
+    networks:
+      - dev
   nginx:
     image: nginx:latest
     build:
@@ -64,6 +56,11 @@ services:
       - database
       - server
       - client
+    networks:
+      - dev
+networks:
+  dev:
+    driver: bridge
 
 volumes:
   database_volumes:
