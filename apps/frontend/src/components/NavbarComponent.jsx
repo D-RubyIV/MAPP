@@ -38,7 +38,7 @@ const NavbarComponent = () => {
         {
             "name": "Add Fund",
             "icon": <HappyOutline color={'#999999'} height={`${widthIcon}px`} width={`${heightIcon}px`} />,
-            "link": "/",
+            "link": "/add-fund",
         },
         {
             "name": "Add Fund",

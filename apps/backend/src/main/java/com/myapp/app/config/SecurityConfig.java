@@ -15,12 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-
-import java.util.List;
 
 @Component
 public class SecurityConfig {
@@ -47,7 +42,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
-                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
+//                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("")).permitAll()
                                 .anyRequest().authenticated()
                 );

@@ -1,14 +1,18 @@
 package com.myapp.app.controller;
 
 import com.myapp.app.dto.RoleDto;
+import com.myapp.app.model.LicenseModel;
 import com.myapp.app.model.RoleModel;
 import com.myapp.app.model.UserModel;
+import com.myapp.app.repository.LicenseRepository;
 import com.myapp.app.repository.RoleRepository;
 import com.myapp.app.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -22,11 +26,18 @@ import java.util.List;
 public class RoleController {
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private LicenseRepository licenseRepository;
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
         List<RoleModel> modelList = roleRepository.findAll();
         return ResponseEntity.ok(modelList);
+    }
+    @GetMapping("/pagination/{offset}/{limit}")
+    public ResponseEntity<?> paginate(@PathVariable int offset, @PathVariable int limit){
+        Page<LicenseModel> page = licenseRepository.findAll(PageRequest.of(offset, limit));
+        return ResponseEntity.ok(page);
     }
 
     @PostMapping("")

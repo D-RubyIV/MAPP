@@ -5,13 +5,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import MyAxios from "../../../axios/CustomAxios";
 import { select } from "@material-tailwind/react";
 import Select from 'react-select';
 import toast from 'react-hot-toast';
+import PaginateComponet from "./Paginate"
+import { json } from "react-router-dom";
 const Table = ({ tableName, labelHeaders, config }) => {
+    const [offset, setOffset] = useState(1)
+    const [limit, setLimit] = useState(15)
+    const [countItems, setCountItems] = useState(0)
+    const [totalPages, setTotalPages] = useState(0)
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [listModel, setListModel] = useState([]);
+    const [listModelVisiable, setListModelVisiable] = useState([]);
     const [showDetailIndex, setShowDetailIndex] = useState(null); // Trạng thái để theo dõi việc hiển thị chi tiết
     const [countValidLabel, setCountValidLabel] = useState(0)
     const [openDialog, setOpenDialog] = useState(false)
@@ -21,6 +29,27 @@ const Table = ({ tableName, labelHeaders, config }) => {
     const [intersection, setIntersection] = useState()
     const baseApi = config["indexApi"]
 
+    const handleArrayModel = (list) => {
+        setListModel(list);
+        setListModelVisiable(list.slice((offset-1) * limit, offset * limit))
+        setTotalPages(parseInt(Math.ceil(list.length / limit)))
+    }
+    const loadInitSetup = async () => {
+        try {
+            const response = await MyAxios.get(`${baseApi}`);
+            if (response.status === 200 && response.data && Array.isArray(response.data)) {
+                handleArrayModel(response.data)
+                setCountItems(response.data.length)
+            }
+        } catch (error) {
+            console.error("Error loading initial setup:", error);
+        }
+    }
+    const onPageChange = (pageNumber) => {
+        console.log(pageNumber)
+        setOffset(pageNumber)
+        setListModelVisiable(listModel.slice((pageNumber-1) * limit, pageNumber* limit))
+    }
     const handleSubmit = async () => {
         if (action === "CREATE") {
             await MyAxios.post(baseApi, myItem).then(function (response) {
@@ -113,18 +142,18 @@ const Table = ({ tableName, labelHeaders, config }) => {
         }
         else if (action === "DETAIL") {
             console.log("DETAIL: " + id);
-            setmyItem(listModel.filter(model => model.id === id)[0]);
-            reloadTypeItem(listModel.filter(model => model.id === id)[0])
+            setmyItem(listModelVisiable.filter(model => model.id === id)[0]);
+            reloadTypeItem(listModelVisiable.filter(model => model.id === id)[0])
         }
         else if (action === "UPDATE") {
             console.log("UPDATE: " + id)
-            setmyItem(listModel.filter(model => model.id === id)[0]);
-            reloadTypeItem(listModel.filter(model => model.id === id)[0])
+            setmyItem(listModelVisiable.filter(model => model.id === id)[0]);
+            reloadTypeItem(listModelVisiable.filter(model => model.id === id)[0])
         }
         else if (action === "DELETE") {
             console.log("DELETE: " + id)
-            setmyItem(listModel.filter(model => model.id === id)[0]);
-            reloadTypeItem(listModel.filter(model => model.id === id)[0])
+            setmyItem(listModelVisiable.filter(model => model.id === id)[0]);
+            reloadTypeItem(listModelVisiable.filter(model => model.id === id)[0])
         }
 
     }
@@ -152,16 +181,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
         setCountValidLabel(countValid)
     };
 
-    const loadInitSetup = async () => {
-        try {
-            const response = await MyAxios.get(baseApi);
-            if (response.status === 200 && response.data) {
-                setListModel(response.data);
-            }
-        } catch (error) {
-            console.error("Error loading initial setup:", error);
-        }
-    }
+
 
     useEffect(() => {
         handleResize();
@@ -270,8 +290,8 @@ const Table = ({ tableName, labelHeaders, config }) => {
                         <button className="py-1 bg-indigo-400 px-2 rounded-md text-sm hover:text-gray-200" onClick={() => handleDialog(true, "CREATE", null)}>Add new</button>
                     </div>
                 </div>
-                <div className="mt-2">
-                    <table className="table-fixed w-full">
+                <div className="mt-2 overflow-y-scroll" style={{ "height": "350px" }}>
+                    <table className="table-fixed w-full overflow-scroll">
                         <thead className="shadow tracking-tighter">
                             <tr className="text-center">
                                 <th className={`w-1/12 py-2 tracking-tighter text-xs md:text-sm text-gray-600`}>.No</th>
@@ -284,7 +304,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {listModel.map((item, index) => (
+                            {listModelVisiable.map((item, index) => (
                                 <Fragment key={index}>
                                     <tr className="shadow">
                                         <td className="py-2 text-center tracking-tighter text-xs md:text text-gray-700">
@@ -362,7 +382,27 @@ const Table = ({ tableName, labelHeaders, config }) => {
                         </div>
                     </div>
                 </div>
+
+                <div className="flex items-center border-t border-gray-200 py-3 justify-center">
+                    <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div className="text-center sm:text-left">
+                            <p className="text-sm text-gray-600">
+                                Showing <span className="text-gray-900 text-xs font-semibold">{(offset-1)*limit+1}</span> to <span className="text-gray-900 text-xs font-semibold">{offset*limit}</span> of {" "}
+                                <span className="text-gray-900 text-xs font-semibold">{countItems}</span> results
+                            </p>
+                        </div>
+                        <div className="">
+                            <nav className="rounded-md shadow-sm" aria-label="Pagination">
+                                <PaginateComponet totalPages={totalPages} currentPage={offset} onPageChange={onPageChange} />
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                </div>
             </div>
+
         </Fragment>
     );
 }

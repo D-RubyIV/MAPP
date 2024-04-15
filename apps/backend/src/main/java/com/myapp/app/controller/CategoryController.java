@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -24,8 +26,12 @@ public class CategoryController {
     private CategoryRepository categoryRepository;
     @GetMapping("")
     public ResponseEntity<?> findAll(){
-        List<CategoryModel> modelList = categoryRepository.findAll();
-        return ResponseEntity.ok(modelList);
+        return ResponseEntity.ok(categoryRepository.findAll());
+    }
+    @GetMapping("/pagination/{offset}/{limit}")
+    public ResponseEntity<?> paginate(@PathVariable int offset, @PathVariable int limit){
+        Page<CategoryModel> page = categoryRepository.findAll(PageRequest.of(offset, limit));
+        return ResponseEntity.ok(page);
     }
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody CategoryDto dto, BindingResult bindingResult) throws Exception {

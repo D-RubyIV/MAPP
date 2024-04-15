@@ -2,6 +2,7 @@ package com.myapp.app.controller;
 
 import com.myapp.app.dto.RoleDto;
 import com.myapp.app.dto.UserDto;
+import com.myapp.app.model.LicenseModel;
 import com.myapp.app.model.RoleModel;
 import com.myapp.app.model.UserModel;
 import com.myapp.app.repository.UserRepository;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -26,6 +29,11 @@ public class UserController {
     public ResponseEntity<?> findAll(){
         List<UserModel> modelList = userRepository.findAll();
         return ResponseEntity.ok(modelList);
+    }
+    @GetMapping("/pagination/{offset}/{limit}")
+    public ResponseEntity<?> paginate(@PathVariable int offset, @PathVariable int limit){
+        Page<UserModel> page = userRepository.findAll(PageRequest.of(offset, limit));
+        return ResponseEntity.ok(page);
     }
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody UserDto dto, BindingResult bindingResult) throws Exception {

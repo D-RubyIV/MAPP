@@ -16,8 +16,12 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class InitDataBase {
@@ -89,12 +93,15 @@ public class InitDataBase {
             categoryModel.setName("CLASS 2");
             categoryRepository.save(categoryModel);
         }
-        if (licenseRepository.findBySecret("ABCD") == null){
+        if (licenseRepository.findBySecret("ABCD").isEmpty()){
             LicenseModel licenseModel = new LicenseModel();
             licenseModel.setSecret("ABCD");
             licenseModel.setFreezeAt(new TimeUtil().getIsoTime());
             licenseModel.setCategoryModel(categoryRepository.findByCode("HYPERTELE"));
             licenseRepository.save(licenseModel);
         }
+        List<CategoryModel> list = IntStream.range(1, 200)
+                .mapToObj(i -> new CategoryModel("category" + i, "name" + i)).collect(Collectors.toList());
+        categoryRepository.saveAll(list);
     }
 }

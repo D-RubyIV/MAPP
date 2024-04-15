@@ -19,6 +19,10 @@ const ManageComponent = () => {
             "name": "License",
             "link": "licenses",
         },
+        {
+            "name": "Files",
+            "link": "files",
+        },
     ]
     return (
         <Fragment>
