@@ -1,5 +1,6 @@
 package com.myapp.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 @Entity
 @Data
-@Table(name = "user")
+@Table(name = "tbl_user")
 public class UserModel extends BaseModel implements UserDetails {
     private String username;
     private String email;
@@ -25,6 +26,7 @@ public class UserModel extends BaseModel implements UserDetails {
     @ManyToOne
     @JoinColumn(name="role_id", nullable=false)
     private RoleModel roleModel;
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Stream.of(roleModel).map(s -> new SimpleGrantedAuthority(s.getCode())).collect(Collectors.toList());

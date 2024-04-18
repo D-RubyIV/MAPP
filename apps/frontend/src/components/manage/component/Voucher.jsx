@@ -23,17 +23,30 @@ const EXM = () => {
             "allowEdit": true,
             "type": "string"
         },
-
+        {
+            "nameColumn": "Percent",
+            "nameAttribute": "percent",
+            "media": import.meta.env.VITE_sm,
+            "allowEdit": true,
+            "type": "string"
+        },
+        {
+            "nameColumn": "Amount",
+            "nameAttribute": "amount",
+            "media": import.meta.env.VITE_sm,
+            "allowEdit": true,
+            "type": "string"
+        },
     ]
     const config = {
-        "indexApi": "api/manage/categories",
+        "indexApi": "api/manage/vouchers",
         "foreignModel": [
 
         ],
     }
     return (
         <div>
-            <Table tableName={"Category"} labelHeaders={labelHeaders} config={config}></Table>
+            <Table tableName={"Voucher"} labelHeaders={labelHeaders} config={config}></Table>
         </div>
     );
 }

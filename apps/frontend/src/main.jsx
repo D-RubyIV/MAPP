@@ -14,12 +14,17 @@ import HomeComponent from './components/HomeComponent.jsx'
 import AuthProvider from './provider/authProvider.jsx'
 //ADD FUND
 import CryptoFundComponent from "./components/payment/Crypto.jsx"
+import MethodPayComponent from "./components/payment/Method.jsx"
 // ADMIN
 import UserManageComponent from "./components/manage/component/User.jsx"
 import CategoryManageComponent from "./components/manage/component/Category.jsx"
 import RoleManageComponent from "./components/manage/component/Role.jsx"
 import LicenseManageComponent from "./components/manage/component/License.jsx"
 import FileManageComponent from "./components/manage/component/File.jsx"
+import ProductManageComponent from "./components/manage/component/Product.jsx"
+import OrderManageComponent from "./components/manage/component/Order.jsx"
+import VoucherManageComponent from "./components/manage/component/Voucher.jsx"
+import OrderDetailManageComponent from "./components/manage/component/OrderDetail.jsx"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<RootComponent />}>
@@ -32,9 +37,13 @@ const router = createBrowserRouter(
           <Route path='roles' element={<RoleManageComponent />}></Route>
           <Route path='licenses' element={<LicenseManageComponent />}></Route>
           <Route path='files' element={<FileManageComponent />}></Route>
+          <Route path='products' element={<ProductManageComponent />}></Route>
+          <Route path='orders' element={<OrderManageComponent />}></Route>
+          <Route path='order-details' element={<OrderDetailManageComponent />}></Route>
+          <Route path='vouchers' element={<VoucherManageComponent />}></Route>
         </Route>
         <Route path='add-fund'>
-          <Route index element={<CryptoFundComponent/>}></Route>
+          <Route index element={<MethodPayComponent/>}></Route>
         </Route>
       </Route>
       <Route path='login' element={<LoginComponent />}></Route>

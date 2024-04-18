@@ -11,8 +11,8 @@ import { select } from "@material-tailwind/react";
 import Select from 'react-select';
 import toast from 'react-hot-toast';
 import PaginateComponet from "./Paginate"
-import { json } from "react-router-dom";
-const Table = ({ tableName, labelHeaders, config }) => {
+import { Link, json } from "react-router-dom";
+const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) => {
     const [offset, setOffset] = useState(1)
     const [limit, setLimit] = useState(15)
     const [countItems, setCountItems] = useState(0)
@@ -29,9 +29,14 @@ const Table = ({ tableName, labelHeaders, config }) => {
     const [intersection, setIntersection] = useState()
     const baseApi = config["indexApi"]
 
+    useEffect(() => {
+        loadInitSetup();
+    }, [signalReload])
+
+
     const handleArrayModel = (list) => {
         setListModel(list);
-        setListModelVisiable(list.slice((offset-1) * limit, offset * limit))
+        setListModelVisiable(list.slice((offset - 1) * limit, offset * limit))
         setTotalPages(parseInt(Math.ceil(list.length / limit)))
     }
     const loadInitSetup = async () => {
@@ -48,7 +53,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
     const onPageChange = (pageNumber) => {
         console.log(pageNumber)
         setOffset(pageNumber)
-        setListModelVisiable(listModel.slice((pageNumber-1) * limit, pageNumber* limit))
+        setListModelVisiable(listModel.slice((pageNumber - 1) * limit, pageNumber * limit))
     }
     const handleSubmit = async () => {
         if (action === "CREATE") {
@@ -56,7 +61,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
                 setOpenDialog(false);
                 console.log(response);
                 if (response.status == 200) {
-                    toast("LOGIN SUCCESS")
+                    toast("CREATE SUCCESS")
                     setTimeout(() => {
                         loadInitSetup();
                     }, 500);
@@ -107,9 +112,11 @@ const Table = ({ tableName, labelHeaders, config }) => {
         console.log(intersection)
         setIntersection(intersection)
 
+        const temporaryData = {};
         intersection.map(label => {
-            setmyItem({ ...myItem, [label.replace("Model", "Id")]: myItem[label].id });
+            temporaryData[label.replace("Model", "Id")] = myItem[label].id;
         })
+        setmyItem({ ...myItem, ...temporaryData })
     }
 
     useEffect(() => {
@@ -158,18 +165,19 @@ const Table = ({ tableName, labelHeaders, config }) => {
 
     }
     const handleForeignObject = async () => {
+        const temporaryData = {};
         for (const fore of config.foreignModel) {
             try {
                 const response = await MyAxios.get(fore.apiUrl);
-                const updatedObject = { ...foreignObject };
-                updatedObject[fore.nameAttribute] = response.data;
-                setForeignObject(updatedObject);
+                temporaryData[fore.nameAttribute] = response.data;
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-
+        const updatedObject = { ...foreignObject, ...temporaryData };
+        setForeignObject(updatedObject);
     }
+
     const handleResize = () => {
         setScreenWidth(window.innerWidth);
         var countValid = 0
@@ -180,8 +188,6 @@ const Table = ({ tableName, labelHeaders, config }) => {
         })
         setCountValidLabel(countValid)
     };
-
-
 
     useEffect(() => {
         handleResize();
@@ -215,8 +221,24 @@ const Table = ({ tableName, labelHeaders, config }) => {
                 </div>
             )
         }
+        // else if (label.type === "link") {
+        //     return (
+        //         <div>
+        //             <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+        //             <div><Link to={myItem ? myItem[label.nameAttribute] :""} className={`${classNameInput} border-none text-blue-600 underline`}>Download</Link></div>
+        //         </div>
+        //     )
+        // }
         else if (label.type === "integer") {
             if (label.nameAttribute === "id" && action !== "CREATE") {
+                return (
+                    <div>
+                        <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
+                        <input disabled={isDisable(label)} onChange={handleOnChange} name={label.nameAttribute} value={myItem ? myItem[label.nameAttribute] || "" : ""} type="int" className={classNameInput} />
+                    </div>
+                )
+            }
+            if (label.nameAttribute !== "id" && action === "CREATE") {
                 return (
                     <div>
                         <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
@@ -230,15 +252,15 @@ const Table = ({ tableName, labelHeaders, config }) => {
                 <div>
                     <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
                     <select
+                        title="select"
                         disabled={isDisable(label)}
                         name={label.nameAttribute}
                         onChange={handleOnChange}
-                        value={myItem ? myItem[label.nameAttribute] ? 'true' : 'false' || "" : ""}
                         className={classNameInput}
                     >
                         <option>Please select your option</option>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
+                        <option value={true} selected={myItem && myItem[label.nameAttribute] === true}>True</option>
+                        <option value={false} selected={myItem && myItem[label.nameAttribute] === false}>False</option>
                     </select>
                 </div>
             )
@@ -248,16 +270,16 @@ const Table = ({ tableName, labelHeaders, config }) => {
                 <div>
                     <label htmlFor={label.nameAttribute} className='text-sm'>{label.nameColumn}:</label>
                     <select
+                        title="select"
                         disabled={isDisable(label)}
                         name={label.nameAttribute.replace("Model", "Id")}
                         onChange={handleOnChange}
-                        value={myItem ? myItem[label.nameAttribute.replace("Model", "Id")] || "" : ""}
                         className={classNameInput}
                     >
                         <option>Please select your option</option>
                         {
                             Array.isArray(foreignObject[label.nameAttribute]) && foreignObject[label.nameAttribute].map((item, index) => (
-                                <option key={index} value={item.id}>{item.name}</option>
+                                <option key={index} value={item.id} selected={myItem && myItem[label.nameAttribute.replace("Model", "Id")] === item.id}>{item.hasOwnProperty("name") ? item.name : item.hasOwnProperty("username") ? item.username : item.id}</option>
                             ))
                         }
 
@@ -267,15 +289,27 @@ const Table = ({ tableName, labelHeaders, config }) => {
         }
     }
 
+    const renderLongString = (chuoi, length) => {
+        const chuoiJavaScript = chuoi.toString();
+        if (chuoiJavaScript.length <= length) {
+            return chuoiJavaScript;
+        } else {
+            return chuoiJavaScript.substring(0, length) + '...';
+        }
+    }
+
     const renderValueCol = (data) => {
-        if (typeof data === "boolean") {
+        if (typeof data === "string" && data.includes("http")) {
+            return (<Link to={data} className="text-blue-500 underline">Download</Link>)
+        }
+        else if (typeof data === "boolean") {
             return data ? "True" : "False"
         }
         else if (typeof data === "object") {
-            return data.name
+            return data.hasOwnProperty("name") ? data.name : data.hasOwnProperty("username") ? data.username : data.id
         }
         else {
-            return data
+            return renderLongString(data, 27)
         }
     }
 
@@ -286,8 +320,9 @@ const Table = ({ tableName, labelHeaders, config }) => {
                     <div>
                         <div><span className="text-md font-semibold">Manage {tableName}</span></div>
                     </div>
-                    <div>
-                        <button className="py-1 bg-indigo-400 px-2 rounded-md text-sm hover:text-gray-200" onClick={() => handleDialog(true, "CREATE", null)}>Add new</button>
+                    <div className="flex gap-2">
+                        {buttonExpand}
+                        <button className="py-1 bg-indigo-400 px-2 rounded-md text-sm hover:text-gray-200" onClick={() => handleDialog(true, "CREATE", null)}>Create</button>
                     </div>
                 </div>
                 <div className="mt-2 overflow-y-scroll" style={{ "height": "350px" }}>
@@ -331,18 +366,18 @@ const Table = ({ tableName, labelHeaders, config }) => {
                                     {/* Render detail row if showDetailIndex is equal to index */}
                                     {showDetailIndex === index && (
                                         <tr className="shadow">
-                                            <td className="p-2 text-center tracking-tighter text-xs md:text text-gray-700" colSpan={countValidLabel + 1}>
+                                            <td className="py-3 text-center tracking-tighter text-xs md:text text-gray-700" colSpan={countValidLabel + 1}>
                                                 {labelHeaders.map((label, index) => (
-                                                    <div className='grid grid-cols-4 text-left py-1' key={index}>
-                                                        <div className='col-span-1'>
-                                                            <span className="py-2 text-left tracking-tighter text-xs md:text text-gray-700">{label.nameColumn}:</span>
+                                                    <div className='grid grid-cols-8 text-left py-1 bg-gray-100 px-2 rounded-md shadow' key={index}>
+                                                        <div className='col-span-3'>
+                                                            <span className="py-2 text-left tracking-tighter text-[12px] md:text text-gray-900">{label.nameColumn}:</span>
                                                         </div>
-                                                        <div className="col-span-3">
-                                                            <span>{renderValueCol(item[label.nameAttribute])}</span>
+                                                        <div className="col-span-5">
+                                                            <span className="text-[12.5px] tracking-tighter">{renderValueCol(item[label.nameAttribute])}</span>
                                                         </div>
                                                     </div>
                                                 ))}
-                                                <div className='flex gap-3'>
+                                                <div className='flex gap-3 mt-1'>
                                                     <button onClick={() => handleDialog(true, "UPDATE", item.id)} className='text-xs py-0.5 text-blue-500 underline'>Edit</button>
                                                     <button onClick={() => handleDialog(true, "DELETE", item.id)} className='text-xs py-0.5 text-red-500 underline'>Delete</button>
                                                 </div>
@@ -387,7 +422,7 @@ const Table = ({ tableName, labelHeaders, config }) => {
                     <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between">
                         <div className="text-center sm:text-left">
                             <p className="text-sm text-gray-600">
-                                Showing <span className="text-gray-900 text-xs font-semibold">{(offset-1)*limit+1}</span> to <span className="text-gray-900 text-xs font-semibold">{offset*limit}</span> of {" "}
+                                Showing <span className="text-gray-900 text-xs font-semibold">{(offset - 1) * limit + 1}</span> to <span className="text-gray-900 text-xs font-semibold">{countItems > offset * limit ? offset * limit : countItems}</span> of {" "}
                                 <span className="text-gray-900 text-xs font-semibold">{countItems}</span> results
                             </p>
                         </div>

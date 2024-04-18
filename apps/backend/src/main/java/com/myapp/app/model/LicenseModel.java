@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "license")
+@Table(name = "tbl_license")
 public class LicenseModel extends BaseModel{
     private String secret;
     private Long freezeAt;

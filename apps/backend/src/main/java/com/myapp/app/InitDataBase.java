@@ -1,13 +1,7 @@
 package com.myapp.app;
 
-import com.myapp.app.model.CategoryModel;
-import com.myapp.app.model.LicenseModel;
-import com.myapp.app.model.RoleModel;
-import com.myapp.app.model.UserModel;
-import com.myapp.app.repository.CategoryRepository;
-import com.myapp.app.repository.LicenseRepository;
-import com.myapp.app.repository.RoleRepository;
-import com.myapp.app.repository.UserRepository;
+import com.myapp.app.model.*;
+import com.myapp.app.repository.*;
 import com.myapp.app.util.TimeUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +27,15 @@ public class InitDataBase {
     private LicenseRepository licenseRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
 
     @PostConstruct
     public void init() {
@@ -59,11 +62,11 @@ public class InitDataBase {
             userModel.setRoleModel(roleRepository.findByCode("ADMIN"));
             userRepository.save(userModel);
         }
-        if (userRepository.findByUsername("abc") == null){
+        if (userRepository.findByUsername("customer") == null){
             UserModel userModel = new UserModel();
-            userModel.setUsername("abc");
+            userModel.setUsername("customer");
             userModel.setPassword(new BCryptPasswordEncoder().encode("123"));
-            userModel.setEmail("abc@gmail.com");
+            userModel.setEmail("customer@gmail.com");
             userModel.setPhone("84833486936");
             userModel.setEnabled(true);
             userModel.setBalance(9999999);
@@ -87,11 +90,35 @@ public class InitDataBase {
             categoryModel.setName("CLASS 1");
             categoryRepository.save(categoryModel);
         }
+        if (categoryRepository.findByCode("FACEBOOK") == null){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setCode("FACEBOOK");
+            categoryModel.setName("CLASS 1");
+            categoryRepository.save(categoryModel);
+        }
         if (categoryRepository.findByCode("CYPERSOFT") == null){
             CategoryModel categoryModel = new CategoryModel();
             categoryModel.setCode("CYPERSOFT");
             categoryModel.setName("CLASS 2");
             categoryRepository.save(categoryModel);
+        }
+        if (productRepository.findByName("Facebook Account") == null){
+            ProductModel productModel = new ProductModel();
+            productModel.setName("Facebook Account");
+            productModel.setDescription("clone");
+            productModel.setQuantity(200);
+            productModel.setPrice(0.25);
+            productModel.setCategoryModel(categoryRepository.findByCode("FACEBOOK"));
+            productRepository.save(productModel);
+        }
+        if (productRepository.findByName("Instagram Account") == null){
+            ProductModel productModel = new ProductModel();
+            productModel.setName("Instagram Account");
+            productModel.setDescription("clone");
+            productModel.setQuantity(100);
+            productModel.setPrice(0.35);
+            productModel.setCategoryModel(categoryRepository.findByCode("FACEBOOK"));
+            productRepository.save(productModel);
         }
         if (licenseRepository.findBySecret("ABCD").isEmpty()){
             LicenseModel licenseModel = new LicenseModel();
@@ -100,8 +127,55 @@ public class InitDataBase {
             licenseModel.setCategoryModel(categoryRepository.findByCode("HYPERTELE"));
             licenseRepository.save(licenseModel);
         }
-        List<CategoryModel> list = IntStream.range(1, 200)
-                .mapToObj(i -> new CategoryModel("category" + i, "name" + i)).collect(Collectors.toList());
-        categoryRepository.saveAll(list);
+        if (voucherRepository.findByCode("VOUCHER1") == null){
+            VoucherModel voucherModel = new VoucherModel();
+            voucherModel.setCode("VOUCHER1");
+            voucherModel.setName("Demo1");
+            voucherModel.setAmount(100000);
+            voucherModel.setPercent(20);
+            voucherRepository.save(voucherModel);
+        }
+        if (voucherRepository.findByCode("VOUCHER2") == null){
+            VoucherModel voucherModel = new VoucherModel();
+            voucherModel.setCode("VOUCHER2");
+            voucherModel.setName("Demo2");
+            voucherModel.setAmount(100000);
+            voucherModel.setPercent(20);
+            voucherRepository.save(voucherModel);
+        }
+
+        if (orderRepository.findById(1L).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setUserModel(userRepository.findByUsername("customer"));
+            orderModel.setAmount(100);
+            orderModel.setVoucherModel(voucherRepository.findByCode("VOUCHER1"));
+            orderRepository.save(orderModel);
+        }
+        if (orderRepository.findById(2L).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setUserModel(userRepository.findByUsername("abcd"));
+            orderModel.setAmount(200);
+            orderModel.setVoucherModel(voucherRepository.findByCode("VOUCHER2"));
+            orderRepository.save(orderModel);
+        }
+        if (orderDetailRepository.findById(1L).isEmpty()){
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setOrderModel(orderRepository.findById(1L).get());
+            orderDetailModel.setProductModel(productRepository.findByName("Instagram Account"));
+            orderDetailModel.setQuantity(20);
+            orderDetailRepository.save(orderDetailModel);
+        }
+        if (orderDetailRepository.findById(2L).isEmpty()){
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setOrderModel(orderRepository.findById(2L).get());
+            orderDetailModel.setProductModel(productRepository.findByName("Facebook Account"));
+            orderDetailModel.setQuantity(20);
+            orderDetailRepository.save(orderDetailModel);
+        }
+
+        CategoryModel categoryModel = categoryRepository.findByCode("HYPERTELE");
+        List<LicenseModel> list = IntStream.range(1, 200)
+                .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
+        licenseRepository.saveAll(list);
     }
 }

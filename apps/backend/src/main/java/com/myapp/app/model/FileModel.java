@@ -8,11 +8,12 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "file")
+@Table(name = "tbl_file")
 public class FileModel extends BaseModel{
     private String name;
     private String type;
     @Lob
     @Column(length = 10000000)
     private byte[] data;
+    private String download;
 }

@@ -9,9 +9,8 @@ import lombok.*;
 @Setter
 @Getter
 @Entity
-@Table(name = "category")
+@Table(name = "tbl_category")
 public class CategoryModel extends BaseModel{
     private String code;
     private String name;
-
 }

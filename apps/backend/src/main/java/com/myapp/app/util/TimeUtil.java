@@ -9,7 +9,6 @@ public class TimeUtil {
     public Long getIsoTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String timestamp = sdf.format(new Date());
-        System.out.println(timestamp);
         return Long.valueOf(timestamp);
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "role")
+@Table(name = "tbl_role")
 public class RoleModel extends BaseModel{
     private String code;
     private String name;
