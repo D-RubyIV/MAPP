@@ -42,8 +42,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
-//                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
-                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
+//                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("")).permitAll()
                                 .anyRequest().authenticated()
                 );
