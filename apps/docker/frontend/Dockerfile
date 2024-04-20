@@ -1,10 +1,7 @@
-# Stage 1: Build the Node.js application
 FROM node:18-alpine as BUILD
-
-# Set the working directory within the container to /app
 WORKDIR /apps/frontend
 COPY ./apps/frontend .
 RUN npm install
+RUN npm run build
 EXPOSE 3000
-# RUN npm install typescript
-CMD ["npm","run","dev"]
+CMD ["npm", "run", "dev"]
