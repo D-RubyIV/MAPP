@@ -45,8 +45,6 @@ services:
       - server
     networks:
       - dev
-    environment:
-      - VITE_BACKENDAPI="http://103.177.35.108"
       
   nginx:
     image: nginx:latest

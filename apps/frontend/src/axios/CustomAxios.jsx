@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { useState } from 'react';
 const token = localStorage.getItem("token")
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BACKENDAPI,
+  baseURL: import.meta.env.VITE_SERVERURI,
   timeout: 1000,
   headers: { 'X-Custom-Header': 'foobar' }
 });
