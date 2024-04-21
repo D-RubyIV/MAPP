@@ -13,5 +13,8 @@ export default defineConfig({
   preview: {
     host: true,
     port: 3000
-  }
+  },
+  build: {
+    sourcemap: false,
+  },
 })
