@@ -107,10 +107,10 @@ const NavbarComponent = () => {
                             <hr />
                             {/* Feature */}
                             <div className="text-gray-400 mt-2">
-                                <ul className="grid grid-cols-2 hover:text-gray-500 gap-1">
+                                <ul className="grid grid-cols-2 hover:text-gray-500 gap-2">
                                     {
                                         arrayItem.map((item, index) => (
-                                            <li className="bg-gray-200 p-2 rounded-md my-auto" key={index}>
+                                            <li className="bg-gray-200 ring-1 p-2 shadow-md rounded-md my-auto" key={index}>
                                                 <div>
                                                     <Link to={item.link} className="flex items-center justify-start gap-2" onClick={() => setOpenMenu(!openMenu)}>
                                                         <span className="text-2xl flex">{item.icon}</span>
@@ -123,9 +123,9 @@ const NavbarComponent = () => {
                                 </ul>
                             </div>
                             {/* Logout */}
-                            <div className="bg-gray-400 w-full py-1 rounded-md mt-2 tracking-tighter">
+                            <div className="bg-gray-300 ring-1 w-full py-1 rounded-md mt-2 tracking-tighter">
                                 <Link to={"/logout"} className="font-semibold w-full">
-                                    <div className="flex justify-center items-center">
+                                    <div className="flex justify-center items-center text-gray-800">
                                         <span><LogOutOutline color={'#00000'} height="25px" width="25px" /></span>
                                         <span className="text-md tracking-tighter">Logout</span>
                                     </div>
