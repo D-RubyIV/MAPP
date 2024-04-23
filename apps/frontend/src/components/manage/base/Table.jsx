@@ -14,7 +14,7 @@ import PaginateComponet from "./Paginate"
 import { Link, json } from "react-router-dom";
 const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) => {
     const [offset, setOffset] = useState(1)
-    const [limit, setLimit] = useState(15)
+    const [limit, setLimit] = useState(10)
     const [countItems, setCountItems] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -64,7 +64,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                     toast("CREATE SUCCESS")
                     setTimeout(() => {
                         loadInitSetup();
-                    }, 500);
+                    }, 100);
                 }
             })
         }
@@ -76,7 +76,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                     toast("UPDATE SUCCESS")
                     setTimeout(() => {
                         loadInitSetup();
-                    }, 500);
+                    }, 100);
                 }
             })
         }
@@ -88,7 +88,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                     toast("DELETE SUCCESS")
                     setTimeout(() => {
                         loadInitSetup();
-                    }, 500);
+                    }, 100);
                 }
             })
         }
@@ -212,7 +212,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
     }
 
     const renderInputRow = (label) => {
-        const classNameInput = `text-sm block w-full rounded-md border-0 py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${isDisable(label) ? "bg-blue-100" : ""}`
+        const classNameInput = `text-[16px] block w-full rounded-md border-0 py-1 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 border-2 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${isDisable(label) ? "bg-blue-100" : ""}`
         if (label.type === "string") {
             return (
                 <div>
@@ -325,11 +325,11 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                         <button className="py-1 bg-indigo-400 px-2 rounded-md text-sm hover:text-gray-200" onClick={() => handleDialog(true, "CREATE", null)}>Create</button>
                     </div>
                 </div>
-                <div className="mt-2 overflow-y-scroll" style={{ "height": "350px" }}>
+                <div className="mt-2 overflow-y-scroll h-auto" >
                     <table className="table-fixed w-full overflow-scroll">
                         <thead className="shadow tracking-tighter">
                             <tr className="text-center">
-                                <th className={`w-1/12 py-2 tracking-tighter text-xs md:text-sm text-gray-600`}>.No</th>
+                                <th className={`w-1/12 py-2 tracking-tighter text-[16px] text-gray-600`}>.No</th>
                                 {labelHeaders.map((label, index) => (
                                     isValidLabel(label) && (
                                         <th className={`py-2 tracking-tighter text-xs md:text-sm text-gray-600`} key={index}>{label.nameColumn}</th>
@@ -341,18 +341,18 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                         <tbody>
                             {listModelVisiable.map((item, index) => (
                                 <Fragment key={index}>
-                                    <tr className="shadow">
+                                    <tr className="shadow-md">
                                         <td className="py-2 text-center tracking-tighter text-xs md:text text-gray-700">
                                             <div className="flex items-center justify-center">
                                                 <button className="flex text-blue-400 md:invisible" onClick={() => toggleDetail(index)}>
-                                                    {showDetailIndex === index ? <RemoveCircleOutlineIcon sx={{ fontSize: 14 }} /> : <ControlPointIcon sx={{ fontSize: 14 }} />}
+                                                    {showDetailIndex === index ? <RemoveCircleOutlineIcon sx={{ fontSize: 16 }} /> : <ControlPointIcon sx={{ fontSize: 16 }} />}
                                                 </button>
                                                 <span>{index + 1}</span>
                                             </div>
                                         </td>
                                         {labelHeaders.map((label, j) => (
                                             isValidLabel(label) && (
-                                                <td className="py-2 text-center tracking-tighter text-xs md:text text-gray-700" key={j}>{renderValueCol(item[label.nameAttribute])}</td>
+                                                <td className="py-2 text-center tracking-tighter text-[13px] md:text text-gray-700" key={j}>{renderValueCol(item[label.nameAttribute])}</td>
                                             )
                                         ))}
                                         <td className="hidden md:block">
@@ -365,15 +365,15 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                                     </tr>
                                     {/* Render detail row if showDetailIndex is equal to index */}
                                     {showDetailIndex === index && (
-                                        <tr className="shadow">
-                                            <td className="py-3 text-center tracking-tighter text-xs md:text text-gray-700" colSpan={countValidLabel + 1}>
+                                        <tr className="shadow py-3 text-center tracking-tighter text-xs md:text text-gray-700 bg-gray-100 rounded-md">
+                                            <td className="p-2" colSpan={countValidLabel + 1}>
                                                 {labelHeaders.map((label, index) => (
-                                                    <div className='grid grid-cols-8 text-left py-1 bg-gray-100 px-2 rounded-md shadow' key={index}>
+                                                    <div className='grid grid-cols-8 text-left py-1 px-2' key={index}>
                                                         <div className='col-span-3'>
                                                             <span className="py-2 text-left tracking-tighter text-[12px] md:text text-gray-900">{label.nameColumn}:</span>
                                                         </div>
                                                         <div className="col-span-5">
-                                                            <span className="text-[12.5px] tracking-tighter">{renderValueCol(item[label.nameAttribute])}</span>
+                                                            <span className="text-[13px] tracking-tighter">{renderValueCol(item[label.nameAttribute])}</span>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -389,30 +389,32 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                         </tbody>
                     </table>
                 </div>
-                <div>
-                    <div className={`rounded-t-md bg-white shadow-2xl fixed w-5/6 md:w-2/5 2xl:w-2/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${openDialog ? "block" : "hidden"}`}>
-                        <div className='py-1.5 px-3'>
-                            <div className="py-1.5 text-right ">
-                                <div className='flex justify-between'>
-                                    <div><span className='font-semibold'>Dialog</span></div>
-                                    <button onClick={() => setOpenDialog(false)}><CloseIcon /></button>
-                                </div>
-                            </div>
-                            <div>
-                                {action !== "DELETE" && labelHeaders.map((label, index) => (
-                                    <div className='' key={index}>
-
-                                        {
-                                            renderInputRow(label)
-                                        }
+                <div className="">
+                    <div className={`rounded-md bg-white shadow-2xl fixed w-5/6 md:w-2/5 2xl:w-2/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${openDialog ? "block" : "hidden"}`}>
+                        <div>
+                            <div className='py-1.5 px-3'>
+                                <div className="py-1.5 text-right ">
+                                    <div className='flex justify-between'>
+                                        <div><span className='font-semibold'>Dialog</span></div>
+                                        <button onClick={() => setOpenDialog(false)}><CloseIcon /></button>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                                <div>
+                                    {action !== "DELETE" && labelHeaders.map((label, index) => (
+                                        <div className='' key={index}>
 
-                            <div className="mt-3">
-                                {
-                                    action !== "DETAIL" ? <button className='p-2 bg-indigo-500 w-full rounded-md text-white' onClick={() => handleSubmit()}>Submit</button> : ""
-                                }
+                                            {
+                                                renderInputRow(label)
+                                            }
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="mt-4">
+                                    {
+                                        action !== "DETAIL" ? <button className='p-2 bg-indigo-500 w-full rounded-md text-white' onClick={() => handleSubmit()}>Submit</button> : ""
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -66,14 +66,14 @@ const NavbarComponent = () => {
         <StyleSheetManager shouldForwardProp={shouldForwardProp}>
             <Fragment>
                 <div className="flex flex-row items-center justify-between mb-5">
-                    <div className="flex">
+                    <div className="inline-flex">
                         <Link to={"/"}>
-                            <img className="w-7 h-7 rounded-full object-cover" src="https://th.bing.com/th/id/OIP.KhXEdjeK786BCg21hNBqEAHaFm?w=219&h=180&c=7&r=0&o=5&cb=11&dpr=1.1&pid=1.7" alt="" />
+                            <img className="w-8 h-8 rounded-full object-cover" src="https://th.bing.com/th/id/OIP.KhXEdjeK786BCg21hNBqEAHaFm?w=219&h=180&c=7&r=0&o=5&cb=11&dpr=1.1&pid=1.7" alt="" />
                             <label htmlFor="" className="hidden">My Project</label>
                         </Link>
                     </div>
-                    <div>
-                        <button onClick={() => setOpenMenu(!openMenu)}><p className="text-xl"><ion-icon name="grid-outline"></ion-icon></p></button>
+                    <div className="inline-flex">
+                        <button onClick={() => setOpenMenu(!openMenu)}><p className="text-[24px] inline-flex"><ion-icon name="grid-outline"></ion-icon></p></button>
                     </div>
                 </div>
 
@@ -84,8 +84,8 @@ const NavbarComponent = () => {
                         <div className="flex flex-row items-center justify-between">
                             <div>
                             </div>
-                            <div>
-                                <button onClick={() => setOpenMenu(!openMenu)}><p className="text-2xl text-black"><ion-icon name="close-outline"></ion-icon></p></button>
+                            <div className="inline-flex">
+                                <button onClick={() => setOpenMenu(!openMenu)}><p className="text-[24px] inline-flex"><ion-icon name="close-outline"></ion-icon></p></button>
                             </div>
                         </div>
                         {/* INFO */}
