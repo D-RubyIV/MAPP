@@ -100,11 +100,15 @@ public class FileController {
     @GetMapping("/download/{fileId}")
     public ResponseEntity<Resource> download(@PathVariable("fileId") Long fileId) throws Exception {
         System.out.println("Download");
-        FileModel fileUpload = null;
-        fileUpload = fileService.downloadFile(fileId);
+        FileModel fileUpload = fileService.downloadFile(fileId);
+
+        String encodedFilename = java.net.URLEncoder.encode(fileUpload.getName(), "UTF-8");
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(fileUpload.getType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "fileUpload; filename=\"" + fileUpload.getName()
-                        + "\"").body(new ByteArrayResource(fileUpload.getData()));
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"")
+                .body(new ByteArrayResource(fileUpload.getData()));
     }
+
+
 }
