@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
         console.log("Error: " + JSON.stringify(error.response));
         if (error.response["status"] == 500 || error.response["status"] == 403) {
           console.log(error.response.data["status"])
-          localStorage.clear()
+          localStorage.removeItem("token")
           delete myAxios.defaults.headers.common["Authorization"];
         }
       })
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
       myAxios.get("api/auth/me").then(function (response) {
         if (response.data == "anonymousUser" && response.status == 200) {
           setAuthenticated(false)
-          localStorage.clear()
+          localStorage.removeItem("token")
         }
         else {
           localStorage.setItem("me", JSON.stringify(response.data))
@@ -61,7 +61,7 @@ const AuthProvider = ({ children }) => {
           console.log("Error: " + JSON.stringify(error.response));
           if (error.response["status"] == 500 || error.response["status"] == 403) {
             console.log(500)
-            localStorage.clear()
+            localStorage.removeItem("token")
             delete myAxios.defaults.headers.common["Authorization"];
           }
         })
@@ -71,7 +71,7 @@ const AuthProvider = ({ children }) => {
     }
     else {
       delete myAxios.defaults.headers.common["Authorization"];
-      localStorage.clear()
+      localStorage.removeItem("token")
       setAuthenticated(false)
     }
   }, [token])

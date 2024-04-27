@@ -21,8 +21,11 @@ public class UserModel extends BaseModel implements UserDetails {
     private String email;
     private String password;
     private String phone;
+    private String fullName;
     private float balance;
     private boolean enabled;
+    @JsonIgnore
+    private String verificationCode;
     @ManyToOne
     @JoinColumn(name="role_id", nullable=false)
     private RoleModel roleModel;

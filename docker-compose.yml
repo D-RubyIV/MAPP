@@ -3,6 +3,7 @@ version: '3.9'
 services:
   database:
     image: mysql:8
+    command: --max_allowed_packet=256000000
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: product
@@ -45,6 +46,8 @@ services:
       - server
     networks:
       - dev
+    environment:
+      - VITE_SERVERURI="https://itemjunction.net"
       
   nginx:
     image: nginx:latest
@@ -61,6 +64,14 @@ services:
     - ./apps/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - dev
+
+  # bot:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/docker/bot/Dockerfile
+
+  #   environment:
+  #     - TELEGRAM_TOKEN=7062310362:AAG3CCZehw5a3qmPxWoagWvVVi9MkilDD0c
 
 networks:
   dev:

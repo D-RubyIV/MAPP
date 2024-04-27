@@ -30,13 +30,6 @@ const EXM = () => {
             "type": "string"
         },
         {
-            "nameColumn": "Data",
-            "nameAttribute": "data",
-            "media": import.meta.env.VITE_md,
-            "allowEdit": true,
-            "type": "string"
-        },
-        {
             "nameColumn": "Download",
             "nameAttribute": "download",
             "media": import.meta.env.VITE_md,

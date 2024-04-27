@@ -43,10 +43,10 @@ public class SecurityConfig {
                         authorize -> authorize
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
-//                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("")).permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 );
 //                .formLogin(Customizer.withDefaults());
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

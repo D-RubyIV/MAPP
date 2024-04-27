@@ -9,7 +9,7 @@ const ProtectedRouter = () => {
   
   // 
   if (authenticated == false) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/auth" />;
   }
   // else if(authenticated == true){
   //   return <Navigate to="/" />;

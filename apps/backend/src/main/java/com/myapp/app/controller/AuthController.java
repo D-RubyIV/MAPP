@@ -8,7 +8,9 @@ import com.myapp.app.service.AuthService;
 import com.myapp.app.service.JwtService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,12 +60,17 @@ public class AuthController {
         }
         else {
             if (new BCryptPasswordEncoder().matches(signinUserDto.getPassword(), userModel.getPassword())){
-                HashMap<String, String> map = new HashMap<>();
-                String accessToken = jwtService.generateAccessToken(new HashMap<>(), userModel);
-                String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), userModel);
-                map.put("access", accessToken);
-                map.put("refresh", refreshToken);
-                return ResponseEntity.ok().body(map);
+                if (!userModel.isEnabled()){
+                    throw new BadRequestException("Account not active");
+                }
+                else{
+                    HashMap<String, String> map = new HashMap<>();
+                    String accessToken = jwtService.generateAccessToken(new HashMap<>(), userModel);
+                    String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), userModel);
+                    map.put("access", accessToken);
+                    map.put("refresh", refreshToken);
+                    return ResponseEntity.ok().body(map);
+                }
             }
             else {
                 throw new BadRequestException("Email or password not correct");
@@ -86,10 +93,18 @@ public class AuthController {
             else {
                 throw new BadRequestException("Not allow access");
             }
-
-
     }
 
+    @ResponseBody
+    @GetMapping("/active/{code}")
+    public ResponseEntity<?> activeAccount(@PathVariable String code){
+        String message = String.format("Active successfully with code: %s", code);
+        UserModel userModel = userRepository.findByVerificationCode(code);
+        userModel.setEnabled(true);
+        userRepository.save(userModel);
+        return ResponseEntity.ok().body(message);
+
+    }
     @GetMapping("/me")
     public ResponseEntity<?> handleAuth(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -20,6 +20,8 @@ public class UserDto {
     private String password;
     @NotNull(message = "phone is requires")
     private String phone;
+    @NotNull(message = "fullName is requires")
+    private String fullName;
     @NotNull(message = "balance is requires")
     private float balance;
     @NotNull(message = "enabled is requires")

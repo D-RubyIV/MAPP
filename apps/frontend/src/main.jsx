@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 // 
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import LoginComponent from './components/LoginComponent'
+import AuthComponent from './components/AuthComponent'
 import MainComponent from './components/MainComponent.jsx'
 import RootComponent from './components/RootComponent.jsx'
 import LogoutComponet from './components/LogoutComponet.jsx'
@@ -46,7 +46,7 @@ const router = createBrowserRouter(
           <Route index element={<MethodPayComponent/>}></Route>
         </Route>
       </Route>
-      <Route path='login' element={<LoginComponent />}></Route>
+      <Route path='auth' element={<AuthComponent />}></Route>
       <Route path='logout' element={<LogoutComponet />}></Route>
     </Route>
   )
