@@ -22,7 +22,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,7 @@ import org.springframework.core.io.Resource;
 @RestController
 @RequestMapping("api/manage/files")
 public class FileController {
+    private String uploadDir = "source";
     @Autowired
     private FileService fileService;
     @Autowired
@@ -79,35 +86,48 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-        FileModel attachment = null;
-        String downloadUrl = "";
-        attachment = fileService.saveFile(file);
-        downloadUrl = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("api/manage/files/download/")
-                .path(String.valueOf(attachment.getId()))
-                .toUriString();
-        attachment.setDownload(downloadUrl);
-        fileRepository.save(attachment);
-        Map<String, String> map = new HashMap<>();
-        map.put("name", attachment.getName());
-        map.put("downloadUrl", downloadUrl);
-        map.put("type", file.getContentType());
-        map.put("size", String.valueOf(file.getSize()));
-        return ResponseEntity.ok().body(map);
+        String fileName = file.getOriginalFilename();
+        try {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(fileName);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
+            Files.copy(file.getInputStream(), filePath);
+
+            FileModel fileModel = new FileModel();
+            fileModel.setName(fileName);
+            fileModel.setType(file.getContentType());
+            fileRepository.save(fileModel);
+            return ResponseEntity.ok().body(fileModel);
+        } catch (Exception e) {
+            throw new Exception("File could not be saved: " + e.getMessage());
+        }
     }
 
     @GetMapping("/download/{fileId}")
     public ResponseEntity<Resource> download(@PathVariable("fileId") Long fileId) throws Exception {
-        System.out.println("Download");
-        FileModel fileUpload = fileService.downloadFile(fileId);
+        FileModel fileModel = fileRepository.findById(fileId).orElseThrow(() -> new BadRequestException("File not found"));
 
-        String encodedFilename = java.net.URLEncoder.encode(fileUpload.getName(), "UTF-8");
+        Path filePath = Paths.get(uploadDir).resolve(fileModel.getName());
+        File file = filePath.toFile();
+
+        if (!file.exists()) {
+            throw new IOException("File not found");
+        }
+
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(filePath));
+
+        String encodedFilename = URLEncoder.encode(fileModel.getName(), StandardCharsets.UTF_8.toString());
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileUpload.getType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"")
-                .body(new ByteArrayResource(fileUpload.getData()));
+                .contentType(MediaType.parseMediaType(fileModel.getType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
+                .body(resource);
     }
 
 

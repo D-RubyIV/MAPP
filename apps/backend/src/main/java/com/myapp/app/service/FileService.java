@@ -16,26 +16,5 @@ public class FileService {
         return java.util.UUID.randomUUID().toString();
     }
 
-    public FileModel saveFile(MultipartFile file) throws Exception {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-        try {
-            if (fileName.contains("..")) {
-                throw new Exception("The file name is invalid" + fileName);
-            }
-            FileModel fileUpload = new FileModel();
-            fileUpload.setName(fileName);
-            fileUpload.setType(file.getContentType());
-            fileUpload.setData(file.getBytes());
-            return fileRepository.save(fileUpload);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("File could not be save");
-        }
-    }
-
-    public FileModel downloadFile(Long fileId) throws Exception {
-        return fileRepository.findById(fileId)
-                .orElseThrow(() -> new Exception("A file with Id : " + fileId + " could not be found"));
-    }
 }

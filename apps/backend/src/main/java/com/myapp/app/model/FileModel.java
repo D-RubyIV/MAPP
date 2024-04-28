@@ -13,9 +13,5 @@ import lombok.*;
 public class FileModel extends BaseModel{
     private String name;
     private String type;
-    @JsonIgnore
-    @Lob
-    @Column(length = 1000000000)
-    private byte[] data;
     private String download;
 }
