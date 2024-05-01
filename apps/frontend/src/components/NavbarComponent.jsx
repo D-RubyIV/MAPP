@@ -78,7 +78,7 @@ const NavbarComponent = () => {
                 </div>
 
                 {/* POPUP */}
-                <div className={`transition-all duration-300 z-50 py-8 px-8 fixed top-0 left-0 w-full md:w-3/12 xl:w-1/6 h-screen shadow-2xl bg-white rounded-md ${openMenu ? "block -translate-x-0" : "-translate-x-full"}`} ref={menuRef}>
+                <div className={`transition-all duration-300 z-50 py-8 px-8 fixed top-0 left-0 w-full md:w-[200px] xl:w-1/6 h-screen shadow-2xl bg-white rounded-md ${openMenu ? "block -translate-x-0" : "-translate-x-full"}`} ref={menuRef}>
                     {/* MOBILE */}
                     <div className="md:hidden">
                         <div className="flex flex-row items-center justify-between">
@@ -157,8 +157,8 @@ const NavbarComponent = () => {
                                             <li className="py-2 rounded-md my-auto" key={index}>
                                                 <div>
                                                     <Link to={item.link} className="flex items-center justify-start gap-2" onClick={() => setOpenMenu(!openMenu)}>
-                                                        <span className="text-2xl flex">{item.icon}</span>
-                                                        <span className="text-sm text-gray-600 tracking-tighter">{item.name}</span>
+                                                        <span className="text-2xl flex ">{item.icon}</span>
+                                                        <span className="text-[15px] text-gray-600 font-semibold tracking-tighter">{item.name}</span>
                                                     </Link>
                                                 </div>
                                             </li>

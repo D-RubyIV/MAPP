@@ -299,17 +299,20 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
     }
 
     const renderValueCol = (data) => {
-        if (typeof data === "string" && data.includes("http")) {
-            return (<Link to={data} className="text-blue-500 underline">Download</Link>)
+        if (data && typeof data === "string" && data.includes("download/uuid")) {
+            return (<Link to={import.meta.env.VITE_SERVERURI + data} className="text-blue-500 underline">Download</Link>)
         }
-        else if (typeof data === "boolean") {
+        else if (data && typeof data === "boolean") {
             return data ? "True" : "False"
         }
-        else if (typeof data === "object") {
+        else if (data && typeof data === "object") {
             return data.hasOwnProperty("name") ? data.name : data.hasOwnProperty("username") ? data.username : data.id
         }
+        else if (data) {
+            return renderLongString(data, 24)
+        }
         else {
-            return renderLongString(data, 27)
+            return "null"
         }
     }
 
@@ -329,63 +332,76 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                     <table className="table-fixed w-full overflow-scroll">
                         <thead className="shadow tracking-tighter">
                             <tr className="text-center">
-                                <th className={`w-1/12 py-2 tracking-tighter text-[16px] text-gray-600`}>.No</th>
+                                <th className={`w-1/12 py-2 tracking-tighter text-[14.5px] text-gray-600`}>.No</th>
                                 {labelHeaders.map((label, index) => (
                                     isValidLabel(label) && (
-                                        <th className={`py-2 tracking-tighter text-xs md:text-sm text-gray-600`} key={index}>{label.nameColumn}</th>
+                                        <th className={`py-2 tracking-tighter text-[14.5px] text-gray-600`} key={index}>{label.nameColumn}</th>
                                     )
                                 ))}
-                                <th className={`w-2/12 py-2 tracking-tighter text-xs md:text-sm text-gray-600 hidden md:inline`}>Action</th>
+                                <th className={`w-2/12 py-2 tracking-tighter text-[14.5px] text-gray-600 hidden md:inline`}>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {listModelVisiable.map((item, index) => (
-                                <Fragment key={index}>
-                                    <tr className="shadow-md">
-                                        <td className="py-2 text-center tracking-tighter text-xs md:text text-gray-700">
-                                            <div className="flex items-center justify-center">
-                                                <button className="flex text-blue-400 md:invisible" onClick={() => toggleDetail(index)}>
-                                                    {showDetailIndex === index ? <RemoveCircleOutlineIcon sx={{ fontSize: 16 }} /> : <ControlPointIcon sx={{ fontSize: 16 }} />}
-                                                </button>
-                                                <span>{index + 1}</span>
-                                            </div>
-                                        </td>
-                                        {labelHeaders.map((label, j) => (
-                                            isValidLabel(label) && (
-                                                <td className="py-2 text-center tracking-tighter text-[13px] md:text text-gray-700" key={j}>{renderValueCol(item[label.nameAttribute])}</td>
-                                            )
-                                        ))}
-                                        <td className="hidden md:block">
-                                            <div className="flex justify-center items-center gap-4">
-                                                <button onClick={() => handleDialog(true, "DETAIL", item.id)} className="text-gray-500"><VisibilityIcon sx={{ fontSize: 18 }} /></button>
-                                                <button onClick={() => handleDialog(true, "UPDATE", item.id)} className="text-gray-500"><EditIcon sx={{ fontSize: 18 }} /></button>
-                                                <button onClick={() => handleDialog(true, "DELETE", item.id)} className="text-gray-500"><DeleteIcon sx={{ fontSize: 18 }} /></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {/* Render detail row if showDetailIndex is equal to index */}
-                                    {showDetailIndex === index && (
-                                        <tr className="shadow py-3 text-center tracking-tighter text-xs md:text text-gray-700 bg-gray-100 rounded-md">
-                                            <td className="p-2" colSpan={countValidLabel + 1}>
-                                                {labelHeaders.map((label, index) => (
-                                                    <div className='grid grid-cols-8 text-left py-1 px-2' key={index}>
-                                                        <div className='col-span-3'>
-                                                            <span className="py-2 text-left tracking-tighter text-[12px] md:text text-gray-900">{label.nameColumn}:</span>
-                                                        </div>
-                                                        <div className="col-span-5">
-                                                            <span className="text-[13px] tracking-tighter">{renderValueCol(item[label.nameAttribute])}</span>
-                                                        </div>
+                            {listModelVisiable.length == 0 ? (
+                                <tr>
+                                    <td colSpan={window.innerWidth >= 768 ? countValidLabel + 2 : countValidLabel + 1}>
+                                        <div className="text-center">
+                                            <p className="text-[13.5px] font-semibold py-10">No have any object</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                <>
+                                    {listModelVisiable.map((item, index) => (
+                                        <Fragment key={index}>
+                                            <tr className="shadow-md relative">
+                                                <td className="py-[15px] text-center tracking-tighter text-xs md:text text-gray-700">
+                                                    <div className="flex items-center justify-center">
+                                                        <button className="flex text-blue-400 md:invisible" onClick={() => toggleDetail(index)}>
+                                                            {showDetailIndex === index ? <RemoveCircleOutlineIcon sx={{ fontSize: 16 }} /> : <ControlPointIcon sx={{ fontSize: 16 }} />}
+                                                        </button>
+                                                        <span>{index + 1}</span>
                                                     </div>
+                                                </td>
+                                                {labelHeaders.map((label, j) => (
+                                                    isValidLabel(label) && (
+                                                        <td className="py-2 text-center tracking-tighter text-[13px] md:text text-gray-700" key={j}>{renderValueCol(item[label.nameAttribute])}</td>
+                                                    )
                                                 ))}
-                                                <div className='flex gap-3 mt-1'>
-                                                    <button onClick={() => handleDialog(true, "UPDATE", item.id)} className='text-xs py-0.5 text-blue-500 underline'>Edit</button>
-                                                    <button onClick={() => handleDialog(true, "DELETE", item.id)} className='text-xs py-0.5 text-red-500 underline'>Delete</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </Fragment>
-                            ))}
+                                                <td className="h-full hidden md:block py-2">
+                                                    <div className="flex justify-center items-center gap-4">
+                                                        <button onClick={() => handleDialog(true, "DETAIL", item.id)} className="text-gray-500"><VisibilityIcon sx={{ fontSize: 18 }} /></button>
+                                                        <button onClick={() => handleDialog(true, "UPDATE", item.id)} className="text-gray-500"><EditIcon sx={{ fontSize: 18 }} /></button>
+                                                        <button onClick={() => handleDialog(true, "DELETE", item.id)} className="text-gray-500"><DeleteIcon sx={{ fontSize: 18 }} /></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {/* Render detail row if showDetailIndex is equal to index */}
+                                            {showDetailIndex === index && (
+                                                <tr className="shadow py-3 text-center tracking-tighter text-xs md:text text-gray-700 bg-gray-100 rounded-md">
+                                                    <td className="p-2" colSpan={countValidLabel + 1}>
+                                                        {labelHeaders.map((label, index) => (
+                                                            <div className='grid grid-cols-8 text-left py-1 px-2' key={index}>
+                                                                <div className='col-span-3'>
+                                                                    <span className="py-2 text-left tracking-tighter text-[12px] md:text text-gray-900">{label.nameColumn}:</span>
+                                                                </div>
+                                                                <div className="col-span-5">
+                                                                    <span className="text-[13px] tracking-tighter">{renderValueCol(item[label.nameAttribute])}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                        <div className='flex gap-3 mt-1'>
+                                                            <button onClick={() => handleDialog(true, "UPDATE", item.id)} className='text-xs py-0.5 text-blue-500 underline'>Edit</button>
+                                                            <button onClick={() => handleDialog(true, "DELETE", item.id)} className='text-xs py-0.5 text-red-500 underline'>Delete</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </Fragment>
+                                    ))}
+                                </>
+                            )}
+
                         </tbody>
                     </table>
                 </div>
@@ -440,7 +456,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                 </div>
             </div>
 
-        </Fragment>
+        </Fragment >
     );
 }
 

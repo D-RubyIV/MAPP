@@ -4,6 +4,7 @@ import com.myapp.app.dto.FileDto;
 import com.myapp.app.model.FileModel;
 import com.myapp.app.repository.FileRepository;
 import com.myapp.app.service.FileService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +33,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 
@@ -44,6 +46,8 @@ public class FileController {
     private FileService fileService;
     @Autowired
     private FileRepository fileRepository;
+    @Autowired
+    private HttpServletRequest request;
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
@@ -86,6 +90,9 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+        String uri = request.getRequestURI();
+        System.out.println(uri);
+        UUID uuid = UUID.randomUUID();
         String fileName = file.getOriginalFilename();
         try {
             Path uploadPath = Paths.get(uploadDir);
@@ -102,6 +109,8 @@ public class FileController {
             FileModel fileModel = new FileModel();
             fileModel.setName(fileName);
             fileModel.setType(file.getContentType());
+            fileModel.setUuid(uuid.toString());
+            fileModel.setDownload(String.format("/api/manage/files/download/uuid/%s", uuid));
             fileRepository.save(fileModel);
             return ResponseEntity.ok().body(fileModel);
         } catch (Exception e) {
@@ -109,9 +118,9 @@ public class FileController {
         }
     }
 
-    @GetMapping("/download/{fileId}")
-    public ResponseEntity<Resource> download(@PathVariable("fileId") Long fileId) throws Exception {
-        FileModel fileModel = fileRepository.findById(fileId).orElseThrow(() -> new BadRequestException("File not found"));
+    @GetMapping("/download/uuid/{fileId}")
+    public ResponseEntity<Resource> download(@PathVariable("fileId") String uuid) throws Exception {
+        FileModel fileModel = fileRepository.findByUuid(uuid).orElseThrow(() -> new BadRequestException("File not found"));
 
         Path filePath = Paths.get(uploadDir).resolve(fileModel.getName());
         File file = filePath.toFile();
@@ -122,13 +131,12 @@ public class FileController {
 
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(filePath));
 
-        String encodedFilename = URLEncoder.encode(fileModel.getName(), StandardCharsets.UTF_8.toString());
+        String encodedFilename = URLEncoder.encode(fileModel.getName(), StandardCharsets.UTF_8.toString())
+                .replace("+", "%20");
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(fileModel.getType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
                 .body(resource);
     }
-
-
 }

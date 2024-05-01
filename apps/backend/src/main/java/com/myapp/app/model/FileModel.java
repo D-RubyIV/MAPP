@@ -13,5 +13,6 @@ import lombok.*;
 public class FileModel extends BaseModel{
     private String name;
     private String type;
+    private String uuid;
     private String download;
 }
