@@ -72,7 +72,7 @@ services:
       dockerfile: apps/docker/bot/Dockerfile
 
     environment:
-      - TELEGRAM_TOKEN=7062310362:AAG3CCZehw5a3qmPxWoagWvVVi9MkilDD0c
+      - TELEGRAM_TOKEN=7062310362:AAGrUmUxTl4gPi9CpaccJ3agmYEr6UbgCLQ
 
 networks:
   dev:
