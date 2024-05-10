@@ -1,21 +1,12 @@
 package com.myapp.app;
 
+import com.myapp.app.enums.Provider;
 import com.myapp.app.model.*;
 import com.myapp.app.repository.*;
-import com.myapp.app.util.TimeUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Component
 public class InitDataBase {
@@ -23,8 +14,6 @@ public class InitDataBase {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private LicenseRepository licenseRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -60,6 +49,7 @@ public class InitDataBase {
             userModel.setEnabled(true);
             userModel.setBalance(9999999);
             userModel.setRoleModel(roleRepository.findByCode("ADMIN"));
+            userModel.setProvider(Provider.LOCAL);
             userRepository.save(userModel);
         }
         if (userRepository.findByUsername("customer") == null){
@@ -71,6 +61,7 @@ public class InitDataBase {
             userModel.setEnabled(true);
             userModel.setBalance(9999999);
             userModel.setRoleModel(roleRepository.findByCode("USER"));
+            userModel.setProvider(Provider.LOCAL);
             userRepository.save(userModel);
         }
         if (userRepository.findByUsername("abcd") == null){
@@ -82,6 +73,7 @@ public class InitDataBase {
             userModel.setEnabled(true);
             userModel.setBalance(9999999);
             userModel.setRoleModel(roleRepository.findByCode("USER"));
+            userModel.setProvider(Provider.LOCAL);
             userRepository.save(userModel);
         }
         if (categoryRepository.findByCode("HYPERTELE") == null){
@@ -119,13 +111,6 @@ public class InitDataBase {
             productModel.setPrice(0.35);
             productModel.setCategoryModel(categoryRepository.findByCode("FACEBOOK"));
             productRepository.save(productModel);
-        }
-        if (licenseRepository.findBySecret("ABCD").isEmpty()){
-            LicenseModel licenseModel = new LicenseModel();
-            licenseModel.setSecret("ABCD");
-            licenseModel.setFreezeAt(new TimeUtil().getIsoTime());
-            licenseModel.setCategoryModel(categoryRepository.findByCode("HYPERTELE"));
-            licenseRepository.save(licenseModel);
         }
         if (voucherRepository.findByCode("VOUCHER1") == null){
             VoucherModel voucherModel = new VoucherModel();
@@ -173,9 +158,9 @@ public class InitDataBase {
             orderDetailRepository.save(orderDetailModel);
         }
 
-        CategoryModel categoryModel = categoryRepository.findByCode("HYPERTELE");
-        List<LicenseModel> list = IntStream.range(1, 200)
-                .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
-        licenseRepository.saveAll(list);
+//        CategoryModel categoryModel = categoryRepository.findByCode("HYPERTELE");
+//        List<LicenseModel> list = IntStream.range(1, 200)
+//                .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
+//        licenseRepository.saveAll(list);
     }
 }

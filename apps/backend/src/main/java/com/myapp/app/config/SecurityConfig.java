@@ -1,6 +1,8 @@
 package com.myapp.app.config;
 
 import com.myapp.app.security.JwtFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,13 +11,17 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.io.IOException;
 
 @Component
 public class SecurityConfig {
@@ -23,18 +29,20 @@ public class SecurityConfig {
     private JwtFilter jwtFilter;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector handlerMappingIntrospector) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector handlerMappingIntrospector) throws Exception {
+        httpSecurity.sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.cors(AbstractHttpConfigurer::disable);
-        httpSecurity.sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(handlerMappingIntrospector);
         httpSecurity
                 .cors(Customizer.withDefaults())
@@ -42,29 +50,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
-                                .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/oauth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
-                                .requestMatchers(mvcMatcherBuilder.pattern("")).permitAll()
-                                .anyRequest().permitAll()
-                );
-//                .formLogin(Customizer.withDefaults());
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                                .anyRequest().authenticated()
+                )
+                .formLogin(Customizer.withDefaults());
+//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//
-//        configuration.setAllowedOrigins(List.of("http://localhost:8080/","http://localhost:5173/"));
-//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-//        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
+
 }

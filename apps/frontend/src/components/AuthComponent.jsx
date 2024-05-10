@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import CustomAxios from "../axios/CustomAxios"
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
+import OauthComponent from "./oauth/OauthComponent";
 export default function LoginComponent() {
   const navigate = useNavigate()
   // INIT
@@ -52,43 +53,41 @@ export default function LoginComponent() {
         }, 1000);
       }
     })
-    .catch(function (error) {
-      if (error.response && error.response.status === 500) {
-        toast(error.message);
-      }
-      else if (error.response && error.response.status === 400) {
-        toast(error.response.data.message);
-      }
-    });
+      .catch(function (error) {
+        if (error.response && error.response.status === 500) {
+          toast(error.message);
+        }
+        else if (error.response && error.response.status === 400) {
+          toast(error.response.data.message);
+        }
+      });
   }
   const handleSignup = () => {
     console.log(authSignInObject)
     CustomAxios.post("api/auth/signup", authSignUpObject)
-    .then(function (response) {
-      console.log(response);
-      if (response.status === 200) {
-        toast("Check your mail to active account");
-        setTimeout(() => {
+      .then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+          toast("Check email to active your account");
           setMode(1);
-        }, 1000);
-      } 
-    })
-    .catch(function (error) {
-      if (error.response && error.response.status === 500) {
-        toast(error.message);
-      }
-      else if (error.response && error.response.status === 400) {
-        toast(error.response.data.message);
-      }
-    });
-  
-    
+        }
+      })
+      .catch(function (error) {
+        if (error.response && error.response.status === 500) {
+          toast(error.message);
+        }
+        else if (error.response && error.response.status === 400) {
+          toast(error.response.data.message);
+        }
+      });
+
+
   }
   // COM
   return (
 
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
 
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -98,7 +97,7 @@ export default function LoginComponent() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           {/* FORM SIGNIN */}
-          <form className={`space-y-2 ${mode === 1 ? "" : "hidden"}`} >
+          <form className={`space-y-1.5 ${mode === 1 ? "" : "hidden"}`} >
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 text-left">
                 Email address
@@ -149,10 +148,10 @@ export default function LoginComponent() {
             </div>
           </form>
           {/* FORM SIGNUP */}
-          
-          <form className={`space-y-2 ${mode === 2 ? "" : "hidden"}`} >
 
-          <div>
+          <form className={`space-y-1.5 ${mode === 2 ? "" : "hidden"}`} >
+
+            <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900 text-left">
                   Fullname
@@ -205,7 +204,7 @@ export default function LoginComponent() {
                 />
               </div>
             </div>
-           
+
 
             <div>
               <div className="flex items-center justify-between">
@@ -237,7 +236,7 @@ export default function LoginComponent() {
             </div>
           </form>
 
-          <p className={`mt-10 text-center text-sm text-gray-500 ${mode === 1 ? "" : "hidden"}`}>
+          <p className={`mt-5 text-center text-sm text-gray-500 ${mode === 1 ? "" : "hidden"}`}>
             Not a member?{' '}
             <button className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" onClick={() => setMode(2)}>
               Start a 14 day free trial
@@ -250,6 +249,8 @@ export default function LoginComponent() {
             </button>
           </p>
         </div>
+        {/* OAUTH */}
+        <OauthComponent></OauthComponent>
       </div>
     </>
 

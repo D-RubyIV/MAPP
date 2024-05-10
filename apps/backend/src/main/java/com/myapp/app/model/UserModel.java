@@ -1,29 +1,35 @@
 package com.myapp.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myapp.app.enums.Provider;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
 @Data
 @Table(name = "tbl_user")
+@ToString
 public class UserModel extends BaseModel implements UserDetails {
     private String username;
     private String email;
+    private String fingerprint;
     private String password;
     private String phone;
     private String fullName;
     private float balance;
     private boolean enabled;
+    private String accessToken;
+    private String refreshToken;
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
     @JsonIgnore
     private String verificationCode;
     @ManyToOne

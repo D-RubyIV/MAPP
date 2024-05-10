@@ -1,9 +1,11 @@
 package com.myapp.app.security;
 
 
+import com.myapp.app.enums.Provider;
 import com.myapp.app.model.UserModel;
 import com.myapp.app.repository.UserRepository;
 import com.myapp.app.service.JwtService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -31,9 +34,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String myAuthorization = request.getHeader("Authorization");
         if (!(myAuthorization != null && myAuthorization.startsWith("Bearer"))) {
+            System.out.println("NOT HAVE AUTHORIZATION");
             filterChain.doFilter(request, response);
             return;
         }
@@ -41,17 +44,23 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (jwtService.extractUsername(tokenClient) == null) {
+                System.out.println("TOKEN NULL");
                 filterChain.doFilter(request, response);
                 return;
             }
             String email = jwtService.extractUsername(tokenClient);
-            UserModel userModel = userRepository.findByEmail(email);
+            Map<String, Object> map = jwtService.getMapClaimsFromToken(tokenClient);
+            String providerString = (String) map.get("provider");
+            Provider provider = Provider.valueOf(providerString);
+            System.out.println("PROVIDER: " + provider.toString());
+            UserModel userModel = userRepository.findByEmailAndProvider(email, provider);
+            System.out.println(userModel);
             if (userModel == null) {
+                System.out.println("USER NOT FOUND");
                 filterChain.doFilter(request, response);
                 return;
             }
-            String token = jwtService.generateAccessToken(new HashMap<>(),userModel);
-            setAuthenticationContext(token, request);
+            setAuthenticationContext(userModel, request);
             filterChain.doFilter(request, response);
         }
         catch (Exception ex){
@@ -60,9 +69,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    private void setAuthenticationContext(String token, HttpServletRequest request) {
-        String email = jwtService.extractUsername(token);
-        UserDetails userDetails = userRepository.findByEmail(email);
+    private void setAuthenticationContext(UserDetails userDetails, HttpServletRequest request) {
+        System.out.println("USER DETAIL");
+        System.out.println(userDetails);
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,

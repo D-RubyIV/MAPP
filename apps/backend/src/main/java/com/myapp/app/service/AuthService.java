@@ -7,14 +7,9 @@ import com.myapp.app.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Properties;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -26,32 +21,15 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    public void sendEMail(String activeCode, UserModel userModel) {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-        mailSender.setUsername("phah04@gmail.com");
-        mailSender.setPassword("aeku khmm bexh cszw");
-
-        Properties properties = new Properties();
-        properties.setProperty("mail.smtp.auth", "true");
-        properties.setProperty("mail.smtp.starttls.enable", "true");
-
-        mailSender.setJavaMailProperties(properties);
-
-        String from = "sender@gmail.com";
-        String link = String.format("%s/api/auth/active/%s", baseUrl, activeCode);
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);
-        message.setTo(userModel.getEmail());
-        message.setSubject("Active Link of ItemJunction");
-        message.setText("Hello guys! Click this link to active your account\nLink: " + link);
-
-        mailSender.send(message);
+    @Async
+    public void sendEMail(String activeCode, UserModel userModel){
+        String context = String.format("Hello guys! Click this link to active your account\nLink: %s/api/auth/active/%s", baseUrl, activeCode);
+        EmailService emailService = new EmailService(context, userModel.getEmail());
+        Thread t = new Thread(emailService);
+        t.start();
     }
 
-    public UserModel register(SignupUserDto signupUserDto) {
+    public UserModel register(SignupUserDto signupUserDto){
         UUID uuid = UUID.randomUUID();
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(signupUserDto, userModel);

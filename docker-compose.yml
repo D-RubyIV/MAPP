@@ -47,8 +47,8 @@ services:
     networks:
       - dev
     environment:
-      - VITE_SERVERURI=https://itemjunction.net
-      - VITE_CLIENTURI=https://itemjunction.net
+      - VITE_SERVERURI=http://20.255.248.8
+      - VITE_CLIENTURI=http://20.255.248.8
       
   nginx:
     image: nginx:latest

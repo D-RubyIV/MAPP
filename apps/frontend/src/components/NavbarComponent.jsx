@@ -107,7 +107,7 @@ const NavbarComponent = () => {
                             <hr />
                             {/* Feature */}
                             <div className="text-gray-400 mt-2">
-                                <ul className="grid grid-cols-2 hover:text-gray-500 gap-2">
+                                <ul className="grid grid-cols-1 hover:text-gray-500 gap-2">
                                     {
                                         arrayItem.map((item, index) => (
                                             <li className="bg-gray-200 ring-1 p-2 shadow-md rounded-md my-auto" key={index}>

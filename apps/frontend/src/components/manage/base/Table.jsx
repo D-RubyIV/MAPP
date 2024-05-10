@@ -12,7 +12,10 @@ import Select from 'react-select';
 import toast from 'react-hot-toast';
 import PaginateComponet from "./Paginate"
 import { Link, json } from "react-router-dom";
+import { Skeleton } from "@mui/material";
+import 'react-loading-skeleton/dist/skeleton.css'
 const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) => {
+    const [isLoading, setIsLoading] = useState(false)
     const [offset, setOffset] = useState(1)
     const [limit, setLimit] = useState(10)
     const [countItems, setCountItems] = useState(0)
@@ -40,15 +43,19 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
         setTotalPages(parseInt(Math.ceil(list.length / limit)))
     }
     const loadInitSetup = async () => {
-        try {
-            const response = await MyAxios.get(`${baseApi}`);
-            if (response.status === 200 && response.data && Array.isArray(response.data)) {
-                handleArrayModel(response.data)
-                setCountItems(response.data.length)
-            }
-        } catch (error) {
-            console.error("Error loading initial setup:", error);
-        }
+        await MyAxios.get(`${baseApi}`)
+            .then(function (response) {
+                if (response.status === 200 && response.data && Array.isArray(response.data)) {
+                    handleArrayModel(response.data);
+                    setCountItems(response.data.length);
+                    setTimeout(() => {
+                        setIsLoading(true)
+                    }, 200)
+                }
+            })
+            .catch(function (error) {
+                console.error("Error loading initial setup:", error);
+            });
     }
     const onPageChange = (pageNumber) => {
         console.log(pageNumber)
@@ -342,7 +349,7 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                             </tr>
                         </thead>
                         <tbody>
-                            {listModelVisiable.length == 0 ? (
+                            {listModelVisiable.length == 0 && isLoading == true ? (
                                 <tr>
                                     <td colSpan={window.innerWidth >= 768 ? countValidLabel + 2 : countValidLabel + 1}>
                                         <div className="text-center">
@@ -350,6 +357,17 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                                         </div>
                                     </td>
                                 </tr>
+                            ) : isLoading == false ? (
+                                <>
+                                    {[...Array(limit)].map((_, index) => (
+                                        <tr key={index} >
+                                            <td colSpan={countValidLabel + 1} className="py-[15px] text-center tracking-tighter text-xs md:text text-gray-700">
+                                                <Skeleton/>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </>
+
                             ) : (
                                 <>
                                     {listModelVisiable.map((item, index) => (

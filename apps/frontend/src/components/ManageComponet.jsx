@@ -19,11 +19,6 @@ const ManageComponent = () => {
             "icon": <FingerPrintIcon />
         },
         {
-            "name": "License",
-            "link": "licenses",
-            "icon": <KeyIcon />
-        },
-        {
             "name": "Product",
             "link": "products",
             "icon": <ArchiveBoxIcon />

@@ -2,6 +2,7 @@ package com.myapp.app.controller;
 
 import com.myapp.app.dto.RoleDto;
 import com.myapp.app.dto.UserDto;
+import com.myapp.app.enums.Provider;
 import com.myapp.app.model.LicenseModel;
 import com.myapp.app.model.RoleModel;
 import com.myapp.app.model.UserModel;
@@ -40,7 +41,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        if (userRepository.findByUsername(dto.getUsername()) != null || userRepository.findByEmail(dto.getEmail()) != null) {
+        if (userRepository.findByUsername(dto.getUsername()) != null || userRepository.findByEmailAndProvider(dto.getEmail(), Provider.LOCAL) != null) {
             throw new BadRequestException("user already exists");
         }
         UserModel model = new UserModel();

@@ -3,10 +3,7 @@ package com.myapp.app.controller;
 import com.myapp.app.dto.RoleDto;
 import com.myapp.app.model.LicenseModel;
 import com.myapp.app.model.RoleModel;
-import com.myapp.app.model.UserModel;
-import com.myapp.app.repository.LicenseRepository;
 import com.myapp.app.repository.RoleRepository;
-import com.myapp.app.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
@@ -26,8 +23,6 @@ import java.util.List;
 public class RoleController {
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private LicenseRepository licenseRepository;
 
     @GetMapping("")
     public ResponseEntity<?> findAll() {
@@ -36,7 +31,7 @@ public class RoleController {
     }
     @GetMapping("/pagination/{offset}/{limit}")
     public ResponseEntity<?> paginate(@PathVariable int offset, @PathVariable int limit){
-        Page<LicenseModel> page = licenseRepository.findAll(PageRequest.of(offset, limit));
+        Page<RoleModel> page = roleRepository.findAll(PageRequest.of(offset, limit));
         return ResponseEntity.ok(page);
     }
 

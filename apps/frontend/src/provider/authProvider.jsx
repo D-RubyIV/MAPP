@@ -5,13 +5,21 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   // INIT VALUE
+  const [isLoading, setIsLoading] = useState(false)
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [authenticated, setAuthenticated] = useState()
   const [roles, setRoles] = useState()
   const [me, setMe] = useState()
-  // Function to set the authentication token
-
+  useEffect(() => {
+    console.log(token)
+  
+  }, [])
+  
   // USE EFFECT INIT
+  useEffect(() => {
+    console.log("ISLOADING:", isLoading)
+  }, [isLoading])
+  
   useEffect(() => {
     const interval = setInterval(() => {
       axios.defaults.headers.common["Authorization"] = "Bearer " + JSON.parse(token)["refresh"];
@@ -42,6 +50,7 @@ const AuthProvider = ({ children }) => {
     if (token) {
       myAxios.defaults.headers.common["Authorization"] = "Bearer " + JSON.parse(token)["access"];
       myAxios.get("api/auth/me").then(function (response) {
+        console.log(response.data)
         if (response.data == "anonymousUser" && response.status == 200) {
           setAuthenticated(false)
           localStorage.removeItem("token")
@@ -54,6 +63,7 @@ const AuthProvider = ({ children }) => {
           const myrole = response.data["roleModel"]
           setRoles(myrole["code"])
         }
+        
       })
         .catch(function (error) {
           console.log(error)
@@ -65,20 +75,20 @@ const AuthProvider = ({ children }) => {
             delete myAxios.defaults.headers.common["Authorization"];
           }
         })
-        .finally(function () {
-          // always executed
-        });
     }
     else {
       delete myAxios.defaults.headers.common["Authorization"];
       localStorage.removeItem("token")
       setAuthenticated(false)
     }
+    setTimeout(() => {
+      setIsLoading(true)
+    }, 200);
   }, [token])
 
   // Provide the authentication context to the children components
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, roles, setRoles, me, setMe }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ authenticated, setAuthenticated, roles, setRoles, me, setMe, isLoading }}>{children}</AuthContext.Provider>
   );
 };
 

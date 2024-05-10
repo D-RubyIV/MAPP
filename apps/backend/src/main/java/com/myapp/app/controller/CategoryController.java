@@ -1,9 +1,7 @@
 package com.myapp.app.controller;
 
 import com.myapp.app.dto.CategoryDto;
-import com.myapp.app.dto.LicenseDto;
 import com.myapp.app.model.CategoryModel;
-import com.myapp.app.model.LicenseModel;
 import com.myapp.app.repository.CategoryRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
