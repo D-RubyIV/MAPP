@@ -19,6 +19,20 @@ export default function LoginComponent() {
   useEffect(() => {
     console.log("LOGIN OBJECT: " + JSON.stringify(authSignInObject))
   }, [authSignInObject])
+  useEffect(() => {
+    CustomAxios.get("api/auth/me").then(function (response) {
+      console.log(response.data)
+      if (response.data == "anonymousUser" && response.status == 200) {
+        localStorage.removeItem("token")
+      }
+      else {
+        localStorage.setItem("me", JSON.stringify(response.data))
+        navigate("/")
+      }
+      
+    })
+  }, [])
+
   // HANDLE
   const handleChangeInputSigninObject = (event) => {
     let value = event.target.value;

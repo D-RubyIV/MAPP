@@ -14,23 +14,23 @@ const ProductComponent = () => {
 
     const listCategoryObject = [
         {
-            "name": "Category 1",
+            "name": "Software",
             "id": 1
         },
         {
-            "name": "Category 2",
+            "name": "Course",
             "id": 2
         },
         {
-            "name": "Category 3",
+            "name": "Account",
             "id": 3
         },
         {
-            "name": "Category 4",
+            "name": "Technological equipment",
             "id": 4
         },
         {
-            "name": "Category 5",
+            "name": "Source",
             "id": 5
         },
     ];
@@ -100,7 +100,7 @@ const ProductComponent = () => {
                 </div>
                 <ul className="flex flex-row gap-2 overflow-y-auto p-2">
                     {listCategoryObject.map((item, index) => (
-                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200" : "bg-blue-100"} ring-1 ring-offset-1 whitespace-nowrap w-auto px-1 py-0.5 text-[12px] rounded-2xl border-spacing-2 border-gray-300 border-2 shadow-sm`}>
+                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200" : "bg-blue-100"} ring-1 ring-offset-1 whitespace-nowrap w-auto px-2 py-0.5 text-[12px] rounded-2xl border-spacing-2 border-gray-300 border-2 shadow-sm`}>
                             {item.name}
                         </li>
                     ))}

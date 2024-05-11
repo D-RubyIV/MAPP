@@ -31,6 +31,7 @@ import OrderDetailManageComponent from "./components/manage/component/OrderDetai
 import NotFoundComponent from './components/NotFoundComponent.jsx'
 import DetailProductComponent from './components/DetailProductComponent.jsx'
 import UrlSearchComponent from './components/oauth/UrlSearchComponent.jsx';
+import ProfileComponent from './components/ProfileComponent.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='' element={<RootComponent />}>
@@ -51,6 +52,8 @@ const router = createBrowserRouter(
           <Route path='vouchers' element={<VoucherManageComponent />}></Route>
         </Route>
         {/*  */}
+        <Route path='profile' element={<ProfileComponent />}></Route>
+        {/*  */}
         <Route path='add-fund'>
           <Route index element={<MethodPayComponent />}></Route>
         </Route>
@@ -69,8 +72,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
-    </AuthProvider>
+  <AuthProvider>
+    <RouterProvider router={router}></RouterProvider>
+  </AuthProvider>
   // {/* </React.StrictMode> */}
 )

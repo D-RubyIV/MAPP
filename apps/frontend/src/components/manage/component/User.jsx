@@ -5,7 +5,7 @@ const EXM = () => {
         {
             "nameColumn": "Id",
             "nameAttribute": "id",
-            "media": import.meta.env.VITE_md,
+            "media": import.meta.env.VITE_2xl,
             "allowEdit": false,
             "type": "integer"
         },
@@ -26,6 +26,27 @@ const EXM = () => {
         {
             "nameColumn": "Phone",
             "nameAttribute": "phone",
+            "media": import.meta.env.VITE_2xl,
+            "allowEdit": true,
+            "type": "string"
+        },
+        {
+            "nameColumn": "Provider",
+            "nameAttribute": "provider",
+            "media": import.meta.env.VITE_md,
+            "allowEdit": false,
+            "type": "string"
+        },
+        {
+            "nameColumn": "Fullname",
+            "nameAttribute": "fullName",
+            "media": import.meta.env.VITE_2xl,
+            "allowEdit": true,
+            "type": "string"
+        },
+        {
+            "nameColumn": "Password",
+            "nameAttribute": "password",
             "media": import.meta.env.VITE_2xl,
             "allowEdit": true,
             "type": "string"

@@ -54,9 +54,8 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()
-                )
-                .formLogin(Customizer.withDefaults());
-//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                );
+        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

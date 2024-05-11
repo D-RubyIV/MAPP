@@ -424,9 +424,9 @@ const Table = ({ tableName, labelHeaders, config, buttonExpand, signalReload }) 
                     </table>
                 </div>
                 <div className="">
-                    <div className={`rounded-md bg-white shadow-2xl fixed w-5/6 md:w-2/5 2xl:w-2/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${openDialog ? "block" : "hidden"}`}>
+                    <div className={`h-4/5 overflow-y-scroll rounded-md bg-white drop-shadow-2xl fixed w-5/6 md:w-2/5 2xl:w-2/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${openDialog ? "block" : "hidden"}`}>
                         <div>
-                            <div className='py-1.5 px-3'>
+                            <div className='py-1.5 px-3 '>
                                 <div className="py-1.5 text-right ">
                                     <div className='flex justify-between'>
                                         <div><span className='font-semibold'>Dialog</span></div>

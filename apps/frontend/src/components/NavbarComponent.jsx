@@ -26,9 +26,9 @@ const NavbarComponent = () => {
             "link": "/",
         },
         {
-            "name": "My Profile",
+            "name": "Profile",
             "icon": <InformationCircleOutline color={'#999999'} height={`${widthIcon}px`} width={`${heightIcon}px`} />,
-            "link": "/",
+            "link": "/profile",
         },
         {
             "name": "Manage",
