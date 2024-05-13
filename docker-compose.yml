@@ -49,6 +49,18 @@ services:
     environment:
       - VITE_SERVERURI=http://20.255.248.8
       - VITE_CLIENTURI=http://20.255.248.8
+  
+  translate:
+    build:
+      context: .
+      dockerfile: apps/docker/translate/Dockerfile
+    ports:
+      - "3005:3005"
+    depends_on:
+      - server
+    networks:
+      - dev
+      
       
   nginx:
     image: nginx:latest

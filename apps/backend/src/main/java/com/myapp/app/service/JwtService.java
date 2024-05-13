@@ -84,7 +84,6 @@ public class JwtService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
         String token = buildToken(extraClaims, userModel, expiration_short);
-        userModel.setAccessToken(token);
         userRepository.save(userModel);
         return token;
     }
@@ -93,7 +92,6 @@ public class JwtService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
         String token = buildToken(extraClaims, userModel, expiration_long);
-        userModel.setRefreshToken(token);
         userRepository.save(userModel);
         return token;
     }

@@ -33,6 +33,11 @@ public class ProductController {
         Page<ProductModel> page = productRepository.findAll(PageRequest.of(offset, limit));
         return ResponseEntity.ok(page);
     }
+    @GetMapping("{id}")
+    public ResponseEntity<?> get(@PathVariable("id") Long id) throws BadRequestException {
+        ProductModel model = productRepository.findById(id).orElseThrow(() -> new BadRequestException("Not found"));
+        return ResponseEntity.ok().body(model);
+    }
 
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody ProductDto dto, BindingResult bindingResult) throws Exception {

@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Component
 public class InitDataBase {
     @Autowired
@@ -24,7 +28,8 @@ public class InitDataBase {
     private VoucherRepository voucherRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
-
+    @Autowired
+    private LicenseRepository licenseRepository;
 
     @PostConstruct
     public void init() {
@@ -76,22 +81,34 @@ public class InitDataBase {
             userModel.setProvider(Provider.LOCAL);
             userRepository.save(userModel);
         }
-        if (categoryRepository.findByCode("HYPERTELE") == null){
+        if (categoryRepository.findByCode("SOFTWARE") == null){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("HYPERTELE");
-            categoryModel.setName("CLASS 1");
+            categoryModel.setCode("SOFTWARE");
+            categoryModel.setName("Software");
             categoryRepository.save(categoryModel);
         }
-        if (categoryRepository.findByCode("FACEBOOK") == null){
+        if (categoryRepository.findByCode("COURSE") == null){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("FACEBOOK");
-            categoryModel.setName("CLASS 1");
+            categoryModel.setCode("COURSE");
+            categoryModel.setName("Course");
             categoryRepository.save(categoryModel);
         }
-        if (categoryRepository.findByCode("CYPERSOFT") == null){
+        if (categoryRepository.findByCode("Technological equipment") == null){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("CYPERSOFT");
-            categoryModel.setName("CLASS 2");
+            categoryModel.setCode("Technological equipment");
+            categoryModel.setName("Technological equipment");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findByCode("Account") == null){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setCode("Account");
+            categoryModel.setName("Account");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findByCode("Source") == null){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setCode("Source");
+            categoryModel.setName("Source");
             categoryRepository.save(categoryModel);
         }
         if (productRepository.findByName("Facebook Account") == null){
@@ -158,9 +175,9 @@ public class InitDataBase {
             orderDetailRepository.save(orderDetailModel);
         }
 
-//        CategoryModel categoryModel = categoryRepository.findByCode("HYPERTELE");
-//        List<LicenseModel> list = IntStream.range(1, 200)
-//                .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
-//        licenseRepository.saveAll(list);
+        CategoryModel categoryModel = categoryRepository.findByCode("SOFTWARE");
+        List<LicenseModel> list = IntStream.range(1, 200)
+                .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
+        licenseRepository.saveAll(list);
     }
 }

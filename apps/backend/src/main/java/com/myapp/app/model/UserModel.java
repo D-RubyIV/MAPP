@@ -26,8 +26,6 @@ public class UserModel extends BaseModel implements UserDetails {
     private String fullName;
     private float balance;
     private boolean enabled;
-    private String accessToken;
-    private String refreshToken;
     @Enumerated(EnumType.STRING)
     private Provider provider;
     @JsonIgnore
