@@ -47,8 +47,9 @@ services:
     networks:
       - dev
     environment:
-      - VITE_SERVERURI=http://20.255.248.8
-      - VITE_CLIENTURI=http://20.255.248.8
+      - VITE_SERVERURL=http://20.255.248.242
+      - VITE_CLIENTURL=http://20.255.248.242
+      - VITE_LANGUAURL=http://20.255.248.242
   
   translate:
     build:

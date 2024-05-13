@@ -8,7 +8,7 @@ i18next
     debug: true,
     fallbackLng: "en",
     backend: {
-      loadPath: "http://localhost:3005/locales/{{lng}}/{{ns}}.json"
+      loadPath: `${import.meta.env.VITE_LANGUAURL}/locales/{{lng}}/{{ns}}.json`
     },
   });
 export default i18next;
