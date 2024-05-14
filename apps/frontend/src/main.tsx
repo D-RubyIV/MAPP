@@ -24,6 +24,8 @@ import SettingComponent from './component/setting/SettingComponent.tsx'
 import LicenseComponent from './component/manage/table/LicenseComponent.tsx'
 import DetailProductComponent from './component/body/DetailProductComponent.tsx'
 import StorangeComponent from './component/manage/table/StorangeComponent.tsx'
+import NotFoundComponent from './component/common/NotFoundComponent.tsx'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='' element={<ProtectRouter/>} >
@@ -48,14 +50,17 @@ const router = createBrowserRouter(
       <Route path='auth' element={<AuthComponent />} />
       <Route path='oauth' element={<UrlSearchComponent />} />
       <Route path='logout' element={<LogoutComponet />} />
+      <Route path='*' element={<NotFoundComponent />} />
     </Route>
   )
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
+    
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
+
   // </React.StrictMode>,
 )

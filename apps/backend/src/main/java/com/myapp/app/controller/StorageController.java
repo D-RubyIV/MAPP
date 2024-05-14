@@ -29,6 +29,11 @@ public class StorageController {
         return new ResponseEntity<>(service.uploadFile(file), HttpStatus.OK);
     }
 
+    @PostMapping("v2/upload")
+    public ResponseEntity<String> uploadFileV2(@RequestParam(value = "files") MultipartFile[] files) {
+        return new ResponseEntity<>(service.uploadFileV2(files), HttpStatus.OK);
+    }
+
     @GetMapping("/download/{fileName}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
         byte[] data = service.downloadFile(fileName);

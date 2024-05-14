@@ -28,6 +28,9 @@ const UrlSearchComponent = () => {
 
                 }
             })
+            .catch(function(error){
+                toast("OAuth failed")
+            })
         }
         else if (stateParam == "facebook") {
             var code = urlParams.get("code")
@@ -43,6 +46,9 @@ const UrlSearchComponent = () => {
                     // window.location.reload();
                 }
             })
+            .catch(function(error){
+                toast("OAuth failed")
+            })
         }
         else if (stateParam == "github") {
             var code = urlParams.get("code")
@@ -56,6 +62,9 @@ const UrlSearchComponent = () => {
                     setTimeout(()=>{setIsLoading(false)}, 200)
                     window.location.reload();
                 }
+            })
+            .catch(function(error){
+                toast("OAuth failed")
             })
         }
     }

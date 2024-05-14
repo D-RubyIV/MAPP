@@ -23,7 +23,7 @@ public class StorageService {
     @Autowired
     private AmazonS3 s3Client;
 
-    public List<S3ObjectSummary> findAllObjects(){
+    public List<S3ObjectSummary> findAllObjects() {
         ListObjectsV2Result listObjectsV2Result = s3Client.listObjectsV2(bucketName);
         List<S3ObjectSummary> contents = listObjectsV2Result.getObjectSummaries();
         System.out.println("Number of objects in the bucket: " + (long) contents.size());
@@ -34,10 +34,26 @@ public class StorageService {
     public String uploadFile(MultipartFile file) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = file.getOriginalFilename();
-//        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        //String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         fileObj.delete();
         return "File uploaded : " + fileName;
+    }
+
+    public String uploadFileV2(MultipartFile[] files) {
+        try {
+            for (MultipartFile file : files) {
+                File fileObj = convertMultiPartFileToFile(file);
+                String fileName = file.getOriginalFilename();
+                //String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+                fileObj.delete();
+            }
+            return "File uploaded successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "File upload error";
+        }
     }
 
     public byte[] downloadFile(String fileName) {
