@@ -38,6 +38,7 @@ const StorageComponent = () => {
             .catch(function () {
                 toast("Delete file error")
             })
+            setOpenDeleteDialog(false)
     }
 
     const onClickDeleteBtn = (key: string) => {
@@ -73,6 +74,7 @@ const StorageComponent = () => {
                 setTimeout(() => setIsLoading(false), 200);
             }
         });
+        
     };
 
     useEffect(() => {
@@ -102,6 +104,7 @@ const StorageComponent = () => {
                 toast.error('Error uploading files: ' + error);
                 console.error(error);
             });
+            
     };
 
     return (
@@ -169,14 +172,6 @@ const StorageComponent = () => {
                                                         ))}
                                                     </tbody>
                                                 </table>
-                                                {/* <ul className="list-disc list-inside max-h-80 overflow-auto">
-                                                    {selectedFiles.map((file: any, index: number) => (
-                                                        <li key={index} className="flex justify-between items-center">
-                                                            <span className="text-sm text-gray-500">{file.name}</span>
-                                                            <button type="button" onClick={() => handleFileRemove(index)} className="text-red-500 ml-4 text-sm underline">Remove</button>
-                                                        </li>
-                                                    ))}
-                                                </ul> */}
                                             </div>
                                         ) : (
                                             <CloudUploadOutlined sx={{ fontSize: 36 }} className={`text-gray-500 h-10 ${selectedFiles && selectedFiles.length > 0 ? "hidden" : "block"}`} />

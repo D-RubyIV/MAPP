@@ -58,14 +58,6 @@ export default function AuthComponent() {
                 }, 500);
             }
         })
-            .catch(function (error) {
-                if (error.response && error.response.status === 500) {
-                    toast(error.message);
-                }
-                else if (error.response && error.response.status === 400) {
-                    toast(error.response.data.message);
-                }
-            });
     }
     const handleSignup = () => {
         console.log(authSignInObject)
@@ -77,14 +69,6 @@ export default function AuthComponent() {
                     setMode(1);
                 }
             })
-            .catch(function (error) {
-                if (error.response && error.response.status === 500) {
-                    toast(error.message);
-                }
-                else if (error.response && error.response.status === 400) {
-                    toast(error.response.data.message);
-                }
-            });
     }
     // COM
     return (

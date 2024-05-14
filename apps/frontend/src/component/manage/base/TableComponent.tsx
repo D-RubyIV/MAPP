@@ -20,7 +20,6 @@ const TableComponent = ({ labels, config }: { labels: Label[], config: Config })
     const limit = 10
     const [offset, setOffset] = useState(1)
     const [totalPages, setTotalPages] = useState<number>(0)
-    const [fetchDataStatus, setFetchDataStatus] = useState<boolean>(true)
     const [open, setOpen] = useState<boolean>(false)
     const [data, setData] = useState<any[]>([]);
     const [dataVisionable, setDataVisionable] = useState<any[]>([]);
@@ -125,20 +124,16 @@ const TableComponent = ({ labels, config }: { labels: Label[], config: Config })
         }
     };
 
-    useEffect(() => {
-        if (fetchDataStatus == false) {
-            toast.error("Fetch data error")
-        }
-    }, [fetchDataStatus])
 
     const getPrimaryData = async () => {
         try {
             const response = await instance.get(config.api);
             setData(response.data);
             setObject(response.data[0])
-        } catch (error) {
-            setFetchDataStatus(false);
-            console.error("Error fetching data:", error);
+        } catch (error: any) {
+            if (error.response.status !== 403){
+                toast.error("Fetch data error")
+            }
         }
         setIsLoadingPrimaryData(false)
     };
@@ -151,9 +146,10 @@ const TableComponent = ({ labels, config }: { labels: Label[], config: Config })
                     try {
                         const response = await instance.get(label.api);
                         temporaryData[label.attribute] = response.data;
-                    } catch (error) {
-                        setFetchDataStatus(false)
-                        console.error("Error fetching data:", error);
+                    } catch (error: any) {
+                        if (error.response.status !== 403){
+                            toast.error("Fetch data error")
+                        }
                     }
                 }
             }
