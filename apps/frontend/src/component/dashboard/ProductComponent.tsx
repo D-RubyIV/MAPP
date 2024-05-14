@@ -71,8 +71,8 @@ const ProductComponent = () => {
                     <p className="text-xl font-bold tracking-tight">Our Products</p>
                 </div>
                 {isLoadingCategories === false ? (
-                    <ul className="flex flex-row gap-1 overflow-y-auto">{categories.map((item, index) => (
-                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200 font-semibold" : "bg-blue-100"} border-2 whitespace-nowrap w-auto px-2.5 py-1 text-[12px] rounded-2xl border-spacing-2 border-gray-300 shadow-sm text-gray-600`}>
+                    <ul className="flex flex-row gap-1.5 overflow-y-auto">{categories.map((item, index) => (
+                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200 font-semibold" : "bg-blue-100"} border-2 whitespace-nowrap w-auto py-1.5 px-3 text-[12px] rounded-2xl border-spacing-2 border-gray-300 shadow-sm text-gray-600`}>
                             {item.name}
                         </li>))}
                     </ul>)
