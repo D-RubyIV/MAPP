@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import toast from "react-hot-toast";
 import PaginateComponent from "../paginate/PaginateComponent";
+import ConfirmComponent from "../../common/ConfirmComponent";
+import { Action } from "../model/Action";
 
 const StorageComponent = () => {
     const limit = 10;
@@ -17,6 +19,32 @@ const StorageComponent = () => {
     const [open, setOpen] = useState(false);
     const [data, setData] = useState<any[]>([]);
     const [dataVisible, setDataVisible] = useState<any[]>([]);
+    const [object, setObject] = useState<any>()
+
+    const [action, setAction] = useState<Action>()
+    const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
+
+    useEffect(() => {
+        console.log(object)
+    }, [object])
+
+    const onDelete = async () => {
+        instance.delete(`${import.meta.env.VITE_SERVERURL}/api/manage/storage/delete/${object.key}`)
+            .then(function (response) {
+                if (response.status === 200) {
+                    toast("Delete file success")
+                }
+            })
+            .catch(function () {
+                toast("Delete file error")
+            })
+    }
+
+    const onClickDeleteBtn = (key: string) => {
+        console.log(key)
+        setOpenDeleteDialog(true)
+        setObject(dataVisible.filter(model => model.key === key)[0])
+    }
 
     const handleFileChange = (event: any) => {
         setSelectedFiles(Array.from(event.target.files));
@@ -95,7 +123,7 @@ const StorageComponent = () => {
                             <div className="flex justify-end items-end gap-3">
                                 <button className="text-gray-500"><VisibilityIcon sx={{ fontSize: 20 }} /></button>
                                 <button className="text-gray-500"><EditIcon sx={{ fontSize: 20 }} /></button>
-                                <button className="text-gray-500"><DeleteIcon sx={{ fontSize: 20 }} /></button>
+                                <button className="text-gray-500" onClick={() => onClickDeleteBtn(item.key)}><DeleteIcon sx={{ fontSize: 20 }} /></button>
                             </div>
                         </div>
                     </div>
@@ -134,7 +162,7 @@ const StorageComponent = () => {
                                                     <tbody>
                                                         {selectedFiles.map((file: any, index: number) => (
                                                             <tr key={index} className="">
-                                                                <td><span className="text-sm text-blue-400">#{index+1}</span></td>
+                                                                <td><span className="text-sm text-blue-400">#{index + 1}</span></td>
                                                                 <td><span className="text-sm text-gray-600">{file.name}</span></td>
                                                                 <td><button type="button" onClick={() => handleFileRemove(index)} className="text-red-500 ml-4 text-sm underline p-2">Remove</button></td>
                                                             </tr>
@@ -161,9 +189,10 @@ const StorageComponent = () => {
                     </div>
                 </form>
             </div>
-            <div className="flex justify-end mt-3">
+            <div className="flex justify-end mt-5">
                 <PaginateComponent totalPages={totalPages} currentPage={offset} onPageChange={setOffset}></PaginateComponent>
             </div>
+            <ConfirmComponent isOpen={openDeleteDialog} onDelete={onDelete} setIsOpen={setOpenDeleteDialog} targert={object ? object.key : ""} />
         </div>
     );
 }
