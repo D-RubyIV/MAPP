@@ -47,9 +47,9 @@ services:
     networks:
       - dev
     environment:
-      - VITE_SERVERURL=https://itemjunction.net/
-      - VITE_CLIENTURL=https://itemjunction.net/
-      - VITE_LANGUAURL=https://itemjunction.net/
+      - VITE_SERVERURL=https://itemjunction.net
+      - VITE_CLIENTURL=https://itemjunction.net
+      - VITE_LANGUAURL=https://itemjunction.net
   
   translate:
     build:
