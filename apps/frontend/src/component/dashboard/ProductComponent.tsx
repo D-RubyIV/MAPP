@@ -71,8 +71,8 @@ const ProductComponent = () => {
                     <p className="text-xl font-bold tracking-tight">Our Products</p>
                 </div>
                 {isLoadingCategories === false ? (
-                    <ul className="flex flex-row gap-2 overflow-y-auto p-2">{categories.map((item, index) => (
-                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200" : "bg-blue-100"} ring-1 ring-offset-1 whitespace-nowrap w-auto px-2 py-0.5 text-[12px] rounded-2xl border-spacing-2 border-gray-300 border-2 shadow-sm text-gray-600`}>
+                    <ul className="flex flex-row gap-1 overflow-y-auto">{categories.map((item, index) => (
+                        <li key={index} onClick={() => handleCategory(item)} className={`${listActiveCategoryObject.some(s => s.id === item.id) ? "bg-orange-200 font-semibold" : "bg-blue-100"} border-2 whitespace-nowrap w-auto px-2.5 py-1 text-[12px] rounded-2xl border-spacing-2 border-gray-300 shadow-sm text-gray-600`}>
                             {item.name}
                         </li>))}
                     </ul>)
@@ -80,7 +80,7 @@ const ProductComponent = () => {
                 }
             </div>
             {/* Product */}
-            <div className="mt-3">
+            <div className="">
                 <p className="text-xl font-bold tracking-tigh">Customers also purchased</p>
                 {isLoadingProducts === false ? (
                     <div className="p-2 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8">
