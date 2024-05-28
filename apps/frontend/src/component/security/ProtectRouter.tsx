@@ -6,40 +6,34 @@ import Toast from "../../toast/Toast";
 import LoadingComponent from "../common/LoadingComponent";
 
 const ProtectRouter = () => {
-    const {setIsLoading} = useAuth()
+    const { setIsLoading } = useAuth()
     const navigate = useNavigate();
-    const { authenticated, setAuthenticated } = useAuth(); // Type assertion
-    
-    if (authenticated === false) {
-        console.log("AUTHENTICATED: ", authenticated)
-    }
+    const { user, setUser } = useAuth(); // Type assertion
+
+    console.log("AUTHENTICATED: ", user)
     const initSetup = async () => {
         instance.get("api/auth/me").then(function (response) {
             console.log(response)
             if (response.status === 200) {
                 if (response.data === "anonymousUser") {
-                    setTimeout(()=>{setIsLoading(false)}, 500)
-                    setAuthenticated(false)
                     navigate("/auth")
                 }
-                else{
-                    setTimeout(()=>{setIsLoading(false)}, 500)
-                    setAuthenticated(true)
+                else {
+                    setUser(response.data)
                 }
             }
-            
         })
-        
+        setIsLoading(false)
     }
     useEffect(() => {
         initSetup()
     }, [])
 
     return (
-        <div className="px-8 py-4 md:px-10 xl:px-16" >
+        <div className="px-8 py-4 md:px-10 xl:px-20" >
             <Toast></Toast>
             <Outlet></Outlet>
-            <LoadingComponent></LoadingComponent>
+            <LoadingComponent/>
         </div>
     );
 }

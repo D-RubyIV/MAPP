@@ -12,7 +12,7 @@ const NavbarComponent = () => {
         },
         {
             "name": "Profile",
-            "link": "/",
+            "link": "/profile",
         },
         {
             "name": "Manage",

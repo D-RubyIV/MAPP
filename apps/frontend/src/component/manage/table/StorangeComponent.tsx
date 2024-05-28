@@ -8,7 +8,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import toast from "react-hot-toast";
 import PaginateComponent from "../paginate/PaginateComponent";
 import ConfirmComponent from "../../common/ConfirmComponent";
-import { Action } from "../model/Action";
 
 const StorageComponent = () => {
     const limit = 10;
@@ -20,8 +19,6 @@ const StorageComponent = () => {
     const [data, setData] = useState<any[]>([]);
     const [dataVisible, setDataVisible] = useState<any[]>([]);
     const [object, setObject] = useState<any>()
-
-    const [action, setAction] = useState<Action>()
     const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
 
     useEffect(() => {

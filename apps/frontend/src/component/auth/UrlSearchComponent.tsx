@@ -2,10 +2,8 @@ import { useEffect } from "react";
 import toast from 'react-hot-toast';
 import instance from "../../axios/Instance";
 import { useAuth } from "../security/AuthProvider";
-import { useNavigate } from "react-router-dom";
 
 const UrlSearchComponent = () => {
-    const navigate = useNavigate()
     const urlHash = window.location.search || window.location.hash
     const queryString = urlHash.startsWith("#") ? urlHash.substring(1) : urlHash
     const urlParams = new URLSearchParams(queryString);
@@ -23,7 +21,7 @@ const UrlSearchComponent = () => {
                     console.log("GET OAUTH GOOGLE SUCCESS")
                     localStorage.setItem("token", JSON.stringify(response.data))
                     toast("LOGIN SUCCESS")
-                    setTimeout(()=>{setIsLoading(false)}, 200)
+                    setIsLoading(false)
                     window.location.reload();
 
                 }
@@ -38,7 +36,7 @@ const UrlSearchComponent = () => {
                     console.log("GET OAUTH FACEBOOK SUCCESS")
                     localStorage.setItem("token", JSON.stringify(response.data))
                     toast("LOGIN SUCCESS")
-                    setTimeout(()=>{setIsLoading(false)}, 200)
+                    setIsLoading(false)
                     window.location.reload();
                 }
             })
@@ -52,7 +50,7 @@ const UrlSearchComponent = () => {
                     console.log("GET OAUTH GITHUB SUCCESS")
                     localStorage.setItem("token", JSON.stringify(response.data))
                     toast("LOGIN SUCCESS")
-                    setTimeout(()=>{setIsLoading(false)}, 200)
+                    setIsLoading(false)
                     window.location.reload();
                 }
             })

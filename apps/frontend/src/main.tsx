@@ -25,6 +25,8 @@ import LicenseComponent from './component/manage/table/LicenseComponent.tsx'
 import DetailProductComponent from './component/body/DetailProductComponent.tsx'
 import StorangeComponent from './component/manage/table/StorangeComponent.tsx'
 import NotFoundComponent from './component/common/NotFoundComponent.tsx'
+import React from 'react'
+import ProfileComponent from './component/profile/ProfileComponent.tsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,6 +48,7 @@ const router = createBrowserRouter(
         </Route>
         <Route path='product/:id' element={<DetailProductComponent />} />
         <Route path='setting' element={<SettingComponent />} />
+        <Route path='profile' element={<ProfileComponent />} />
       </Route>
       <Route path='auth' element={<AuthComponent />} />
       <Route path='oauth' element={<UrlSearchComponent />} />
@@ -56,11 +59,9 @@ const router = createBrowserRouter(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-    
+  <React.StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-
-  // </React.StrictMode>,
+  </React.StrictMode>,
 )

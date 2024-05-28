@@ -4,6 +4,9 @@ import Skeleton from "react-loading-skeleton";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useAuth } from "../security/AuthProvider";
+import { motion } from "framer-motion";
+import { SellOutlined } from "@mui/icons-material";
+
 
 const ProductComponent = () => {
     const { setIsLoading } = useAuth()
@@ -14,9 +17,7 @@ const ProductComponent = () => {
 
     useEffect(() => {
         if (isLoadingCategories === false && isLoadingProducts === false) {
-            setTimeout(() => {
-                setIsLoading(false)
-            }, 200)
+            setIsLoading(false)
         }
     }, [isLoadingCategories, isLoadingProducts])
 
@@ -83,10 +84,28 @@ const ProductComponent = () => {
             <div className="">
                 <p className="text-xl font-bold tracking-tigh">Customers also purchased</p>
                 {isLoadingProducts === false ? (
-                    <div className="p-2 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8">
+                    <motion.section
+                        variants={{
+                            hidden: { opacity: 0 },
+                            show: {
+                                opacity: 1,
+                                transition: {
+                                    staggerChildren: 0.25
+                                }
+                            }
+                        }}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{once: false, amount: 0.7}}
+                        className="py-1 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8"
+                    >
                         {products.map((product, index) => (
-                            <div key={index} className="group relative">
-                                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md ring-2 ring-indigo-500 shadow-md lg:aspect-none group-hover:opacity-75 lg:h-80">
+                            <motion.div
+                                key={index}
+                                className="group relative shadow-md border-2 border-gray-400 p-2 rounded-md"
+                                variants={{hidden: {opacity: 0}, show: {opacity: 1}}}
+                            >
+                                <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80">
 
                                     <img
                                         src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
@@ -99,7 +118,8 @@ const ProductComponent = () => {
                                     <div>
                                         <Link to={`/product/${product.id}`}>
                                             <h3 className="text-sm text-gray-700">
-                                                <span aria-hidden="true" className="absolute inset-0" />
+                                                
+                                                <span aria-hidden="true" className="absolute top-0.5 left-0.5 h-4 "><SellOutlined /><span className="text-orange-500">5%</span></span>
                                                 {product.name}
                                             </h3>
                                         </Link>
@@ -107,9 +127,9 @@ const ProductComponent = () => {
                                     </div>
                                     <p className="text-sm font-medium text-gray-900">{product.price}</p>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.section>
                 ) : (<Skeleton count={5} />)
                 }
 
