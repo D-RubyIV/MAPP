@@ -27,6 +27,8 @@ import StorangeComponent from './component/manage/table/StorangeComponent.tsx'
 import NotFoundComponent from './component/common/NotFoundComponent.tsx'
 import React from 'react'
 import ProfileComponent from './component/profile/ProfileComponent.tsx'
+import DetailComponent from './component/dashboard/DetailComponent.tsx'
+import CartComponent from './component/cart/CartComponent.tsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,7 +48,8 @@ const router = createBrowserRouter(
           <Route path='vouchers' element={<VoucherComponent />} />
           <Route path='storage' element={<StorangeComponent />} />
         </Route>
-        <Route path='product/:id' element={<DetailProductComponent />} />
+        <Route path='product/:id' element={<DetailComponent />} />
+        <Route path='cart' element={<CartComponent />} />
         <Route path='setting' element={<SettingComponent />} />
         <Route path='profile' element={<ProfileComponent />} />
       </Route>

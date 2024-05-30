@@ -8,6 +8,10 @@ const instance = axios.create({
 
 if (token) {
     instance.defaults.headers.common["Authorization"] = "Bearer " + JSON.parse(token)["access"];
+    console.log("HAVE TOKEN")
+}
+else{
+    console.log("NO HAVE TOKEN")
 }
 
 instance.interceptors.response.use(function (response) {

@@ -49,7 +49,7 @@ const FooterComponent = () => {
         <>
             <section className="flex flex-col gap-10 mb-10" ref={containerRef}>
                 <motion.h1
-                    className="text-sm tracking-wide text-slate-800 text-center"
+                    className="text-sm tracking-wide text-slate-400 text-center"
                     animate={mainControls}
                     initial="hidden"
                     variants={{
@@ -65,7 +65,7 @@ const FooterComponent = () => {
                 </motion.h1>
                 <motion.p
                     style={{ translateX: paragraphOneValue }}
-                    className="text-slate-800 font-thin text-sm w-1/2 mx-auto"
+                    className="text-slate-400 font-thin text-sm w-1/2 mx-auto"
                 >
                     This is a basic tutorial on how to get up and running with Framer
                     Motion with some TailwindCSS. If you enjoyed this video, please leave
@@ -73,7 +73,7 @@ const FooterComponent = () => {
                 </motion.p>
                 <motion.p
                     style={{ translateX: paragraphTwoValue }}
-                    className="text-slate-800 font-thin text-sm w-1/2 mx-auto"
+                    className="text-slate-400 font-thin text-sm w-1/2 mx-auto"
                 >
                     Have fun playing with Framer Motion. It is a very powerful library,
                     when used properly. Add some life to your websites.

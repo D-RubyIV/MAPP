@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import instance from "../../axios/Instance";
 import Skeleton from "react-loading-skeleton";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
 import { useAuth } from "../security/AuthProvider";
 import { motion } from "framer-motion";
-import { SellOutlined } from "@mui/icons-material";
+import ProductCardComponent from "../card/ProductCardComponent";
 
 
 const ProductComponent = () => {
@@ -96,38 +95,11 @@ const ProductComponent = () => {
                         }}
                         initial="hidden"
                         whileInView="show"
-                        viewport={{once: false, amount: 0.7}}
+                        viewport={{ once: false, amount: 0.7 }}
                         className="py-1 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8"
                     >
                         {products.map((product, index) => (
-                            <motion.div
-                                key={index}
-                                className="group relative shadow-md border-2 border-gray-400 p-2 rounded-md"
-                                variants={{hidden: {opacity: 0}, show: {opacity: 1}}}
-                            >
-                                <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80">
-
-                                    <img
-                                        src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
-                                        alt={product.imageAlt}
-                                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                                    />
-
-                                </div>
-                                <div className="mt-4 flex justify-between">
-                                    <div>
-                                        <Link to={`/product/${product.id}`}>
-                                            <h3 className="text-sm text-gray-700">
-                                                
-                                                <span aria-hidden="true" className="absolute top-0.5 left-0.5 h-4 "><SellOutlined /><span className="text-orange-500">5%</span></span>
-                                                {product.name}
-                                            </h3>
-                                        </Link>
-                                        <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                                    </div>
-                                    <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                                </div>
-                            </motion.div>
+                            <ProductCardComponent product={product} key={index}/>
                         ))}
                     </motion.section>
                 ) : (<Skeleton count={5} />)

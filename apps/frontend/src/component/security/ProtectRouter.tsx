@@ -33,7 +33,7 @@ const ProtectRouter = () => {
         <div className="px-8 py-4 md:px-10 xl:px-20" >
             <Toast></Toast>
             <Outlet></Outlet>
-            <LoadingComponent/>
+            {/* <LoadingComponent/> */}
         </div>
     );
 }

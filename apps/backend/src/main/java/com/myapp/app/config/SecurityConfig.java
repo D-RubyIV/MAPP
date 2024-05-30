@@ -55,6 +55,7 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/storage")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/storage/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/products")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/products/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/categories")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/**")).hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()

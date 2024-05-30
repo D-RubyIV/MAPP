@@ -81,52 +81,43 @@ public class InitDataBase {
             userModel.setProvider(Provider.LOCAL);
             userRepository.save(userModel);
         }
-        if (categoryRepository.findByCode("SOFTWARE") == null){
+        if (categoryRepository.findByCode("Shoe") == null){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("SOFTWARE");
-            categoryModel.setName("Software");
+            categoryModel.setCode("Shoe");
+            categoryModel.setName("Shoe");
             categoryRepository.save(categoryModel);
         }
-        if (categoryRepository.findByCode("COURSE") == null){
+        if (categoryRepository.findByCode("T-shirts") == null){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("COURSE");
-            categoryModel.setName("Course");
+            categoryModel.setCode("T-shirts");
+            categoryModel.setName("T-shirts");
             categoryRepository.save(categoryModel);
         }
-        if (categoryRepository.findByCode("Technological equipment") == null){
-            CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("Technological equipment");
-            categoryModel.setName("Technological equipment");
-            categoryRepository.save(categoryModel);
-        }
-        if (categoryRepository.findByCode("Account") == null){
-            CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("Account");
-            categoryModel.setName("Account");
-            categoryRepository.save(categoryModel);
-        }
-        if (categoryRepository.findByCode("Source") == null){
-            CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setCode("Source");
-            categoryModel.setName("Source");
-            categoryRepository.save(categoryModel);
-        }
-        if (productRepository.findByName("Facebook Account") == null){
+        if (productRepository.findByName("Air Jordan 1 Low") == null){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Facebook Account");
+            productModel.setName("Air Jordan 1 Low");
             productModel.setDescription("clone");
             productModel.setQuantity(200);
             productModel.setPrice(0.25);
-            productModel.setCategoryModel(categoryRepository.findByCode("FACEBOOK"));
+            productModel.setCategoryModel(categoryRepository.findByCode("Shoe"));
             productRepository.save(productModel);
         }
-        if (productRepository.findByName("Instagram Account") == null){
+        if (productRepository.findByName("Nike Air Max 90") == null){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Instagram Account");
+            productModel.setName("Nike Air Max 90");
+            productModel.setDescription("clone");
+            productModel.setQuantity(200);
+            productModel.setPrice(0.25);
+            productModel.setCategoryModel(categoryRepository.findByCode("Shoe"));
+            productRepository.save(productModel);
+        }
+        if (productRepository.findByName("Air Jordan 1 Low") == null){
+            ProductModel productModel = new ProductModel();
+            productModel.setName("Air Jordan 1 Low");
             productModel.setDescription("clone");
             productModel.setQuantity(100);
             productModel.setPrice(0.35);
-            productModel.setCategoryModel(categoryRepository.findByCode("FACEBOOK"));
+            productModel.setCategoryModel(categoryRepository.findByCode("Shoe"));
             productRepository.save(productModel);
         }
         if (voucherRepository.findByCode("VOUCHER1") == null){
@@ -163,19 +154,18 @@ public class InitDataBase {
         if (orderDetailRepository.findById(1L).isEmpty()){
             OrderDetailModel orderDetailModel = new OrderDetailModel();
             orderDetailModel.setOrderModel(orderRepository.findById(1L).get());
-            orderDetailModel.setProductModel(productRepository.findByName("Instagram Account"));
+            orderDetailModel.setProductModel(productRepository.findByName("Air Jordan 1 Low"));
             orderDetailModel.setQuantity(20);
             orderDetailRepository.save(orderDetailModel);
         }
         if (orderDetailRepository.findById(2L).isEmpty()){
             OrderDetailModel orderDetailModel = new OrderDetailModel();
             orderDetailModel.setOrderModel(orderRepository.findById(2L).get());
-            orderDetailModel.setProductModel(productRepository.findByName("Facebook Account"));
+            orderDetailModel.setProductModel(productRepository.findByName("Nike Air Max 90"));
             orderDetailModel.setQuantity(20);
             orderDetailRepository.save(orderDetailModel);
         }
-
-        CategoryModel categoryModel = categoryRepository.findByCode("SOFTWARE");
+        CategoryModel categoryModel = categoryRepository.findByCode("Shoe");
         List<LicenseModel> list = IntStream.range(1, 200)
                 .mapToObj(i -> new LicenseModel("License1", 2333L, categoryModel)).collect(Collectors.toList());
         licenseRepository.saveAll(list);

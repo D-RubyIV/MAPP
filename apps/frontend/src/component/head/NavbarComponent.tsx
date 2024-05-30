@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import MenuIcon from '@mui/icons-material/Menu';
-import { CloseOutlined } from "@mui/icons-material";
+import { CloseOutlined, Person, PersonOutline, SearchOutlined, ShoppingBag, ShoppingBagOutlined } from "@mui/icons-material";
 import { useState } from "react";
+import { ShoppingBagIcon } from "@heroicons/react/20/solid";
 const NavbarComponent = () => {
     const [openMenu, setOpenMenu] = useState(false)
     const listItem = [
@@ -56,7 +57,12 @@ const NavbarComponent = () => {
                     </ul>
                 </div>
                 <div className="md:hidden">
-                    <button onClick={() => setOpenMenu(true)}><MenuIcon /></button>
+                    <div className="flex gap-1.5 items-center justify-center">
+                        <button onClick={() => { }}><SearchOutlined /></button>
+                        <button onClick={() => { }}><PersonOutline /></button>
+                        <Link to={"/cart"}><ShoppingBagOutlined /></Link>
+                        <button onClick={() => setOpenMenu(true)}><MenuIcon /></button>
+                    </div>
                     <div className={`absolute z-50 top-0 left-0 bg-white w-full h-screen py-3 md:py-4 ${openMenu ? "block" : "hidden"}`}>
                         <div className="flex justify-between">
                             <div className="inline-flex">
