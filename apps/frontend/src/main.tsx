@@ -23,6 +23,9 @@ import ProductComponent from './component/manage/table/ProductComponent.tsx'
 import CategoryComponent from './component/manage/table/CategoryComponent.tsx'
 import ColorComponent from './component/manage/table/ColorComponent.tsx'
 import ProductDetailComponent from './component/manage/table/ProductDetailComponent.tsx'
+import VoucherComponent from './component/manage/table/VoucherComponent.tsx'
+import OrderComponent from './component/manage/table/OrderComponent.tsx'
+import OrderDetailComponent from './component/manage/table/OrderDetailComponent.tsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='' element={<ProtectRouter/>} >
@@ -34,6 +37,9 @@ const router = createBrowserRouter(
           <Route path='products' element={<ProductComponent />} />
           <Route path='categories' element={<CategoryComponent />} />
           <Route path='colors' element={<ColorComponent />} />
+          <Route path='vouchers' element={<VoucherComponent />} />
+          <Route path='orders' element={<OrderComponent />} />
+          <Route path='order-details' element={<OrderDetailComponent />} />
           <Route path='product-details' element={<ProductDetailComponent />} />
         </Route>
         <Route path='product/:id' element={<DetailComponent />} />

@@ -3,6 +3,7 @@ package com.example.app;
 
 import com.example.app.common.Provider;
 import com.example.app.common.Role;
+import com.example.app.common.Status;
 import com.example.app.model.*;
 import com.example.app.repository.*;
 import jakarta.annotation.PostConstruct;
@@ -10,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 @Component
 public class InitDataBase {
     @Autowired
@@ -27,8 +29,14 @@ public class InitDataBase {
     private ProductDetailRepository productDetailRepository;
     @Autowired
     private SizeRepository sizeRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @PostConstruct
     public void init() {
@@ -133,11 +141,12 @@ public class InitDataBase {
             colorModel.setCode("COL02");
             colorRepository.save(colorModel);
         }
-        //
+        // PRODUCT DETAIL
         if (productDetailRepository.findByCode("PDT01") == null){
             ProductDetailModel productDetailModel = new ProductDetailModel();
             productDetailModel.setCode("PDT01");
             productDetailModel.setQuantity(20);
+            productDetailModel.setPrice(1000);
             productDetailModel.setColor(colorRepository.findByCode("COL01"));
             productDetailModel.setProduct(productRepository.findById(1).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(1).orElse(null));
@@ -147,10 +156,79 @@ public class InitDataBase {
             ProductDetailModel productDetailModel = new ProductDetailModel();
             productDetailModel.setCode("PDT02");
             productDetailModel.setQuantity(20);
+            productDetailModel.setPrice(20000);
             productDetailModel.setColor(colorRepository.findByCode("COL02"));
             productDetailModel.setProduct(productRepository.findById(2).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
+        }
+        // VOUCHER
+        if (voucherRepository.findById(1).isEmpty()){
+            VoucherModel voucherModel = new VoucherModel();
+            voucherModel.setName("Sale 05");
+            voucherModel.setCode("VCH01");
+            voucherModel.setPercent(20);
+            voucherModel.setMinimize(50);
+            voucherModel.setStartDate(LocalDate.now());
+            voucherModel.setEndDate(LocalDate.now().plusDays(5));
+            voucherRepository.save(voucherModel);
+        }
+        if (voucherRepository.findById(2).isEmpty()){
+            VoucherModel voucherModel = new VoucherModel();
+            voucherModel.setName("Sale 10");
+            voucherModel.setCode("VCH02");
+            voucherModel.setPercent(25);
+            voucherModel.setMinimize(20);
+            voucherModel.setStartDate(LocalDate.now());
+            voucherModel.setEndDate(LocalDate.now().plusDays(2));
+            voucherRepository.save(voucherModel);
+        }
+        if (voucherRepository.findById(3).isEmpty()){
+            VoucherModel voucherModel = new VoucherModel();
+            voucherModel.setName("Flash Sale");
+            voucherModel.setCode("VCH03");
+            voucherModel.setPercent(15);
+            voucherModel.setMinimize(50);
+            voucherModel.setStartDate(LocalDate.now());
+            voucherModel.setEndDate(LocalDate.now().plusDays(8));
+            voucherRepository.save(voucherModel);
+        }
+        // ORDER
+        if (orderRepository.findById(1).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setOrderDate(LocalDate.now());
+            orderModel.setStatus(Status.Pending);
+            orderModel.setVoucher(voucherRepository.findById(1).orElse(null));
+            orderRepository.save(orderModel);
+        }
+        if (orderRepository.findById(2).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setOrderDate(LocalDate.now());
+            orderModel.setStatus(Status.Pending);
+            orderModel.setVoucher(voucherRepository.findById(2).orElse(null));
+            orderRepository.save(orderModel);
+        }
+        if (orderRepository.findById(3).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setOrderDate(LocalDate.now());
+            orderModel.setStatus(Status.Success);
+            orderModel.setVoucher(voucherRepository.findById(3).orElse(null));
+            orderRepository.save(orderModel);
+        }
+        // ORDER DETAIL
+        if (orderDetailRepository.findById(1).isEmpty()){
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setProductDetail(productDetailRepository.findById(1).orElse(null));
+            orderDetailModel.setQuantity(5);
+            orderDetailModel.setOrder(orderRepository.findById(2).orElse(null));
+            orderDetailRepository.save(orderDetailModel);
+        }
+        if (orderDetailRepository.findById(2).isEmpty()){
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setProductDetail(productDetailRepository.findById(2).orElse(null));
+            orderDetailModel.setQuantity(10);
+            orderDetailModel.setOrder(orderRepository.findById(1).orElse(null));
+            orderDetailRepository.save(orderDetailModel);
         }
 
 

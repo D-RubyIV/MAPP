@@ -6,7 +6,7 @@ import { Dialog } from "../../ui/dialog";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { useForm } from 'react-hook-form';
-import { Method } from "../model/Method";
+import { Method } from "../enum/Method";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
 

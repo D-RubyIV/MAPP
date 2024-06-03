@@ -1,6 +1,6 @@
 import React, { } from "react";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
-import { Method } from "../model/Method"; // Import Method enum
+import { Method } from "../enum/Method"; // Import Method enum
 
 const ActionComponent = ({ handleOpenDialog }: { handleOpenDialog: (object: any, method: Method) => void }) => {
     return (

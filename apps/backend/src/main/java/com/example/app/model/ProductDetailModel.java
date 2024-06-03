@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "product_detail")
+@Table(name = "product_details")
 public class ProductDetailModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,12 +14,12 @@ public class ProductDetailModel {
     private float price;
     private int quantity;
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductModel product;
     @ManyToOne
-    @JoinColumn(name = "color_id")
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
     private ColorModel color;
     @ManyToOne
-    @JoinColumn(name = "size_id")
+    @JoinColumn(name = "size_id", referencedColumnName = "id")
     private SizeModel size;
 }

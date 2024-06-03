@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { CloseOutlined } from '@mui/icons-material'
 import { cn } from '../../lib/util'
-import { Method } from '../manage/model/Method'
+import { Method } from '../manage/enum/Method'
 
 export interface DialogProps {
   className?: string,

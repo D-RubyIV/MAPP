@@ -5,144 +5,133 @@ import PagenateComponent from "../puzzle/PaginateComponent";
 import { Dialog } from "../../ui/dialog";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { Select } from "../../ui/select";
 import { useForm } from 'react-hook-form';
 import { Method } from "../enum/Method";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { Select } from "../../ui/select";
 
-type User = {
-    id: number,
-    email: string,
-    password: string,
-    phone: string,
-    enabled: boolean,
-    role: string,
-    provider: string,
-    image: string
-}
 
-const UserComponent = () => {
-    const { register, handleSubmit, setValue, reset } = useForm<User>();
-    const [diableForm, setDiableForm] = useState<boolean>(false)
+const OrderDetailComponent = () => {
+    const { register, handleSubmit, setValue, reset, formState: { errors }, } = useForm<OrderDetail>();
+    const [disableForm, setDisableForm] = useState<boolean>(false);
+    const [listVoucher, setListVoucher] = useState<Voucher[]>()
+    const [listOrder, setListOrder] = useState<Order[]>()
+    const [listDetailProduct, setListDetailProduct] = useState<ProductDetail>()
+    const [method, setMethod] = useState<Method>(Method.DETAIL);
+    const [data, setData] = useState<OrderDetail[]>([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [object, setObject] = useState<OrderDetail | {}>({});
+    const limit = 9;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const onSubmit = (data: User) => {
+
+    const onSubmit = (data: OrderDetail) => {
         if (method === Method.UPDATE) {
-            instance.put(`/api/manage/users/${(object as User).id}`, data).then(
+            instance.put(`/api/manage/order-details/${(object as OrderDetail).id}`, data).then(
                 function (response) {
                     console.log(response)
                     if (response.status === 200) {
-                        toast("Update successfully")
+                        toast("Updated successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
             )
         }
         else if (method === Method.CREATE) {
-            instance.post("/api/manage/users", data).then(
+            instance.post("/api/manage/order-details", data).then(
                 function (response) {
                     console.log(response)
                     if (response.status === 200) {
-                        toast("Create successfully")
+                        toast("Created successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
             )
         }
         else if (method === Method.DELETE) {
-            instance.delete(`/api/manage/users/${(object as User).id}`).then(
+            instance.delete(`/api/manage/order-details/${(object as OrderDetail).id}`).then(
                 function (response) {
                     console.log(response)
                     if (response.status === 200) {
-                        toast("Delete successfully")
+                        toast("Deleted successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
             )
         }
-        setOpenDialog(false)
-
     }
 
-    const [method, setMethod] = useState<Method>(Method.DETAIL)
-    const [data, setData] = useState<User[]>([])
-    const [openDialog, setOpenDialog] = useState(false)
-    const [object, setObject] = useState<User | {}>({})
-    const limit = 9;
-    const [currentPage, setCurrentPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(1)
 
     const fetchData = async () => {
-        await instance.get(`/api/manage/users?limit=${limit}&offset=${currentPage - 1}`).then(function (response) {
+        await instance.get(`/api/manage/order-details?limit=${limit}&offset=${currentPage - 1}`).then(function (response) {
             console.log(response)
             setData(response?.data?.content)
             setTotalPages(response?.data?.totalPages)
+        })
+        await instance.get(`/api/manage/orders?limit=${100}&offset=${0}`).then(function (response) {
+            console.log(response)
+            setListOrder(response?.data?.content)
+        })
+        await instance.get(`/api/manage/product-details?limit=${100}&offset=${0}`).then(function (response) {
+            console.log(response)
+            setListDetailProduct(response?.data?.content)
         })
     }
 
     useEffect(() => {
         if (method === Method.DETAIL || method === Method.DELETE) {
-            setDiableForm(true)
+            setDisableForm(true);
         }
         else {
-            setDiableForm(false)
+            setDisableForm(false);
         }
     }, [method])
 
-
     useEffect(() => {
-        console.log(object)
         if (openDialog && 'id' in object) {
-            setValue("id", (object as User).id);
-            setValue("email", (object as User).email || "");
-            setValue("password", (object as User).password || "");
-            setValue("phone", (object as User).phone || "");
-            setValue("provider", (object as User).provider || "");
-            setValue("role", (object as User).role || "");
-            setValue("enabled", (object as User).enabled || false);
+            setValue("id", (object as OrderDetail).id);
+            setValue("order", ((object as OrderDetail).order as Order)?.id);
+            setValue("productDetail", ((object as OrderDetail).productDetail as ProductDetail)?.id);
+            setValue("quantity", object.quantity);
+
         } else {
             reset();
         }
     }, [object, openDialog, setValue, reset])
 
     useEffect(() => {
-        fetchData()
+        fetchData();
     }, [currentPage])
 
-    useEffect(() => {
-        console.log(object)
-    }, [object])
-
-
-    const handleOpenDialog = (object: User | {}, method: Method) => {
-        console.log("METHOD: " + method)
+    const handleOpenDialog = (object: Order | {}, method: Method) => {
         setOpenDialog(true);
         setObject(object);
         setMethod(method);
-        console.log(object);
     }
-
 
     return (
         <Fragment>
             <div className="relative">
-                {/*  */}
                 <div className="flex justify-end pb-2">
                     <button className="bg-indigo-400 rounded-md text-[12px] py-1 px-2" onClick={() => handleOpenDialog({}, Method.CREATE)}>Add new</button>
                 </div>
-                {/*  */}
                 <div>
                     <div className="hidden md:block">
                         <table className="table-auto md:table-fixed w-full text-[13.5px]">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Enable</th>
-                                    <th>Role</th>
-                                    <th>Provider</th>
-                                    <th>Image</th>
+                                    <th>Order</th>
+                                    <th>Product</th>
+                                    <th>DetailProduct</th>
+                                    <th>Quantity</th>
+                                    <th>Voucher</th>
+                                    <th>Price</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -151,12 +140,12 @@ const UserComponent = () => {
                                     data.map((item) => (
                                         <tr key={item.id}>
                                             <td>{item.id}</td>
-                                            <td>{item.email || "N/a"}</td>
-                                            <td>{item.phone || "N/a"}</td>
-                                            <td>{item.enabled ? "True" : "False" || "N/a"}</td>
-                                            <td>{item.role || "N/a"}</td>
-                                            <td>{item.provider || "N/a"}</td>
-                                            <td>{item.image || "N/a"}</td>
+                                            <td>{(item.order as Order)?.id || "N/A"}</td>
+                                            <td>{((item.productDetail as ProductDetail)?.product as Product)?.name || "N/A"}</td>
+                                            <td>{(item.productDetail as ProductDetail)?.code || "N/A"}</td>
+                                            <td>{item.quantity || "N/A"}</td>
+                                            <td>{((item.order as Order)?.voucher as Voucher)?.name || "N/A"}</td>
+                                            <td>{((item.productDetail as ProductDetail)?.price * item.quantity) || "N/A"}</td>
                                             <td>
                                                 <div className="flex gap-3 justify-center">
                                                     <button className="text-gray-500" onClick={() => handleOpenDialog(item, Method.DETAIL)}><Visibility sx={{ fontSize: 18 }} /></button>
@@ -181,7 +170,7 @@ const UserComponent = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <div>
-                                                <span>{item.email}</span>
+                                                <span>{item.orderDate?.toString()}</span>
                                             </div>
                                             <div>
                                                 <div className="flex gap-3 justify-center">
@@ -191,7 +180,6 @@ const UserComponent = () => {
                                                 </div>
                                             </div>
                                         </div>
-
                                     </li>
                                 ))
                             }
@@ -201,31 +189,25 @@ const UserComponent = () => {
                         <PagenateComponent currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}></PagenateComponent>
                     </div>
                 </div>
-                {/*  */}
                 <div className={`px-8 py-4 md:px-10 xl:px-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full ${openDialog ? "" : "hidden"}`}>
                     <Dialog method={method} className="bg-white shadow-xl rounded-md" open={openDialog} handleclose={() => setOpenDialog(false)}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input autoComplete="false" disabled={diableForm} className="px-2 py-1.5" {...register('email')} label="Email"></Input>
-                            <Input autoComplete="false" disabled={diableForm} className="px-2 py-1.5" {...register('password')} label="Password"></Input>
-                            <Input autoComplete="false" disabled={diableForm} className="px-2 py-1.5" {...register('phone')} label="Phone"></Input>
-
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Provider" {...register("provider")}>
-                                <option value={"Local"}>Local</option>
-                                <option value={"Google"}>Google</option>
-                                <option value={"Facebook"}>Facebook</option>
-                                <option value={"Github"}>Github</option>
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity")} label="Quantity"></Input>
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="Detail Proudct" {...register("productDetail")} defaultValue={""} >
+                                {
+                                    Array.isArray(listDetailProduct) && listDetailProduct.map((item, index) => (
+                                        <option key={index} value={item.id}>{item.code}</option>
+                                    ))
+                                }
                             </Select>
-
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Role" {...register("role")}>
-                                <option value={"User"}>User</option>
-                                <option value={"Moderator"}>Moderator</option>
-                                <option value={"Admin"}>Admin</option>
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="Order" {...register("order")} defaultValue={""} >
+                                {
+                                    Array.isArray(listOrder) && listOrder.map((item, index) => (
+                                        <option key={index} value={item.id}>{item.id}</option>
+                                    ))
+                                }
                             </Select>
-
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Enabled" {...register("enabled")}>
-                                <option value={"true"}>True</option>
-                                <option value={"false"}>False</option>
-                            </Select>
+                        
                             <Button className={`w-full mt-2 ${method === Method.DETAIL ? "hidden" : ""}`} variant={"subtle"} size={"sm"}>Submit</Button>
                         </form>
                     </Dialog>
@@ -235,4 +217,4 @@ const UserComponent = () => {
     );
 }
 
-export default UserComponent;
+export default OrderDetailComponent;

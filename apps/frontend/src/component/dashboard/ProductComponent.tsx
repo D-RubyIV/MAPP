@@ -86,17 +86,17 @@ const ProductComponent = () => {
                 {isLoadingProducts === false ? (
                     <motion.section
                         variants={{
-                            hidden: { opacity: 0 },
+                            hidden: { opacity: 0.75 },
                             show: {
                                 opacity: 1,
                                 transition: {
-                                    staggerChildren: 0.25
+                                    staggerChildren: 0.1
                                 }
                             }
                         }}
                         initial="hidden"
                         whileInView="show"
-                        viewport={{ once: false, amount: 0.7 }}
+                        viewport={{ once: false, amount: 0.3 }}
                         className="py-1 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8"
                     >
                         {Array.isArray(products) && products.map((product, index) => (

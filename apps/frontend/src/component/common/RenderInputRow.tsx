@@ -1,4 +1,4 @@
-import { Action } from "../manage/model/Method";
+import { Action } from "../manage/enum/Method";
 import { Label } from "../manage/model/Label";
 import { Type } from "../manage/model/Type";
 

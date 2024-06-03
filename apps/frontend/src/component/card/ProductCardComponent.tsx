@@ -14,8 +14,8 @@ const ProductCardComponent = ({ product }: { product: Product }) => {
     return (
         <Fragment>
             <motion.div
-                className="group relative p-2 shadow-xl rounded-md"
-                variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
+                className="group relative p-2 shadow-md rounded-md"
+                variants={{ hidden: { opacity: 0.8 }, show: { opacity: 1 } }}
             >
                 <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80">
 
@@ -29,8 +29,7 @@ const ProductCardComponent = ({ product }: { product: Product }) => {
                     <div>
                         <Link to={`/product/${product.id}`}>
                             <h3 className="text-sm text-gray-700">
-
-                                <span aria-hidden="true" className="absolute top-0.5 left-0.5 h-4 "><SellOutlined /><span className="text-gray-800">5%</span></span>
+                                {/* <span aria-hidden="true" className="absolute top-0.5 left-0.5 h-4 "><SellOutlined /><span className="text-gray-800">5%</span></span> */}
                                 {product.name}
                             </h3>
                         </Link>
