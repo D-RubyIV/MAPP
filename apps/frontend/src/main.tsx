@@ -5,14 +5,6 @@ import DashBoardComponent from './component/dashboard/DashBoardComponent.tsx'
 import { createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import RootComponent from './component/RootComponent.tsx'
 import ManageComponent from './component/manage/ManageComponent.tsx'
-import UserComponent from './component/manage/table/UserComponent.tsx'
-import OrderComponent from './component/manage/table/OrderComponent.tsx'
-import CategoryComponent from './component/manage/table/CategoryComponent.tsx'
-import RoleComponent from './component/manage/table/RoleComponent.tsx'
-import ProductComponent from './component/manage/table/ProductComponent.tsx'
-import OrderDetailComponent from './component/manage/table/OrderDetailComponent.tsx'
-import VoucherComponent from './component/manage/table/VoucherComponent.tsx'
-import FileComponent from './component/manage/table/FileComponent.tsx'
 import AuthComponent from './component/auth/AuthComponent.tsx'
 import AuthProvider from './component/security/AuthProvider.tsx'
 import ProtectRouter from './component/security/ProtectRouter.tsx'
@@ -21,15 +13,16 @@ import LogoutComponet from './component/auth/LogoutComponent.tsx'
 import 'react-loading-skeleton/dist/skeleton.css'
 import './language/I18Next.tsx'
 import SettingComponent from './component/setting/SettingComponent.tsx'
-import LicenseComponent from './component/manage/table/LicenseComponent.tsx'
-import DetailProductComponent from './component/body/DetailProductComponent.tsx'
-import StorangeComponent from './component/manage/table/StorangeComponent.tsx'
 import NotFoundComponent from './component/common/NotFoundComponent.tsx'
-import React from 'react'
 import ProfileComponent from './component/profile/ProfileComponent.tsx'
 import DetailComponent from './component/dashboard/DetailComponent.tsx'
 import CartComponent from './component/cart/CartComponent.tsx'
-
+import UserComponent from './component/manage/table/UserComponent.tsx'
+import '@radix-ui/themes/styles.css';
+import ProductComponent from './component/manage/table/ProductComponent.tsx'
+import CategoryComponent from './component/manage/table/CategoryComponent.tsx'
+import ColorComponent from './component/manage/table/ColorComponent.tsx'
+import ProductDetailComponent from './component/manage/table/ProductDetailComponent.tsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='' element={<ProtectRouter/>} >
@@ -38,15 +31,10 @@ const router = createBrowserRouter(
         <Route path='manage'>
           <Route path='' element={<ManageComponent />} />
           <Route path='users' element={<UserComponent />} />
-          <Route path='categories' element={<CategoryComponent />} />
           <Route path='products' element={<ProductComponent />} />
-          <Route path='orders' element={<OrderComponent />} />
-          <Route path='order-details' element={<OrderDetailComponent />} />
-          <Route path='roles' element={<RoleComponent />} />
-          <Route path='files' element={<FileComponent />} />
-          <Route path='licenses' element={<LicenseComponent />} />
-          <Route path='vouchers' element={<VoucherComponent />} />
-          <Route path='storage' element={<StorangeComponent />} />
+          <Route path='categories' element={<CategoryComponent />} />
+          <Route path='colors' element={<ColorComponent />} />
+          <Route path='product-details' element={<ProductDetailComponent />} />
         </Route>
         <Route path='product/:id' element={<DetailComponent />} />
         <Route path='cart' element={<CartComponent />} />
@@ -62,9 +50,9 @@ const router = createBrowserRouter(
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>,
+  // {/* </React.StrictMode>, */}
 )

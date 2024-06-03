@@ -7,7 +7,7 @@ const instance = axios.create({
 });
 
 if (token) {
-    instance.defaults.headers.common["Authorization"] = "Bearer " + JSON.parse(token)["access"];
+    instance.defaults.headers.common["Authorization"] = "Bearer " + JSON.parse(token)["accessToken"];
     console.log("HAVE TOKEN")
 }
 else{

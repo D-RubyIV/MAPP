@@ -46,7 +46,7 @@ const FooterComponent = () => {
         },
     ]
     return (
-        <>
+        <div className="overflow-scroll">
             <section className="flex flex-col gap-10 mb-10" ref={containerRef}>
                 <motion.h1
                     className="text-sm tracking-wide text-slate-400 text-center"
@@ -87,7 +87,7 @@ const FooterComponent = () => {
                     animate={mainControls}
                     initial="hidden"
                     variants={{
-                        hidden: { opacity: 0, y: 75 },
+                        hidden: { opacity: 0, y: 20 },
                         visible: {
                             opacity: 1,
                             y: 0,
@@ -119,7 +119,7 @@ const FooterComponent = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
 

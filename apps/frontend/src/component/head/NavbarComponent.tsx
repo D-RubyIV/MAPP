@@ -63,8 +63,8 @@ const NavbarComponent = () => {
                         <Link to={"/cart"}><ShoppingBagOutlined /></Link>
                         <button onClick={() => setOpenMenu(true)}><MenuIcon /></button>
                     </div>
-                    <div className={`absolute z-50 top-0 left-0 bg-white w-full h-screen py-3 md:py-4 ${openMenu ? "block" : "hidden"}`}>
-                        <div className="flex justify-between">
+                    <div className={`fixed px-8 py-4 md:px-10 xl:px-20 z-50 top-0 left-0 bg-white rounded-md w-full h-screen ${openMenu ? "block" : "hidden"}`}>
+                        <div className="flex justify-between py-3 md:py-4">
                             <div className="inline-flex">
                                 <Link to={"/"}>
                                     <img className="w-7 h-7 rounded-full object-cover" src="https://th.bing.com/th/id/OIP.KhXEdjeK786BCg21hNBqEAHaFm?w=219&h=180&c=7&r=0&o=5&cb=11&dpr=1.1&pid=1.7" alt="" />

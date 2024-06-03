@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { UsersIcon, RectangleStackIcon, FingerPrintIcon, KeyIcon, ArchiveBoxIcon, TicketIcon, TruckIcon, DocumentTextIcon } from '@heroicons/react/20/solid';
-import { StorageOutlined } from "@mui/icons-material";
+import { UsersIcon, RectangleStackIcon, ArchiveBoxIcon, TicketIcon, TruckIcon, DocumentTextIcon } from '@heroicons/react/20/solid';
+import { Category, ColorLens, StorageOutlined } from "@mui/icons-material";
 const ManageComponent = () => {
     const listItem = [
         {
@@ -10,25 +10,30 @@ const ManageComponent = () => {
             "icon": <UsersIcon />
         },
         {
-            "name": "Category",
-            "link": "categories",
-            "icon": <RectangleStackIcon />
-        },
-        {
-            "name": "Role",
-            "link": "roles",
-            "icon": <FingerPrintIcon />
-        },
-        {
             "name": "Product",
             "link": "products",
             "icon": <ArchiveBoxIcon />
         },
         {
-            "name": "License",
-            "link": "licenses",
-            "icon": <KeyIcon />
+            "name": "Product Details",
+            "link": "product-details",
+            "icon": <RectangleStackIcon />
         },
+        {
+            "name": "Category",
+            "link": "categories",
+            "icon": <Category/>
+        },
+        {
+            "name": "Color",
+            "link": "colors",
+            "icon": <ColorLens />
+        },
+        // {
+        //     "name": "License",
+        //     "link": "licenses",
+        //     "icon": <FingerPrintIcon />
+        // },
         {
             "name": "Order",
             "link": "orders",

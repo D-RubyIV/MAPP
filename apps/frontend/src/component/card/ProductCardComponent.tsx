@@ -20,7 +20,7 @@ const ProductCardComponent = ({ product }: { product: Product }) => {
                 <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80">
 
                     <img
-                        src="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/52f8b95c-02ff-4311-a123-56eeeb302a05/blazer-mid-77-shoes-xfpQWg.png"
+                        src="./[removal.ai]_79ca390b-67af-4cad-8ae6-b237a26d1b58-air-jordan-1-low-shoes-459b4t.png"
                         className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
                     />
 

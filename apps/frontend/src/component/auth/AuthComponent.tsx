@@ -53,7 +53,7 @@ export default function AuthComponent() {
         console.log(authSignInObject)
         instance.post("api/auth/login", authSignInObject).then(function (response) {
             console.log(response)
-            if (response.status == 200 && response.data.access && response.data.refresh) {
+            if (response.status == 200 && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem("token", JSON.stringify(response.data))
                 toast("LOGIN SUCCESS")
                 navigate("/");

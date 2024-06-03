@@ -6,10 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 4173,
-    hmr: {
-      host: "localhost",
-      protocol: "ws",
-    },
+    // hmr: {
+    //   host: "localhost",
+    //   protocol: "ws",
+    // },
   },
   preview: {
     host: true,

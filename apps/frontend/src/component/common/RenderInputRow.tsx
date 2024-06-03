@@ -1,4 +1,4 @@
-import { Action } from "../manage/model/Action";
+import { Action } from "../manage/model/Method";
 import { Label } from "../manage/model/Label";
 import { Type } from "../manage/model/Type";
 
