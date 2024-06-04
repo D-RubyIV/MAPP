@@ -23,6 +23,7 @@ const VoucherComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Updated successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
@@ -34,6 +35,7 @@ const VoucherComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Created successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
@@ -45,12 +47,12 @@ const VoucherComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Deleted successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
             )
         }
-        setOpenDialog(false);
     }
 
     const [method, setMethod] = useState<Method>(Method.DETAIL);
@@ -182,8 +184,8 @@ const VoucherComponent = () => {
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('name')} label="Name"></Input>
                             <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('code')} label="Code"></Input>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('percent')} label="Percent"></Input>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('minimize')} label="Minimize"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('percent')} label="Percent"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('minimize')} label="Minimize"></Input>
                             <Input type="date" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('startDate')} label="StartDate"></Input>
                             <Input type="date" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('endDate')} label="EndDate"></Input>
                             <Button className={`w-full mt-2 ${method === Method.DETAIL ? "hidden" : ""}`} variant={"subtle"} size={"sm"}>Submit</Button>

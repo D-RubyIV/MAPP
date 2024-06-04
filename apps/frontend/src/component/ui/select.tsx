@@ -18,7 +18,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
                     title="select something"
                     {...props}
                 >
-                    <option value="" disabled>Choose a salutation ...</option>
+                    <option value={""}>Choose a salutation ...</option>
                     {children}
                 </select>
             </div>

@@ -13,7 +13,7 @@ import { Select } from "../../ui/select";
 
 
 const OrderDetailComponent = () => {
-    const { register, handleSubmit, setValue, reset, formState: { errors }, } = useForm<OrderDetail>();
+    const { register, handleSubmit, setValue, reset } = useForm<OrderDetail>();
     const [disableForm, setDisableForm] = useState<boolean>(false);
     const [listVoucher, setListVoucher] = useState<Voucher[]>()
     const [listOrder, setListOrder] = useState<Order[]>()
@@ -170,7 +170,7 @@ const OrderDetailComponent = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <div>
-                                                <span>{item.orderDate?.toString()}</span>
+                                                <span>{(item.order as Order)?.orderDate.toString()}</span>
                                             </div>
                                             <div>
                                                 <div className="flex gap-3 justify-center">
@@ -192,7 +192,7 @@ const OrderDetailComponent = () => {
                 <div className={`px-8 py-4 md:px-10 xl:px-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full ${openDialog ? "" : "hidden"}`}>
                     <Dialog method={method} className="bg-white shadow-xl rounded-md" open={openDialog} handleclose={() => setOpenDialog(false)}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity")} label="Quantity"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity")} label="Quantity"></Input>
                             <Select disabled={disableForm} className="px-2 py-1.5" label="Detail Proudct" {...register("productDetail")} defaultValue={""} >
                                 {
                                     Array.isArray(listDetailProduct) && listDetailProduct.map((item, index) => (

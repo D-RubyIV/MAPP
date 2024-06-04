@@ -41,7 +41,7 @@ public class HandleException {
     public final ResponseEntity<?> handleBindException(BindException ex) {
         String field = ex.getFieldErrors().get(0).getField();
         String defaultMessage = ex.getFieldErrors().get(0).getDefaultMessage();
-        ErrorModel errorModel = new ErrorModel(field + " " + defaultMessage, HttpStatus.BAD_REQUEST, new ArrayList<>());
+        ErrorModel errorModel = new ErrorModel(field.substring(0, 1).toUpperCase() + field.substring(1) + " " + defaultMessage, HttpStatus.BAD_REQUEST, new ArrayList<>());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorModel);
     }
 

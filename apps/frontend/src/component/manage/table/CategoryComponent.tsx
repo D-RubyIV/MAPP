@@ -21,6 +21,7 @@ const CategoryComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Updated successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
@@ -32,6 +33,7 @@ const CategoryComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Created successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
@@ -43,12 +45,12 @@ const CategoryComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Deleted successfully")
+                        setOpenDialog(false);
                     }
                     fetchData();
                 }
             )
         }
-        setOpenDialog(false);
     }
 
     const [method, setMethod] = useState<Method>(Method.DETAIL);

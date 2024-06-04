@@ -3,6 +3,7 @@ package com.example.app.model;
 import com.example.app.common.Provider;
 import com.example.app.common.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class UserModel implements UserDetails {
     @NotBlank
     private String password;
     @NotBlank
+    @Email
     private String email;
     private String phone;
     @NotNull
@@ -29,6 +31,7 @@ public class UserModel implements UserDetails {
     @NotNull
     private Provider provider;
     private String image;
+    @NotNull
     private Boolean enabled;
 
     @Override

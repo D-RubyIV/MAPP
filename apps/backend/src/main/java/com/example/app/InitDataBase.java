@@ -198,6 +198,7 @@ public class InitDataBase {
             OrderModel orderModel = new OrderModel();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Pending);
+            orderModel.setUser(userRepository.findById(1).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(1).orElse(null));
             orderRepository.save(orderModel);
         }
@@ -205,6 +206,7 @@ public class InitDataBase {
             OrderModel orderModel = new OrderModel();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Pending);
+            orderModel.setUser(userRepository.findById(2).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(2).orElse(null));
             orderRepository.save(orderModel);
         }
@@ -212,6 +214,7 @@ public class InitDataBase {
             OrderModel orderModel = new OrderModel();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Success);
+            orderModel.setUser(userRepository.findById(3).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(3).orElse(null));
             orderRepository.save(orderModel);
         }

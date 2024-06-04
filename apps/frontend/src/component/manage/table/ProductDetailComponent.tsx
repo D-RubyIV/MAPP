@@ -201,14 +201,14 @@ const ProductDetailComponent = () => {
                 <div className={`px-8 py-4 md:px-10 xl:px-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full ${openDialog ? "" : "hidden"}`}>
                     <Dialog method={method} className="bg-white shadow-xl rounded-md" open={openDialog} handleclose={() => setOpenDialog(false)}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5"  {...register("code", { required: "code is required!" })} label="Code"></Input>
-                            <div>
-                                {errors.code && (
-                                    <p style={{ color: "black" }}>{errors.code.message}</p>
-                                )}
-                            </div>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity")} label="Quantity"></Input>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("price")} label="Price"></Input>
+                            {/* <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5"  {...register("code", { required: "code is required!" })} label="Code"></Input>
+                            {errors.code && (<p className="text-sm text-red-500">{errors.code.message}</p>)} */}
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("code")} label="Code"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity", {valueAsNumber: true,})} label="Quantity"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("price", {valueAsNumber: true,})} label="Price"></Input>
+
+                            
+
                             <Select disabled={disableForm} className="px-2 py-1.5" label="Product" {...register("product")} defaultValue={""} >
                                 {
                                     Array.isArray(listProduct) && listProduct.map((item, index) => (

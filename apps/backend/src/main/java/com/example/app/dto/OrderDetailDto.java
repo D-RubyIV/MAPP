@@ -1,6 +1,7 @@
 package com.example.app.dto;
 
 import com.example.app.model.OrderModel;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,6 @@ public class OrderDetailDto {
     @NotNull
     private int productDetail;
     @NotNull
+    @Min(1)
     private int quantity;
 }

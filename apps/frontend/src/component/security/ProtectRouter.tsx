@@ -3,14 +3,15 @@ import { useAuth } from "./AuthProvider";
 import instance from "../../axios/Instance";
 import { useEffect } from "react";
 import Toast from "../../toast/Toast";
-import LoadingComponent from "../common/LoadingComponent";
+
 
 const ProtectRouter = () => {
     const { setIsLoading } = useAuth()
     const navigate = useNavigate();
-    const { user, setUser } = useAuth(); // Type assertion
+    const { me, setMe } = useAuth();
 
-    console.log("AUTHENTICATED: ", user)
+    console.log("AUTHENTICATED: ", me)
+
     const initSetup = async () => {
         instance.get("api/auth/me").then(function (response) {
             console.log(response)
@@ -19,7 +20,7 @@ const ProtectRouter = () => {
                     navigate("/auth")
                 }
                 else {
-                    setUser(response.data)
+                    setMe(response.data)
                 }
             }
         })

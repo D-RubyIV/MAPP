@@ -13,10 +13,10 @@ import { Select } from "../../ui/select";
 
 
 const OrderComponent = () => {
-    const { register, handleSubmit, setValue, reset, formState: { errors }, } = useForm<Order>();
+    const { register, handleSubmit, setValue, reset } = useForm<Order>();
 
     const [disableForm, setDisableForm] = useState<boolean>(false);
-
+    const [listUser, setListUser] = useState<User[]>()
     const [listVoucher, setListVoucher] = useState<Voucher[]>()
     const [method, setMethod] = useState<Method>(Method.DETAIL);
     const [data, setData] = useState<Order[]>([]);
@@ -73,6 +73,14 @@ const OrderComponent = () => {
             setData(response?.data?.content)
             setTotalPages(response?.data?.totalPages)
         })
+        await instance.get(`/api/manage/vouchers?limit=${100}&offset=${0}`).then(function (response) {
+            console.log(response)
+            setListVoucher(response?.data?.content)
+        })
+        await instance.get(`/api/manage/users?limit=${100}&offset=${0}`).then(function (response) {
+            console.log(response)
+            setListUser(response?.data?.content)
+        })
     }
 
     useEffect(() => {
@@ -89,6 +97,7 @@ const OrderComponent = () => {
             setValue("id", (object as Order).id);
             setValue("orderDate", (object as Order).orderDate);
             setValue("voucher", ((object as Order).voucher as Voucher).id);
+            setValue("user", ((object as Order).user as User).id);
             setValue("status", (object as Order).status);
 
         } else {
@@ -178,15 +187,28 @@ const OrderComponent = () => {
                 <div className={`px-8 py-4 md:px-10 xl:px-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full ${openDialog ? "" : "hidden"}`}>
                     <Dialog method={method} className="bg-white shadow-xl rounded-md" open={openDialog} handleclose={() => setOpenDialog(false)}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("orderDate")} label="OrderDate"></Input>
-                            <Select disabled={disableForm} className="px-2 py-1.5" label="Product" {...register("voucher")} defaultValue={""} >
+                            <Input type="date" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("orderDate")} label="OrderDate"></Input>
+
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="Status" {...register("status")} defaultValue={""}>
+                                <option value={"Pending"}>Pending</option>
+                                <option value={"Success"}>Success</option>
+                                <option value={"Sucs"}>Sucs</option>
+                            </Select>
+
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="Voucher" {...register("voucher")} defaultValue={""} >
                                 {
                                     Array.isArray(listVoucher) && listVoucher.map((item, index) => (
-                                        <option key={index} value={item.id} >{item.name}</option>
+                                        <option key={index} value={item.id}>{item.name}</option>
                                     ))
                                 }
                             </Select>
-                        
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="User" {...register("user")} defaultValue={""} >
+                                {
+                                    Array.isArray(listUser) && listUser.map((item, index) => (
+                                        <option key={index} value={item.id}>{item.email}</option>
+                                    ))
+                                }
+                            </Select>
                             <Button className={`w-full mt-2 ${method === Method.DETAIL ? "hidden" : ""}`} variant={"subtle"} size={"sm"}>Submit</Button>
                         </form>
                     </Dialog>

@@ -1,27 +1,39 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
+
+type ME = {
+    id: number,
+    email: string, 
+    phone: string,
+    role: "User"| "Admin" |"Moderator",
+    provider: string,
+    image: string,
+    enabled: boolean,
+    username: string
+}
+
 // Define the type for the context value
 type AuthContextType = {
-    user: any; // Replace 'any' with the actual type if available
-    setUser: React.Dispatch<React.SetStateAction<any>>;
+    me: any; // Replace 'any' with the actual type if available
+    setMe: React.Dispatch<React.SetStateAction<any>>;
     isLoading: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<any>>;
 };
 
 // Create the context with initial values
 const AuthContext = createContext<AuthContextType>({
-    user: false,
-    setUser: () => {},
+    me: false,
+    setMe: () => {},
     isLoading: false,
     setIsLoading: () => {},
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState(null)
+    const [me, setMe] = useState<ME>()
     const [isLoading, setIsLoading] = useState(true)
 
     return (
-        <AuthContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
+        <AuthContext.Provider value={{ me, setMe, isLoading, setIsLoading }}>
             {children}
         </AuthContext.Provider>
     );

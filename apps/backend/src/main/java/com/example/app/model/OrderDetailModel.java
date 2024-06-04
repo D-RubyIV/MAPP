@@ -1,6 +1,7 @@
 package com.example.app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class OrderDetailModel {
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductDetailModel productDetail;
+    @NotNull
     private int quantity;
 }

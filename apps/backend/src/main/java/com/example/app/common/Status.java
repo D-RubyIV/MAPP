@@ -1,6 +1,10 @@
 package com.example.app.common;
 
-public enum Status {
-    Pending, Success
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public enum Status {
+    @JsonProperty("Pending")
+    Pending,
+    @JsonProperty("Success")
+    Success,
 }

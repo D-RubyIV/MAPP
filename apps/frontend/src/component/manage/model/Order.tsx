@@ -2,6 +2,7 @@
 type Order = {
     id: number,
     orderDate: Date,
+    user: User | number,
     voucher: Voucher | number,
-    status: "Pending" | "Success"
+    status: string
 }

@@ -11,16 +11,7 @@ import { Method } from "../enum/Method";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
 
-type User = {
-    id: number,
-    email: string,
-    password: string,
-    phone: string,
-    enabled: boolean,
-    role: string,
-    provider: string,
-    image: string
-}
+
 
 const UserComponent = () => {
     const { register, handleSubmit, setValue, reset } = useForm<User>();
@@ -33,6 +24,7 @@ const UserComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Update successfully")
+                        setOpenDialog(false)
                     }
                     fetchData();
                 }
@@ -44,6 +36,7 @@ const UserComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Create successfully")
+                        setOpenDialog(false)
                     }
                     fetchData();
                 }
@@ -55,12 +48,13 @@ const UserComponent = () => {
                     console.log(response)
                     if (response.status === 200) {
                         toast("Delete successfully")
+                        setOpenDialog(false)
                     }
                     fetchData();
                 }
             )
         }
-        setOpenDialog(false)
+    
 
     }
 
@@ -209,20 +203,20 @@ const UserComponent = () => {
                             <Input autoComplete="false" disabled={diableForm} className="px-2 py-1.5" {...register('password')} label="Password"></Input>
                             <Input autoComplete="false" disabled={diableForm} className="px-2 py-1.5" {...register('phone')} label="Phone"></Input>
 
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Provider" {...register("provider")}>
+                            <Select disabled={diableForm} className="px-2 py-1.5" label="Provider" {...register("provider")} defaultValue={""}>
                                 <option value={"Local"}>Local</option>
                                 <option value={"Google"}>Google</option>
                                 <option value={"Facebook"}>Facebook</option>
                                 <option value={"Github"}>Github</option>
                             </Select>
 
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Role" {...register("role")}>
+                            <Select disabled={diableForm} className="px-2 py-1.5" label="Role" {...register("role")} defaultValue={""}>
                                 <option value={"User"}>User</option>
                                 <option value={"Moderator"}>Moderator</option>
                                 <option value={"Admin"}>Admin</option>
                             </Select>
 
-                            <Select disabled={diableForm} className="px-2 py-1.5" label="Enabled" {...register("enabled")}>
+                            <Select disabled={diableForm} className="px-2 py-1.5" label="Enabled" {...register("enabled")} defaultValue={""}>
                                 <option value={"true"}>True</option>
                                 <option value={"false"}>False</option>
                             </Select>
