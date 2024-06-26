@@ -2,7 +2,9 @@ package com.example.app.controller;
 
 import com.example.app.dto.OrderDetailDto;
 import com.example.app.model.OrderDetailModel;
+import com.example.app.model.OrderModel;
 import com.example.app.model.ProductDetailModel;
+import com.example.app.model.UserModel;
 import com.example.app.repository.OrderDetailRepository;
 import com.example.app.repository.OrderRepository;
 import com.example.app.repository.ProductDetailRepository;
@@ -13,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @CrossOrigin("*")
 @Controller
 @RequestMapping("api/manage/order-details")
@@ -35,6 +42,23 @@ public class OrderDetailController {
     ) {
         Pageable pageable = PageRequest.of(offset, limit);
         return ResponseEntity.ok(orderDetailRepository.findAll(pageable));
+    }
+
+    @GetMapping("me")
+    public ResponseEntity<?> getMyOrder(Authentication authentication) {
+        System.out.println(authentication);
+        UserModel userModel = (UserModel) authentication.getPrincipal();
+        return ResponseEntity.ok(userModel);
+    }
+
+    @GetMapping("of/{id}")
+    public ResponseEntity<?> detail(@PathVariable int id) {
+        OrderModel orderModel = orderRepository.findById(id).orElse(null);
+        List<OrderDetailModel> list = new ArrayList<>();
+        if (orderModel != null) {
+            list = orderDetailRepository.findByOrder(orderModel);
+        }
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("")
@@ -59,7 +83,6 @@ public class OrderDetailController {
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(orderDetailRepository.save(model));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {

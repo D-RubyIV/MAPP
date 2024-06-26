@@ -6,7 +6,7 @@ i18next
   .use(HttpBackend)
   .init({
     debug: true,
-    fallbackLng: "en",
+    fallbackLng: "vi",
     backend: {
       loadPath: `${import.meta.env.VITE_LANGUAURL}/locales/{{lng}}/{{ns}}.json`
     },

@@ -1,43 +1,55 @@
 import { Fragment } from "react/jsx-runtime";
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom";
-import { SellOutlined } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import instance from "../../axios/Instance";
+import Skeleton from "react-loading-skeleton";
 
-type Product = {
-    id: number,
-    name: string,
-    color: string,
-    price: number
-}
+
 
 const ProductCardComponent = ({ product }: { product: Product }) => {
+    const [mediaLink, setMediaLink] = useState()
+    useEffect(() => {
+        if(product?.media?.name){
+            instance.get(`/api/cloud/generate-url?file=${product.media.name}`).then(function (response) {
+                if (response.status === 200) {
+                    setMediaLink(response.data)
+                }
+            })
+        }
+    }, [])
+
     return (
         <Fragment>
-            <motion.div
-                className="group relative p-2 shadow-md rounded-md"
-                variants={{ hidden: { opacity: 0.8 }, show: { opacity: 1 } }}
-            >
-                <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80">
+            <Link to={`/product/${product.id}`}>
+                <motion.div
+                    className="group relative p-0.5 shadow-md rounded-md gap-0 flex flex-col"
+                    variants={{ hidden: { opacity: 0.8 }, show: { opacity: 1 } }}
+                >
+                    <div className="w-full overflow-hiddenlg:aspect-none group-hover:opacity-75 lg:h-80 relative">
+                        {mediaLink &&
+                            <img
+                                src={mediaLink}
+                                className="h-auto aspect-square object-cover lg:h-full lg:w-full rounded-md"
+                                style={{ height: '200px' }}
+                            />
+                            ||
+                            <Skeleton count={2} height={200} containerClassName="flex gap-0.5"/>
+                        }
 
-                    <img
-                        src="./[removal.ai]_79ca390b-67af-4cad-8ae6-b237a26d1b58-air-jordan-1-low-shoes-459b4t.png"
-                        className="h-full w-full object-cover object-center lg:h-full lg:w-full rounded-md"
-                    />
+                    </div>
+                    <div className="mt-4 flex justify-between">
+                        <div>
 
-                </div>
-                <div className="mt-4 flex justify-between">
-                    <div>
-                        <Link to={`/product/${product.id}`}>
                             <h3 className="text-sm text-gray-700">
                                 {/* <span aria-hidden="true" className="absolute top-0.5 left-0.5 h-4 "><SellOutlined /><span className="text-gray-800">5%</span></span> */}
                                 {product.name}
                             </h3>
-                        </Link>
-                        <p className="mt-1 text-sm text-gray-400">{product.color}</p>
+                        </div>
+                        <p className="text-sm font-medium text-gray-400">20USDT</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-400">{product.price}</p>
-                </div>
-            </motion.div>
+                </motion.div>
+            </Link>
         </Fragment>
     );
 }

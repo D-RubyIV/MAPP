@@ -26,7 +26,6 @@ export default function AuthComponent() {
                 console.log(response.data)
                 if (response.data == "anonymousUser" && response.status == 200) {
                     localStorage.removeItem("token")
-                    localStorage.removeItem("me")
                     navigate("/auth")
                 }
                 else {
@@ -55,6 +54,7 @@ export default function AuthComponent() {
             console.log(response)
             if (response.status == 200 && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem("token", JSON.stringify(response.data))
+                localStorage.setItem("isLogin", "1")
                 toast("LOGIN SUCCESS")
                 navigate("/");
             }
@@ -74,8 +74,8 @@ export default function AuthComponent() {
     // COM
     return (
 
-        <>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
+        <div className="px-8 py-4 md:px-10 xl:px-20">
+            <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8 ">
 
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-500">
@@ -243,7 +243,7 @@ export default function AuthComponent() {
                 {/* 3D */}
                 <div className="h-full w-full absolute -z-10 top-0 left-0">
                     <Canvas shadows className="mt-16">
-                        <ambientLight intensity={2}></ambientLight>
+                        <ambientLight intensity={3.5}></ambientLight>
                         <OrbitControls autoRotate={true} enableZoom={true}></OrbitControls>
                         <Suspense fallback={null}>
                             <EarthComponent scale={[0.225, 0.225, 0.225]}></EarthComponent>
@@ -254,7 +254,7 @@ export default function AuthComponent() {
                 </div>
 
             </div>
-        </>
+        </div>
 
     )
 }

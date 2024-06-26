@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -30,6 +31,13 @@ public class HandleException {
         ErrorModel errorModel = new ErrorModel(ex.getMessage(), ex.getHttpStatus(), ex.getErrors());
         return ResponseEntity.status(ex.getHttpStatus().value()).body(errorModel);
     }
+
+    @ExceptionHandler(CredentialsExpiredException.class)
+    public final ResponseEntity<ErrorModel> handleCredentialsExpiredException(CredentialsExpiredException ex) {
+        ErrorModel errorModel = new ErrorModel(ex.getMessage(), HttpStatus.FORBIDDEN, new ArrayList<>());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorModel);
+    }
+
 
     @ExceptionHandler(BadRequestException.class)
     public final ResponseEntity<ErrorModel> handleBadRequestsException(BadRequestException ex) {

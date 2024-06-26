@@ -5,11 +5,14 @@ import com.example.app.common.Provider;
 import com.example.app.model.UserModel;
 import com.example.app.repository.UserRepository;
 import com.example.app.service.TokenService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,8 +63,10 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             }
             setAuthenticationContext(userModel, request);
             filterChain.doFilter(request, response);
-        }
-        catch (Exception ex){
+//        } catch (ExpiredJwtException e) {
+//            throw new CredentialsExpiredException("Expired jwt credentials");
+
+        } catch (Exception ex) {
             handlerExceptionResolver.resolveException(request, response, null, ex);
         }
 

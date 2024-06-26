@@ -22,7 +22,7 @@ public class VoucherController {
     private VoucherRepository voucherRepository;
 
     @GetMapping("")
-    public ResponseEntity<?> findAll(
+    public ResponseEntity<?> findAllByPage(
             @RequestParam(name = "limit", defaultValue = "5") int limit,
             @RequestParam(name = "offset", defaultValue = "0") int offset
     ) {

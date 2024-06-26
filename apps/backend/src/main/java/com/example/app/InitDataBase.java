@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,6 +32,8 @@ public class InitDataBase {
     private SizeRepository sizeRepository;
     @Autowired
     private VoucherRepository voucherRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
@@ -50,11 +53,45 @@ public class InitDataBase {
             userModel.setProvider(Provider.Local);
             userRepository.save(userModel);
         }
-        if (userRepository.findByEmailAndProvider("user@gmail.com", Provider.Local) == null) {
+        if (userRepository.findByEmailAndProvider("moderator@gmail.com", Provider.Local) == null) {
             UserModel userModel = new UserModel();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
-            userModel.setEmail("user@gmail.com");
+            userModel.setEmail("moderator@gmail.com");
+            userModel.setName("Quản trị viên");
             userModel.setPhone("84833486936");
+            userModel.setEnabled(true);
+            userModel.setRole(Role.Moderator);
+            userModel.setProvider(Provider.Local);
+            userRepository.save(userModel);
+        }
+        if (userRepository.findByEmailAndProvider("user1@gmail.com", Provider.Local) == null) {
+            UserModel userModel = new UserModel();
+            userModel.setPassword(bCryptPasswordEncoder.encode("123"));
+            userModel.setEmail("user1@gmail.com");
+            userModel.setPhone("84833486936");
+            userModel.setName("Khách hàng 1");
+            userModel.setEnabled(true);
+            userModel.setRole(Role.User);
+            userModel.setProvider(Provider.Local);
+            userRepository.save(userModel);
+        }
+        if (userRepository.findByEmailAndProvider("user2@gmail.com", Provider.Local) == null) {
+            UserModel userModel = new UserModel();
+            userModel.setPassword(bCryptPasswordEncoder.encode("123"));
+            userModel.setEmail("user2@gmail.com");
+            userModel.setPhone("84833486936");
+            userModel.setName("Khách hàng 2");
+            userModel.setEnabled(true);
+            userModel.setRole(Role.User);
+            userModel.setProvider(Provider.Local);
+            userRepository.save(userModel);
+        }
+        if (userRepository.findByEmailAndProvider("user3@gmail.com", Provider.Local) == null) {
+            UserModel userModel = new UserModel();
+            userModel.setPassword(bCryptPasswordEncoder.encode("123"));
+            userModel.setEmail("use3r@gmail.com");
+            userModel.setPhone("84833486936");
+            userModel.setName("Khách hàng 3");
             userModel.setEnabled(true);
             userModel.setRole(Role.User);
             userModel.setProvider(Provider.Local);
@@ -76,13 +113,19 @@ public class InitDataBase {
         // CATEGORY
         if (categoryRepository.findById(1).isEmpty()){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setName("Shoes");
+            categoryModel.setName("Vòng gỗ");
             categoryModel.setCode("CT01");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(2).isEmpty()){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setName("T-Shirt");
+            categoryModel.setName("Hương sạch");
+            categoryModel.setCode("CT02");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findById(3).isEmpty()){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setName("Trầm nụ");
             categoryModel.setCode("CT02");
             categoryRepository.save(categoryModel);
         }
@@ -102,29 +145,59 @@ public class InitDataBase {
         // PRODUCT
         if (productRepository.findById(1).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Air Jordan 1");
-            productModel.setCode("air-jordan-1");
+            productModel.setName("Trầm nụ ngắn");
+            productModel.setCode("tram-nu-001");
+            productModel.setPrice(25000);
+            productModel.setCategory(categoryRepository.findById(3).orElse(null));
             productModel.setSuggest(true);
+            productModel.setDescription("""
+                    <!DOCTYPE html>
+                    <html>
+                    <body>
+                                        
+                    <h1>My First Heading</h1>
+                    <p>My first paragraph.</p>
+                                        
+                    </body>
+                    </html>
+                    """);
             productRepository.save(productModel);
         }
         if (productRepository.findById(2).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Dunk");
-            productModel.setCode("dunk");
+            productModel.setName("Bách cố hương");
+            productModel.setCode("bach-co-huong");
+            productModel.setPrice(45000);
+            productModel.setCategory(categoryRepository.findById(2).orElse(null));
             productModel.setSuggest(true);
+            productModel.setDescription("""
+                    <!DOCTYPE html>
+                    <html>
+                    <body>
+                                        
+                    <h1>My First Heading</h1>
+                    <p>My first paragraph.</p>
+                                        
+                    </body>
+                    </html>
+                    """);
             productRepository.save(productModel);
         }
         if (productRepository.findById(3).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Air Force 1");
-            productModel.setCode("air-force-1");
+            productModel.setName("Trầm nụ dài");
+            productModel.setCode("tram-nu-dai");
+            productModel.setPrice(35000);
+            productModel.setCategory(categoryRepository.findById(3).orElse(null));
             productModel.setSuggest(true);
             productRepository.save(productModel);
         }
         if (productRepository.findById(4).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Air Max");
-            productModel.setCode("air-max");
+            productModel.setName("Khúc cố hương");
+            productModel.setCode("khuc-co-huong");
+            productModel.setPrice(25000);
+            productModel.setCategory(categoryRepository.findById(2).orElse(null));
             productModel.setSuggest(true);
             productRepository.save(productModel);
         }
@@ -145,7 +218,7 @@ public class InitDataBase {
         if (productDetailRepository.findByCode("PDT01") == null){
             ProductDetailModel productDetailModel = new ProductDetailModel();
             productDetailModel.setCode("PDT01");
-            productDetailModel.setQuantity(20);
+            productDetailModel.setQuantity(40);
             productDetailModel.setPrice(1000);
             productDetailModel.setColor(colorRepository.findByCode("COL01"));
             productDetailModel.setProduct(productRepository.findById(1).orElse(null));
@@ -159,6 +232,46 @@ public class InitDataBase {
             productDetailModel.setPrice(20000);
             productDetailModel.setColor(colorRepository.findByCode("COL02"));
             productDetailModel.setProduct(productRepository.findById(2).orElse(null));
+            productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
+            productDetailRepository.save(productDetailModel);
+        }
+        if (productDetailRepository.findByCode("PDT03") == null){
+            ProductDetailModel productDetailModel = new ProductDetailModel();
+            productDetailModel.setCode("PDT03");
+            productDetailModel.setQuantity(25);
+            productDetailModel.setPrice(20000);
+            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setProduct(productRepository.findById(1).orElse(null));
+            productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
+            productDetailRepository.save(productDetailModel);
+        }
+        if (productDetailRepository.findByCode("PDT04") == null){
+            ProductDetailModel productDetailModel = new ProductDetailModel();
+            productDetailModel.setCode("PDT04");
+            productDetailModel.setQuantity(60);
+            productDetailModel.setPrice(20000);
+            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setProduct(productRepository.findById(2).orElse(null));
+            productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
+            productDetailRepository.save(productDetailModel);
+        }
+        if (productDetailRepository.findByCode("PDT05") == null){
+            ProductDetailModel productDetailModel = new ProductDetailModel();
+            productDetailModel.setCode("PDT05");
+            productDetailModel.setQuantity(25);
+            productDetailModel.setPrice(40000);
+            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setProduct(productRepository.findById(3).orElse(null));
+            productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
+            productDetailRepository.save(productDetailModel);
+        }
+        if (productDetailRepository.findByCode("PDT06") == null){
+            ProductDetailModel productDetailModel = new ProductDetailModel();
+            productDetailModel.setCode("PDT06");
+            productDetailModel.setQuantity(25);
+            productDetailModel.setPrice(25000);
+            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setProduct(productRepository.findById(4).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
         }
@@ -218,6 +331,15 @@ public class InitDataBase {
             orderModel.setVoucher(voucherRepository.findById(3).orElse(null));
             orderRepository.save(orderModel);
         }
+
+        if (orderRepository.findById(4).isEmpty()){
+            OrderModel orderModel = new OrderModel();
+            orderModel.setOrderDate(LocalDate.now());
+            orderModel.setStatus(Status.Success);
+            orderModel.setUser(userRepository.findById(1).orElse(null));
+            orderModel.setVoucher(voucherRepository.findById(1).orElse(null));
+            orderRepository.save(orderModel);
+        }
         // ORDER DETAIL
         if (orderDetailRepository.findById(1).isEmpty()){
             OrderDetailModel orderDetailModel = new OrderDetailModel();
@@ -232,6 +354,45 @@ public class InitDataBase {
             orderDetailModel.setQuantity(10);
             orderDetailModel.setOrder(orderRepository.findById(1).orElse(null));
             orderDetailRepository.save(orderDetailModel);
+        }
+        // COMMENT
+        if(commentRepository.findById(1).isEmpty()){
+            CommentModel commentModel = new CommentModel();
+            commentModel.setUser(userRepository.findById(3).orElse(null));
+            commentModel.setTime(LocalDateTime.now());
+            commentModel.setProduct(productRepository.findById(2).orElse(null));
+            commentModel.setStar(4);
+            commentModel.setContent("Hàng đẹp quá shop");
+            commentRepository.save(commentModel);
+        }
+
+        if(commentRepository.findById(2).isEmpty()){
+            CommentModel commentModel = new CommentModel();
+            commentModel.setUser(userRepository.findById(2).orElse(null));
+            commentModel.setTime(LocalDateTime.now());
+            commentModel.setProduct(productRepository.findById(2).orElse(null));
+            commentModel.setStar(4);
+            commentModel.setContent("Cảm ơn quý khách");
+            commentModel.setCommentModel(commentRepository.findById(1).orElse(null));
+            commentRepository.save(commentModel);
+        }
+        if(commentRepository.findById(3).isEmpty()){
+            CommentModel commentModel = new CommentModel();
+            commentModel.setUser(userRepository.findById(3).orElse(null));
+            commentModel.setTime(LocalDateTime.now());
+            commentModel.setProduct(productRepository.findById(2).orElse(null));
+            commentModel.setStar(4);
+            commentModel.setContent("Shop bọc hàng kí quá");
+            commentRepository.save(commentModel);
+        }
+        if(commentRepository.findById(4).isEmpty()){
+            CommentModel commentModel = new CommentModel();
+            commentModel.setUser(userRepository.findById(3).orElse(null));
+            commentModel.setTime(LocalDateTime.now());
+            commentModel.setProduct(productRepository.findById(2).orElse(null));
+            commentModel.setStar(3);
+            commentModel.setContent("Tư vấn nhiệt tình");
+            commentRepository.save(commentModel);
         }
 
 

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Fragment } from "react/jsx-runtime";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import instance from "../../../axios/Instance";
 import PagenateComponent from "../puzzle/PaginateComponent";
 import { Dialog } from "../../ui/dialog";
@@ -9,50 +8,50 @@ import { useForm } from 'react-hook-form';
 import { Method } from "../enum/Method";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
-
+import { Select } from "../../ui/select";
+import JoditEditor from 'jodit-react';
+import { Label } from "../../ui/label";
 
 const ProductComponent = () => {
     const { register, handleSubmit, setValue, reset } = useForm<Product>();
     const [disableForm, setDisableForm] = useState<boolean>(false);
+    const editor = useRef(null);
 
     const onSubmit = (data: Product) => {
-        if (method === Method.UPDATE) {
-            instance.put(`/api/manage/products/${(object as Product).id}`, data).then(
-                function (response) {
-                    console.log(response)
-                    if (response.status === 200) {
-                        toast("Updated successfully")
-                        setOpenDialog(false);
-                    }
-                    fetchData();
-                }
-            )
+        if (data.file instanceof FileList) {
+            data.file = data.file[0];
         }
-        else if (method === Method.CREATE) {
-            instance.post("/api/manage/products", data).then(
-                function (response) {
-                    console.log(response)
-                    if (response.status === 200) {
-                        toast("Created successfully")
-                        setOpenDialog(false);
-                    }
-                    fetchData();
+        console.log(data);
+
+        const fetchMethod = method === Method.UPDATE ? instance.put : instance.post;
+        const url = method === Method.UPDATE ? `/api/manage/products/${(object as Product).id}` : `/api/manage/products`;
+
+        fetchMethod(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }).then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                toast(method === Method.UPDATE ? "Updated successfully" : "Created successfully");
+                setOpenDialog(false);
+            }
+            fetchData();
+        }).catch(error => {
+            console.error(`There was an error ${method === Method.UPDATE ? 'updating' : 'creating'} the product!`, error);
+        });
+
+        if (method === Method.DELETE) {
+            instance.delete(`/api/manage/products/${(object as Product).id}`).then(response => {
+                console.log(response)
+                if (response.status === 200) {
+                    toast("Deleted successfully")
+                    setOpenDialog(false);
                 }
-            )
+                fetchData();
+            })
         }
-        else if (method === Method.DELETE) {
-            instance.delete(`/api/manage/products/${(object as Product).id}`).then(
-                function (response) {
-                    console.log(response)
-                    if (response.status === 200) {
-                        toast("Deleted successfully")
-                        setOpenDialog(false);
-                    }
-                    fetchData();
-                }
-            )
-        }
-    }
+    };
 
     const [method, setMethod] = useState<Method>(Method.DETAIL);
     const [data, setData] = useState<Product[]>([]);
@@ -63,7 +62,7 @@ const ProductComponent = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchData = async () => {
-        await instance.get(`/api/manage/products?limit=${limit}&offset=${currentPage - 1}`).then(function (response) {
+        await instance.get(`/api/manage/products?limit=${limit}&offset=${currentPage - 1}`).then(response => {
             console.log(response)
             setData(response?.data?.content)
             setTotalPages(response?.data?.totalPages)
@@ -71,12 +70,7 @@ const ProductComponent = () => {
     }
 
     useEffect(() => {
-        if (method === Method.DETAIL || method === Method.DELETE) {
-            setDisableForm(true);
-        }
-        else {
-            setDisableForm(false);
-        }
+        setDisableForm(method === Method.DETAIL || method === Method.DELETE);
     }, [method])
 
     useEffect(() => {
@@ -84,6 +78,9 @@ const ProductComponent = () => {
             setValue("id", (object as Product).id);
             setValue("name", (object as Product).name || "");
             setValue("code", (object as Product).code || "");
+            setValue("price", (object as Product).price);
+            setValue("suggest", (object as Product).suggest || false);
+            setValue("description", (object as Product).description || "");
         } else {
             reset();
         }
@@ -168,9 +165,26 @@ const ProductComponent = () => {
                 </div>
                 <div className={`px-8 py-4 md:px-10 xl:px-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full ${openDialog ? "" : "hidden"}`}>
                     <Dialog method={method} className="bg-white shadow-xl rounded-md" open={openDialog} handleclose={() => setOpenDialog(false)}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('name')} label="Name"></Input>
-                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('code')} label="Code"></Input>
+                        <form onSubmit={handleSubmit(onSubmit)} className="overflow-auto max-h-[600px]">
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('name')} label="Name" defaultValue={""}></Input>
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('code')} label="Code" defaultValue={""}></Input>
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('price')} label="Price" defaultValue={""}></Input>
+                            <Input type="file" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register('file')} label="Image"></Input>
+                            <Select disabled={disableForm} className="px-2 py-1.5" label="Suggest" {...register("suggest")} defaultValue={""}>
+                                <option value={"true"}>True</option>
+                                <option value={"false"}>False</option>
+                            </Select>
+                            <div className="">
+                                <Label>Description</Label>
+                                <JoditEditor
+                                    className=""
+                                    {...register('description')}
+                                    ref={editor}
+                                    value={(object as Product)?.description}
+                                    onBlur={newContent => setValue("description", newContent)} // preferred to use only this option to update the content for performance reasons
+                                    onChange={newContent => setValue("description", newContent)}
+                                />
+                            </div>
                             <Button className={`w-full mt-2 ${method === Method.DETAIL ? "hidden" : ""}`} variant={"subtle"} size={"sm"}>Submit</Button>
                         </form>
                     </Dialog>

@@ -3,16 +3,26 @@ import instance from "../../axios/Instance";
 import Skeleton from "react-loading-skeleton";
 import toast from "react-hot-toast";
 import { useAuth } from "../security/AuthProvider";
-import { motion } from "framer-motion";
-import ProductCardComponent from "../card/ProductCardComponent";
+import { useTranslation } from "react-i18next";
+import SlideProductComponent from "./SlideProductComponent";
+import { Star } from "@mui/icons-material";
+
+
 
 
 const ProductComponent = () => {
+    const { t } = useTranslation()
     const { setIsLoading } = useAuth()
     const [fetchStatus, setFetchStatus] = useState(true)
     const [isLoadingCategories, setIsLoadingCategories] = useState<boolean>(true)
     const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true)
     const [categories, setCategories] = useState<any[]>([])
+    const [products, setProducts] = useState<CustomModelSpace.CustomProduct[]>([])
+    const [listActiveCategoryObject, setListActiveCategoryObject] = useState<{ "name": string, "id": number }[]>([]);
+
+    useEffect(() => {
+        console.log("PRODUCT: ", products)
+    }, [products])
 
     useEffect(() => {
         if (isLoadingCategories === false && isLoadingProducts === false) {
@@ -29,7 +39,7 @@ const ProductComponent = () => {
     useEffect(() => {
         setIsLoading(true)
         const fetchData = async () => {
-            instance.get("api/manage/categories?limit=5&offset=0").then(function (response) {
+            await instance.get("api/manage/categories?limit=5&offset=0").then(function (response) {
                 if (response.status == 200) {
                     setCategories(response?.data?.content)
                     setIsLoadingCategories(false)
@@ -38,10 +48,10 @@ const ProductComponent = () => {
             }).catch(function () {
                 setFetchStatus(false)
             })
-            instance.get("api/manage/products").then(function (response) {
+            await instance.get("api/manage/products/custom").then(function (response) {
                 if (response.status == 200) {
+                    setProducts(response?.data)
                 }
-                setProducts(response?.data?.content)
                 setIsLoadingProducts(false)
             }).catch(function () {
                 setFetchStatus(false)
@@ -51,9 +61,7 @@ const ProductComponent = () => {
         fetchData();
     }, [])
 
-    const [products, setProducts] = useState<any[]>([])
 
-    const [listActiveCategoryObject, setListActiveCategoryObject] = useState<{ "name": string, "id": number }[]>([]);
 
     const handleCategory = (object: any) => {
         if (listActiveCategoryObject.some(s => s.id === object.id)) {
@@ -68,7 +76,7 @@ const ProductComponent = () => {
             {/* CATEGORY */}
             <div className="mt-3">
                 <div>
-                    <p className="text-xl font-bold tracking-tight">Our Products</p>
+                    <p className="text-xl font-bold tracking-tight">{t('our_product')}</p>
                 </div>
                 {isLoadingCategories === false ? (
                     <ul className="flex flex-row gap-1.5 overflow-y-auto">{
@@ -81,32 +89,18 @@ const ProductComponent = () => {
                 }
             </div>
             {/* Product */}
-            <div className="">
-                <p className="text-xl font-bold tracking-tigh">Customers also purchased</p>
-                {isLoadingProducts === false ? (
-                    <motion.section
-                        variants={{
-                            hidden: { opacity: 0.75 },
-                            show: {
-                                opacity: 1,
-                                transition: {
-                                    staggerChildren: 0.1
-                                }
-                            }
-                        }}
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={{ once: false, amount: 0.3 }}
-                        className="py-1 grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 xl:gap-x-8"
-                    >
-                        {Array.isArray(products) && products.map((product, index) => (
-                            <ProductCardComponent product={product} key={index} />
-                        ))}
-                    </motion.section>
-                ) : (<Skeleton count={5} />)
-                }
-
+            <div>
+                <li className="font-semibold">Hương sạch</li>
+                <SlideProductComponent products={Array.isArray(products) && products.filter(s => s.category.id === 2) || []} backgroundImage="cach-quan-huong.jpg" ></SlideProductComponent>
             </div>
+
+            {/* Product */}
+            <div>
+                <li className="font-semibold">Trầm nụ</li>
+                <SlideProductComponent products={Array.isArray(products) && products.filter(s => s.category.id === 3) || []} backgroundImage="tram-nu.jpg"></SlideProductComponent>
+            </div>
+
+
         </div>
     );
 };

@@ -12,11 +12,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ProductDetailDto {
+    @NotNull
+    @NotBlank
+    private String name;
     @NotNull
     @NotBlank
     private String code;
@@ -32,5 +36,6 @@ public class ProductDetailDto {
     private int color;
     @NotNull
     private int size;
+    private MultipartFile file;
 }
 

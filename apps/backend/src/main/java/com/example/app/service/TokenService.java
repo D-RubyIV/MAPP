@@ -99,6 +99,7 @@ public class TokenService {
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setAccessToken(generateAccessToken(userModel));
         tokenResponse.setRefreshToken(generateRefreshToken(userModel));
+        tokenResponse.setExpiration(expiration_long);
         return tokenResponse;
     }
 

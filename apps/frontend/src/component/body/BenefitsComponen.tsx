@@ -7,15 +7,15 @@ const BenefitsComponent = () => {
     let arrayItem = [
         {
             "icon": <EmojiEmotionsIcon sx={{ fontSize: 40, color: "#ffffff"  }}/>,
-            "description": "Earn rewards on every night you stay"
+            "description": t('earn_rewards')
         },
         {
             "icon": <LocalOfferIcon sx={{ fontSize: 40, color: "#ffffff" }}/>,
-            "description": "Save more with cheap prices"
+            "description":  t('cheap_price')
         },
         {
             "icon": <RedeemOutlined sx={{ fontSize: 40, color: "#ffffff" }}/>,
-            "description": "Earn rewards on every night you stay"
+            "description": t('earn_rewards')
         },
     ]
     return (

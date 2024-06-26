@@ -10,9 +10,11 @@ import { Method } from "../enum/Method";
 import { DeleteOutline, EditOutlined, Visibility } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import { Select } from "../../ui/select";
+import { useTranslation } from "react-i18next";
 
 
 const ProductDetailComponent = () => {
+    const { t } = useTranslation();
     const { register, handleSubmit, setValue, reset, formState: { errors }, } = useForm<ProductDetail>();
 
     const [disableForm, setDisableForm] = useState<boolean>(false);
@@ -29,10 +31,18 @@ const ProductDetailComponent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-
     const onSubmit = (data: ProductDetail) => {
+        
+        if (data.file as FileList){
+            data.file = (data.file as FileList)[0]
+        }
+
         if (method === Method.UPDATE) {
-            instance.put(`/api/manage/product-details/${(object as ProductDetail).id}`, data).then(
+            instance.put(`/api/manage/product-details/${(object as ProductDetail).id}`, data,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then(
                 function (response) {
                     console.log(response)
                     if (response.status === 200) {
@@ -44,7 +54,11 @@ const ProductDetailComponent = () => {
             )
         }
         else if (method === Method.CREATE) {
-            instance.post("/api/manage/product-details", data).then(
+            instance.post("/api/manage/product-details", data,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }).then(
                 function (response) {
                     console.log(response)
                     if (response.status === 200) {
@@ -102,6 +116,7 @@ const ProductDetailComponent = () => {
     useEffect(() => {
         if (openDialog && 'id' in object) {
             setValue("id", (object as ProductDetail).id);
+            setValue("name", (object as ProductDetail).name);
             setValue("quantity", (object as ProductDetail).quantity);
             setValue("price", (object as ProductDetail).price);
             setValue("code", (object as ProductDetail).code);
@@ -127,7 +142,7 @@ const ProductDetailComponent = () => {
         <Fragment>
             <div className="relative">
                 <div className="flex justify-end pb-2">
-                    <button className="bg-indigo-400 rounded-md text-[12px] py-1 px-2" onClick={() => handleOpenDialog({}, Method.CREATE)}>Add new</button>
+                    <button className="bg-indigo-400 rounded-md text-[12px] py-1 px-2" onClick={() => handleOpenDialog({}, Method.CREATE)}>{t('add_new')}</button>
                 </div>
                 <div>
                     <div className="hidden md:block">
@@ -174,12 +189,13 @@ const ProductDetailComponent = () => {
                             {
                                 data.map((item) => (
                                     <li key={item.id} className="border-2 py-2 px-3 rounded-md text-sm">
-                                        <div>
+                                        <div className="flex gap-2">
                                             <span>#{item.id}</span>
+                                            <span>{t('name')}: {item.name || "N/a"}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <div>
-                                                <span>{(item.product as Product)?.name}</span>
+                                        <div className="flex justify-between mt-1">
+                                            <div className="flex gap-1">
+                                                <span className="bg-green-200 py-0.5 px-1  rounded-md">{t('product')}: {(item.product as Product)?.name}</span>
                                             </div>
                                             <div>
                                                 <div className="flex gap-3 justify-center">
@@ -203,11 +219,12 @@ const ProductDetailComponent = () => {
                         <form onSubmit={handleSubmit(onSubmit)}>
                             {/* <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5"  {...register("code", { required: "code is required!" })} label="Code"></Input>
                             {errors.code && (<p className="text-sm text-red-500">{errors.code.message}</p>)} */}
+                            <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("name")} label="Name"></Input>
                             <Input autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("code")} label="Code"></Input>
-                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity", {valueAsNumber: true,})} label="Quantity"></Input>
-                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("price", {valueAsNumber: true,})} label="Price"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("quantity", { valueAsNumber: true, })} label="Quantity"></Input>
+                            <Input type="number" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("price", { valueAsNumber: true, })} label="Price"></Input>
+                            <Input type="file" autoComplete="false" disabled={disableForm} className="px-2 py-1.5" {...register("file", { valueAsNumber: true, })} label="Image"></Input>
 
-                            
 
                             <Select disabled={disableForm} className="px-2 py-1.5" label="Product" {...register("product")} defaultValue={""} >
                                 {

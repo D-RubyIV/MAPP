@@ -2,6 +2,7 @@ package com.example.app.model;
 
 import com.example.app.common.Provider;
 import com.example.app.common.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,11 +21,13 @@ public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @JsonIgnore
     @NotBlank
     private String password;
     @NotBlank
     @Email
     private String email;
+    private String name;
     private String phone;
     @NotNull
     private Role role;
@@ -46,7 +49,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override

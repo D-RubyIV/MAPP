@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import MenuIcon from '@mui/icons-material/Menu';
 import { CloseOutlined, Person, PersonOutline, SearchOutlined, ShoppingBag, ShoppingBagOutlined } from "@mui/icons-material";
-import { useState } from "react";
-import { ShoppingBagIcon } from "@heroicons/react/20/solid";
+import { useEffect, useState } from "react";
+import instance from "../../axios/Instance";
+import { useAuth } from "../security/AuthProvider";
 const NavbarComponent = () => {
+    const { effLoadingBag, setEffLoadingBag } = useAuth();
+    const [coutItemInBag, setCoutItemInBag] = useState(0)
     const [openMenu, setOpenMenu] = useState(false)
     const listItem = [
         {
@@ -36,6 +39,20 @@ const NavbarComponent = () => {
             "link": "/logout",
         },
     ]
+ 
+    useEffect(() => {
+        fetchCarItems()
+    }, [effLoadingBag])
+
+    const fetchCarItems = async () => {
+        await instance.get("api/common/me/cart/items").then(function (repsonse) {
+            console.log("bag items: ", repsonse.data)
+            if(repsonse.status === 200){
+                setCoutItemInBag(repsonse.data.length)
+            }
+        })
+    }
+
     return (
         <Fragment>
             <div className="flex justify-between py-3 md:py-4">
@@ -58,12 +75,20 @@ const NavbarComponent = () => {
                 </div>
                 <div className="md:hidden">
                     <div className="flex gap-1.5 items-center justify-center">
-                        <button onClick={() => { }}><SearchOutlined /></button>
+                        {/* <div>
+                            <input name="key" className="outline-none border-none text-sm" placeholder="Tìm kiếm theo theo từ khóa"></input>
+                        </div> */}
+                        {/* <button onClick={() => { }}><SearchOutlined /></button> */}
                         <button onClick={() => { }}><PersonOutline /></button>
-                        <Link to={"/cart"}><ShoppingBagOutlined /></Link>
+                        <div className="relative">
+                            <Link to={"/cart"}><ShoppingBagOutlined /></Link>
+                            <div className="absolute p-[8px] -top-0.5 -right-1 bg-red-300 sha0dow-2xl rounded-full w-4 h-4 flex justify-center items-center">
+                                <span className="text-[12px] font-semibold tracking-tighter">{coutItemInBag}</span>
+                            </div>
+                        </div>
                         <button onClick={() => setOpenMenu(true)}><MenuIcon /></button>
                     </div>
-                    <div className={`fixed px-8 py-4 md:px-10 xl:px-20 z-50 top-0 left-0 bg-white rounded-md w-full h-screen ${openMenu ? "block" : "hidden"}`}>
+                    <div className={`fixed px-8 py-4 md:px-10 xl:px-20 z-50 top-0  bg-white rounded-md w-full h-screen transition-all duration-300 ${openMenu ? "block left-0" : "translate-x-full"}`}>
                         <div className="flex justify-between py-3 md:py-4">
                             <div className="inline-flex">
                                 <Link to={"/"}>
@@ -85,6 +110,7 @@ const NavbarComponent = () => {
                             }
                         </ul>
                     </div>
+
                 </div>
             </div>
         </Fragment>

@@ -11,9 +11,11 @@ import com.example.app.service.TokenService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -29,6 +31,8 @@ public class AuthController {
     private TokenService tokenService;
     @Autowired
     private AuthService authService;
+    @Value("${security.jwt.expiration-short}")
+    private int expiration_short;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -50,9 +54,7 @@ public class AuthController {
                 UserModel userModelFound = userRepository.findByEmailAndProvider(email, provider);
                 System.out.println(userModelFound);
                 if (bCryptPasswordEncoder.matches(password, userModelFound.getPassword())){
-                    TokenResponse tokenResponse = new TokenResponse();
-                    tokenResponse.setAccessToken(tokenService.generateAccessToken(userModelFound));
-                    tokenResponse.setRefreshToken(tokenService.generateRefreshToken(userModelFound));
+                    TokenResponse tokenResponse = tokenService.generate(userModelFound);
                     return ResponseEntity.ok(tokenResponse);
                 }
                 else{
@@ -61,7 +63,6 @@ public class AuthController {
             }
         }
     }
-
 
     @PostMapping("/signup")
     private ResponseEntity<?> handleSignup(@Valid @RequestBody SignUpRequests signUpRequests, BindingResult bindingResult) throws Exception {
@@ -75,13 +76,23 @@ public class AuthController {
         return ResponseEntity.ok(userModel);
     }
 
-
     @GetMapping("/me")
     public ResponseEntity<?> handleAuth() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object currentUser = authentication.getPrincipal();
         System.out.println(currentUser);
         return ResponseEntity.ok(currentUser);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestParam("token") String token) {
+        String username = tokenService.extractUsername(token);
+        UserModel userModel = userRepository.findByEmail(username).orElse(null);
+        TokenResponse tokenResponse = new TokenResponse();
+        if (userModel != null){
+            tokenResponse = tokenService.generate(userModel);
+        }
+        return ResponseEntity.ok(tokenResponse);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import com.example.app.common.Status;
 import com.example.app.dto.OrderDto;
 import com.example.app.model.OrderDetailModel;
 import com.example.app.model.OrderModel;
@@ -44,13 +45,8 @@ public class OrderController {
         return ResponseEntity.ok(orderRepository.findAll(pageable));
     }
 
-//    @GetMapping("last/me")
-//    public ResponseEntity<?> findAllMyOrder(){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserModel currentUser = (UserModel) authentication.getPrincipal();
-//        System.out.println(currentUser.getId());
-//        return ResponseEntity.ok(orderRepository.)
-//    }
+
+
 
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody OrderDto dto, BindingResult bindingResult) throws Exception {

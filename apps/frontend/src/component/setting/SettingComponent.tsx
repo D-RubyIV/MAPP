@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const SettingComponent = () => {
-    const {i18n} = useTranslation();
+    const { i18n } = useTranslation();
 
     const [language, setLanguage] = useState(localStorage.getItem("lang") || "en");
 
+    useEffect(() => {
+        console.log("Language: ", language)
+        i18n.changeLanguage(language)
+    }, [language])
+
     const toggleLanguage = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        const {value} = e.target
+        const { value } = e.target
         setLanguage(value);
         i18n.changeLanguage(value)
         localStorage.setItem("lang", value)
@@ -25,7 +30,7 @@ const SettingComponent = () => {
                     </select>
                 </form>
             </div>
-           
+
         </div>
     );
 };

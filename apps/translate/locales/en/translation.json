@@ -1,6 +1,13 @@
 {
-    "welcome": "Welcome",
-    "news": "News",
-    "key": "hello world",
-    "halo": "Find and use your perfect service"
-  }
+  "welcome": "Welcome",
+  "name": "Name",
+  "product": "Product",
+  "add_new": "Add new",
+  "news": "News",
+  "key": "hello world",
+  "halo": "Find and use your perfect service",
+  "earn_rewards": "Earn rewards on every night you stay",
+  "cheap_price":"Save more with cheap prices",
+  "our_product": "Our Products",
+  "customers_also_purchased":"Customers also purchased"
+}

@@ -10,9 +10,13 @@ public class ProductDetailModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String name;
     private String code;
     private float price;
     private int quantity;
+    @OneToOne
+    @JoinColumn(name = "media_id", referencedColumnName = "id")
+    private MediaModel media;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductModel product;
