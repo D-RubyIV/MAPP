@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "medias")
-public class MediaModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class MediaModel extends BaseModel{
     private String name;
 
 }

@@ -1,6 +1,8 @@
 package com.example.app.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,10 +11,10 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity
-@Table(name = "colors")
-public class ColorModel extends BaseModel{
+@Data
+@Table
+public class CollectionModel extends BaseModel{
     @NotBlank
     @NotNull
     private String name;

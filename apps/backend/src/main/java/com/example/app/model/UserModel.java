@@ -17,23 +17,29 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
-public class UserModel implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class UserModel extends BaseModel implements UserDetails{
     @JsonIgnore
     @NotBlank
     private String password;
+
     @NotBlank
     @Email
     private String email;
+
     private String name;
+
     private String phone;
+
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Role role;
+
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Provider provider;
+
     private String image;
+
     @NotNull
     private Boolean enabled;
 

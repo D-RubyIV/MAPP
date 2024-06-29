@@ -12,10 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "comments")
-public class CommentModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class CommentModel extends BaseModel{
     private String content;
     private int star;
     @ManyToOne

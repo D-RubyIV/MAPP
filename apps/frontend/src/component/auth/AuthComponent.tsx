@@ -6,9 +6,12 @@ import OauthComponent from "./OauthComponent";
 import { Canvas } from "@react-three/fiber"
 import { Environment, OrbitControls } from "@react-three/drei"
 import { EarthComponent } from "../../util/Earth"
+import { useTranslation } from "react-i18next";
 export default function AuthComponent() {
+    const [language, setLanguage] = useState(localStorage.getItem("lang") || "vi");
     const navigate = useNavigate()
     // INIT
+    const { t, i18n } = useTranslation()
     const [authSignInObject, setAuthSignInObject] = useState<any>();
     const [authSignUpObject, setAuthSignUpObject] = useState<any>();
     const [mode, setMode] = useState<any>(localStorage.getItem("mode") ? parseInt(localStorage.getItem("mode") || "1") : 1)
@@ -22,7 +25,7 @@ export default function AuthComponent() {
     }, [authSignInObject])
     useEffect(() => {
         const fetchData = async () => {
-            instance.get("api/auth/me").then(function (response) {
+            await instance.get("api/auth/me").then(function (response) {
                 console.log(response.data)
                 if (response.data == "anonymousUser" && response.status == 200) {
                     localStorage.removeItem("token")
@@ -37,7 +40,13 @@ export default function AuthComponent() {
         fetchData()
     }, [])
 
+
     // HANDLE
+    const handleSetLanguage = (lang: string) => {
+        localStorage.setItem("lang", lang)
+        setLanguage(lang)
+        i18n.changeLanguage(lang)
+    }
     const handleChangeInputSigninObject = (event: any) => {
         let value = event.target.value;
         let name = event.target.name;
@@ -48,9 +57,9 @@ export default function AuthComponent() {
         let name = event.target.name;
         setAuthSignUpObject({ ...authSignUpObject, [name]: value });
     }
-    const handleLogin = () => {
+    const handleLogin = async () => {
         console.log(authSignInObject)
-        instance.post("api/auth/login", authSignInObject).then(function (response) {
+        await instance.post("api/auth/login", authSignInObject).then(function (response) {
             console.log(response)
             if (response.status == 200 && response.data.accessToken && response.data.refreshToken) {
                 localStorage.setItem("token", JSON.stringify(response.data))
@@ -60,9 +69,9 @@ export default function AuthComponent() {
             }
         })
     }
-    const handleSignup = () => {
+    const handleSignup = async () => {
         console.log(authSignInObject)
-        instance.post("api/auth/signup", authSignUpObject)
+        await instance.post("api/auth/signup", authSignUpObject)
             .then(function (response) {
                 console.log(response);
                 if (response.status === 200) {
@@ -79,7 +88,7 @@ export default function AuthComponent() {
 
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-500">
-                        {mode === 1 ? "Sign in to your account" : " Sign up to your account"}
+                        {mode === 1 ? t('sign_in_to_your_account') : t('sign_up_to_your_account')}
                     </h2>
                 </div>
 
@@ -88,7 +97,7 @@ export default function AuthComponent() {
                     <form className={`space-y-1.5 ${mode === 1 ? "" : "hidden"}`} >
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-500 text-left">
-                                Email address
+                                Email
                             </label>
                             <div className="">
                                 <input
@@ -105,11 +114,11 @@ export default function AuthComponent() {
                         <div>
                             <div className="flex items-center justify-between">
                                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-500 text-left">
-                                    Password
+                                    {t('password')}
                                 </label>
                                 <div className="text-sm">
                                     <a href="#" className="font-semibold text-indigo-500 hover:text-indigo-500">
-                                        Forgot password?
+                                        {t('forgot_password?')}
                                     </a>
                                 </div>
                             </div>
@@ -131,7 +140,7 @@ export default function AuthComponent() {
                                 type="button"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign in
+                                {t('sign_in')}
                             </button>
                         </div>
                     </form>
@@ -174,7 +183,6 @@ export default function AuthComponent() {
                             </div>
                         </div>
 
-
                         <div>
                             <div className="flex items-center justify-between">
                                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-500 text-left">
@@ -197,7 +205,7 @@ export default function AuthComponent() {
                         <div>
                             <div className="flex items-center justify-between">
                                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-500 text-left">
-                                    Password
+                                    {t('password')}
                                 </label>
                             </div>
                             <div className="">
@@ -219,15 +227,15 @@ export default function AuthComponent() {
                                 type="button"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign up
+                                {t('sign_up')}
                             </button>
                         </div>
                     </form>
 
                     <p className={`mt-5 text-center text-sm text-gray-500 ${mode === 1 ? "" : "hidden"}`}>
-                        Not a member?{' '}
+                       {t("not_a_member?")}{' '}
                         <button className="font-semibold leading-6 text-indigo-500 hover:text-indigo-500" onClick={() => setMode(2)}>
-                            Start a 14 day free trial
+                            {t('start_register')}
                         </button>
                     </p>
                     <p className={`mt-10 text-center text-sm text-gray-500 ${mode === 2 ? "" : "hidden"}`}>
@@ -251,6 +259,12 @@ export default function AuthComponent() {
                         <Environment preset="sunset"></Environment>
                         {/* <ContactShadows position={[0, -5, 0]} opacity={1} scale={10} blur={1} far={10} resolution={256}></ContactShadows> */}
                     </Canvas>
+                </div>
+                <div className="absolute bottom-20 right-1/2 translate-x-1/2 ">
+                    <ul className="flex justify-center gap-2 text-sm">
+                        <li className={`${language === "vi"?"underline underline-offset-2": ""}`} onClick={()=>handleSetLanguage("vi")}>VN</li>
+                        <li className={`${language === "en"?"underline underline-offset-2": ""}`} onClick={()=>handleSetLanguage("en")}>EN</li>
+                    </ul>
                 </div>
 
             </div>

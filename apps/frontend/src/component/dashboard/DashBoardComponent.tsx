@@ -1,6 +1,6 @@
 import BenefitsComponent from "../body/BenefitsComponen";
-import FooterComponent from "../footer/FooterComponnet";
-import BlogComponent from "./BlogComponent";
+import PolicyComponent from "../footer/PolicyComponent";
+import RegisterNotification from "../footer/RegisterNotification";
 import ProductComponent from "./ProductComponent";
 const DashBoardComponent = () => {
 
@@ -8,8 +8,10 @@ const DashBoardComponent = () => {
         <div>
             <BenefitsComponent />
             <ProductComponent />
-            <BlogComponent/>
-            <FooterComponent />
+            {/* <BlogComponent/> */}
+            <RegisterNotification/>
+            {/* <FooterComponent/> */}
+            <PolicyComponent/>
         </div>
     );
 }

@@ -6,10 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "product_details")
-public class ProductDetailModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProductDetailModel extends BaseModel{
     private String name;
     private String code;
     private float price;

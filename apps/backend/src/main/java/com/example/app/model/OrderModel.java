@@ -17,10 +17,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "orders")
-public class OrderModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class OrderModel extends BaseModel{
     @NotNull
     private LocalDate orderDate;
     @EnumPattern(name = "status", regexp = "Pending|Success")

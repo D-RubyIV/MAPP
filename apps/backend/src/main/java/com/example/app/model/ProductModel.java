@@ -3,18 +3,21 @@ package com.example.app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name="products")
-public class ProductModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+@EqualsAndHashCode(callSuper = true)
+public class ProductModel extends BaseModel{
     @NotBlank
     @NotNull
     private String name;
@@ -28,6 +31,19 @@ public class ProductModel {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tag_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<TagModel> tagModels = new ArrayList<>();
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "collection_id", referencedColumnName = "id")
+    private CollectionModel collection;
 
     @NotNull
     @ManyToOne

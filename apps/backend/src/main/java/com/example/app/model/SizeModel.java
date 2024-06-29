@@ -6,10 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "sizes")
-public class SizeModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class SizeModel extends BaseModel{
     private String name;
     private String code;
 }

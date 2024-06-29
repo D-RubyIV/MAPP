@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "order_details")
-public class OrderDetailModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class OrderDetailModel extends BaseModel{
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private OrderModel order;

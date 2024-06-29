@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/cart-details/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/carts/me")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/comment/product/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/manage/collections/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/common/me/cart/items")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/vouchers")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/categories")).permitAll()

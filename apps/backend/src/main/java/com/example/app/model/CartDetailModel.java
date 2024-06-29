@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "cart_details")
-public class CartDetailModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class CartDetailModel extends BaseModel{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductDetailModel productDetail;

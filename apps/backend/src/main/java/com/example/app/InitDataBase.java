@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 @Component
@@ -34,6 +35,10 @@ public class InitDataBase {
     private VoucherRepository voucherRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private CollectionRepository collectionRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
@@ -43,6 +48,24 @@ public class InitDataBase {
 
     @PostConstruct
     public void init() {
+        List<String> listColorCode = List.of("xanh", "do", "den", "vang", "tim");
+        listColorCode.forEach(s -> {
+            if(colorRepository.findByCode(s).isEmpty()){
+                ColorModel colorModel = new ColorModel();
+                colorModel.setCode(s);
+                colorModel.setName(s.toUpperCase());
+                colorRepository.save(colorModel);
+            }
+        });
+        List<String> listSizeCode = List.of("36", "37", "38", "39", "40");
+        listSizeCode.forEach(s -> {
+            if(sizeRepository.findByCode(s).isEmpty()){
+                SizeModel sizeModel = new SizeModel();
+                sizeModel.setCode(s);
+                sizeModel.setName(s.toUpperCase());
+                sizeRepository.save(sizeModel);
+            }
+        });
         if (userRepository.findByEmailAndProvider("phah04@gmail.com", Provider.Local) == null) {
             UserModel userModel = new UserModel();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
@@ -110,23 +133,97 @@ public class InitDataBase {
                 userRepository.save(userModel);
             }
         }
+        // COLLECTIONS
+        if (collectionRepository.findById(1).isEmpty()){
+            CollectionModel collectionModel = new CollectionModel();
+            collectionModel.setName("Sản phẩm nổi bật");
+            collectionModel.setCode("san-pham-noi-bat");
+            collectionRepository.save(collectionModel);
+        }
+        if (collectionRepository.findById(2).isEmpty()){
+            CollectionModel collectionModel = new CollectionModel();
+            collectionModel.setName("Đồ xuân hè");
+            collectionModel.setCode("do-xuan-he");
+            collectionRepository.save(collectionModel);
+        }
+        if (collectionRepository.findById(3).isEmpty()){
+            CollectionModel collectionModel = new CollectionModel();
+            collectionModel.setName("Đồ công sở");
+            collectionModel.setCode("do-cong-so");
+            collectionRepository.save(collectionModel);
+        }
+        if (collectionRepository.findById(4).isEmpty()){
+            CollectionModel collectionModel = new CollectionModel();
+            collectionModel.setName("Đồ thể thao");
+            collectionModel.setCode("do-the-thao");
+            collectionRepository.save(collectionModel);
+        }
+        if (collectionRepository.findById(5).isEmpty()){
+            CollectionModel collectionModel = new CollectionModel();
+            collectionModel.setName("Khác");
+            collectionModel.setCode("khac");
+            collectionRepository.save(collectionModel);
+        }
+        // TAG
+        if (tagRepository.findById(1).isEmpty()){
+            TagModel tagModel = new TagModel();
+            tagModel.setName("Đồ xuân hè");
+            tagModel.setCode("do-xuan-he");
+            tagRepository.save(tagModel);
+        }
+        if (tagRepository.findById(2).isEmpty()){
+            TagModel tagModel = new TagModel();
+            tagModel.setName("Đồ công sở");
+            tagModel.setCode("do-cong-so");
+            tagRepository.save(tagModel);
+        }
+        if (tagRepository.findById(3).isEmpty()){
+            TagModel tagModel = new TagModel();
+            tagModel.setName("Đồ thể thao");
+            tagModel.setCode("do-the-thao");
+            tagRepository.save(tagModel);
+        }
+        if (tagRepository.findById(4).isEmpty()){
+            TagModel tagModel = new TagModel();
+            tagModel.setName("Sản phẩm nổi bật");
+            tagModel.setCode("san-pham-noi-bat");
+            tagRepository.save(tagModel);
+        }
         // CATEGORY
         if (categoryRepository.findById(1).isEmpty()){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setName("Vòng gỗ");
-            categoryModel.setCode("CT01");
+            categoryModel.setName("Ao Polo");
+            categoryModel.setCode("polo");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(2).isEmpty()){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setName("Hương sạch");
-            categoryModel.setCode("CT02");
+            categoryModel.setName("Áo Phông");
+            categoryModel.setCode("ao-phong");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(3).isEmpty()){
             CategoryModel categoryModel = new CategoryModel();
-            categoryModel.setName("Trầm nụ");
-            categoryModel.setCode("CT02");
+            categoryModel.setName("Quần Short");
+            categoryModel.setCode("quan-short");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findById(4).isEmpty()){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setName("Quần Jeans");
+            categoryModel.setCode("quan-jeans");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findById(5).isEmpty()){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setName("Quần Kaki");
+            categoryModel.setCode("quan-kaki");
+            categoryRepository.save(categoryModel);
+        }
+        if (categoryRepository.findById(6).isEmpty()){
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setName("Sơ mi");
+            categoryModel.setCode("so-mi");
             categoryRepository.save(categoryModel);
         }
         // SIZE
@@ -145,11 +242,13 @@ public class InitDataBase {
         // PRODUCT
         if (productRepository.findById(1).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Trầm nụ ngắn");
-            productModel.setCode("tram-nu-001");
+            productModel.setName("Áo Polo họa tiết Refine and shine 09 FSTP070 - Đen nhạt");
+            productModel.setCode("FSTP070");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(3).orElse(null));
+            productModel.setCollection(collectionRepository.findById(1).orElse(null));
             productModel.setSuggest(true);
+            productModel.setTagModels(tagRepository.findAllById(List.of(1, 2)));
             productModel.setDescription("""
                     <!DOCTYPE html>
                     <html>
@@ -165,11 +264,13 @@ public class InitDataBase {
         }
         if (productRepository.findById(2).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Bách cố hương");
-            productModel.setCode("bach-co-huong");
+            productModel.setName("Áo T shirt họa tiết in Refine and Shine FSTS050 - Xanh lá cây");
+            productModel.setCode("FSTS050");
             productModel.setPrice(45000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
+            productModel.setCollection(collectionRepository.findById(2).orElse(null));
             productModel.setSuggest(true);
+            productModel.setTagModels(tagRepository.findAllById(List.of(2, 3)));
             productModel.setDescription("""
                     <!DOCTYPE html>
                     <html>
@@ -185,34 +286,43 @@ public class InitDataBase {
         }
         if (productRepository.findById(3).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Trầm nụ dài");
-            productModel.setCode("tram-nu-dai");
+            productModel.setName("Áo Polo trơn basic thêu logo ngực ESTP038 - Xanh đá đậm");
+            productModel.setCode("FSTP070");
             productModel.setPrice(35000);
             productModel.setCategory(categoryRepository.findById(3).orElse(null));
+            productModel.setCollection(collectionRepository.findById(1).orElse(null));
             productModel.setSuggest(true);
             productRepository.save(productModel);
         }
         if (productRepository.findById(4).isEmpty()){
             ProductModel productModel = new ProductModel();
-            productModel.setName("Khúc cố hương");
-            productModel.setCode("khuc-co-huong");
+            productModel.setName("Áo Polo thể thao can vai FSTP001");
+            productModel.setCode("FSTP001");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
+            productModel.setCollection(collectionRepository.findById(1).orElse(null));
             productModel.setSuggest(true);
             productRepository.save(productModel);
         }
-        // COLOR
-        if (colorRepository.findByName("Red") == null){
-            ColorModel colorModel = new ColorModel();
-            colorModel.setName("Red");
-            colorModel.setCode("COL01");
-            colorRepository.save(colorModel);
+        if (productRepository.findById(5).isEmpty()){
+            ProductModel productModel = new ProductModel();
+            productModel.setName("Áo Polo họa tiết Refine and shine 09 FSTP070 - Xanh lá cây");
+            productModel.setCode("FSTP070");
+            productModel.setPrice(25000);
+            productModel.setCategory(categoryRepository.findById(2).orElse(null));
+            productModel.setCollection(collectionRepository.findById(2).orElse(null));
+            productModel.setSuggest(true);
+            productRepository.save(productModel);
         }
-        if (colorRepository.findByName("Yellow") == null){
-            ColorModel colorModel = new ColorModel();
-            colorModel.setName("Yellow");
-            colorModel.setCode("COL02");
-            colorRepository.save(colorModel);
+        if (productRepository.findById(6).isEmpty()){
+            ProductModel productModel = new ProductModel();
+            productModel.setName("Áo T shirt họa tiết in Refine and Shine FSTS050 - Đen nhạt");
+            productModel.setCode("FSTS050");
+            productModel.setPrice(25000);
+            productModel.setCategory(categoryRepository.findById(2).orElse(null));
+            productModel.setCollection(collectionRepository.findById(2).orElse(null));
+            productModel.setSuggest(true);
+            productRepository.save(productModel);
         }
         // PRODUCT DETAIL
         if (productDetailRepository.findByCode("PDT01") == null){
@@ -220,7 +330,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT01");
             productDetailModel.setQuantity(40);
             productDetailModel.setPrice(1000);
-            productDetailModel.setColor(colorRepository.findByCode("COL01"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(0)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(1).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(1).orElse(null));
             productDetailRepository.save(productDetailModel);
@@ -230,7 +340,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT02");
             productDetailModel.setQuantity(20);
             productDetailModel.setPrice(20000);
-            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(1)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(2).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
@@ -240,7 +350,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT03");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(20000);
-            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(3)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(1).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
@@ -250,7 +360,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT04");
             productDetailModel.setQuantity(60);
             productDetailModel.setPrice(20000);
-            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(4)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(2).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
@@ -260,7 +370,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT05");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(40000);
-            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(0)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(3).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);
@@ -270,7 +380,7 @@ public class InitDataBase {
             productDetailModel.setCode("PDT06");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(25000);
-            productDetailModel.setColor(colorRepository.findByCode("COL02"));
+            productDetailModel.setColor(colorRepository.findByCode(listColorCode.get(2)).orElse(null));
             productDetailModel.setProduct(productRepository.findById(4).orElse(null));
             productDetailModel.setSize(sizeRepository.findById(2).orElse(null));
             productDetailRepository.save(productDetailModel);

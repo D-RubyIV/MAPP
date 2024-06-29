@@ -6,11 +6,13 @@ import com.example.app.model.MediaModel;
 import com.example.app.model.ProductModel;
 import com.example.app.repository.MediaRepository;
 import com.example.app.repository.ProductRepository;
+import com.example.app.response.OverviewProductResponse;
 import com.example.app.service.CloudService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -36,14 +38,7 @@ public class ProductController {
     @Autowired
     private MediaRepository mediaRepository;
 
-    @GetMapping("custom")
-    public ResponseEntity<?> findAllCustom(
-            @RequestParam(name = "limit", defaultValue = "5") int limit,
-            @RequestParam(name = "offset", defaultValue = "0") int offset
-    ){
-        Pageable pageable = PageRequest.of(offset, limit);
-        return ResponseEntity.ok(productRepository.findWithProp(pageable));
-    }
+
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
@@ -52,6 +47,15 @@ public class ProductController {
     ) {
         Pageable pageable = PageRequest.of(offset, limit);
         return ResponseEntity.ok(productRepository.findAll(pageable));
+    }
+
+    @GetMapping("overview")
+    public ResponseEntity<Page<OverviewProductResponse>> findAllCustom(
+            @RequestParam(name = "limit", defaultValue = "5") int limit,
+            @RequestParam(name = "offset", defaultValue = "0") int offset
+    ){
+        Pageable pageable = PageRequest.of(offset, limit);
+        return ResponseEntity.ok(productRepository.findWithPropOverview(pageable));
     }
 
     @GetMapping("isSuggest")

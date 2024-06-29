@@ -47,7 +47,7 @@ const FooterComponent = () => {
     ]
     return (
         <div className="overflow-scroll">
-            <section className="flex flex-col gap-10 mb-10" ref={containerRef}>
+            <section ref={containerRef} className="flex flex-col gap-10 mb-10" >
                 <motion.h1
                     className="text-sm tracking-wide text-slate-400 text-center"
                     animate={mainControls}

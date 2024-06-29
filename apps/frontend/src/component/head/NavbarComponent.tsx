@@ -58,7 +58,7 @@ const NavbarComponent = () => {
             <div className="flex justify-between py-3 md:py-4">
                 <div className="inline-flex">
                     <Link to={"/"}>
-                        <img className="w-7 h-7 rounded-full object-cover" src="https://th.bing.com/th/id/OIP.KhXEdjeK786BCg21hNBqEAHaFm?w=219&h=180&c=7&r=0&o=5&cb=11&dpr=1.1&pid=1.7" alt="" />
+                        <img className="w-auto h-8 rounded-full object-cover" src="https://theme.hstatic.net/200000690725/1001078549/14/logo.png?v=418" alt="" />
                         <label htmlFor="" className="hidden">My Project</label>
                     </Link>
                 </div>
