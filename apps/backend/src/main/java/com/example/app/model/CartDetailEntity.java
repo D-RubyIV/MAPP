@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "cart_details")
-public class CartDetailModel extends BaseModel{
+public class CartDetailEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private ProductDetailModel productDetail;
+    private ProductDetailEntity productDetail;
     private int quantity;
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    private CartModel cart;
+    private CartEntity cart;
 }

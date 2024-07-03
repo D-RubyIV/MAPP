@@ -1,6 +1,6 @@
 package com.example.app.controller;
 
-import com.example.app.model.ColorModel;
+import com.example.app.model.ColorEntity;
 import com.example.app.repository.ColorRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -30,7 +30,7 @@ public class ColorController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> add(@Valid @RequestBody ColorModel entity, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> add(@Valid @RequestBody ColorEntity entity, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -41,12 +41,12 @@ public class ColorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody ColorModel entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody ColorEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        ColorModel model = colorRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        ColorEntity model = colorRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(colorRepository.save(model));
     }
@@ -54,7 +54,7 @@ public class ColorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {
-        ColorModel model = colorRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        ColorEntity model = colorRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         colorRepository.delete(model);
         return ResponseEntity.ok("");
     }

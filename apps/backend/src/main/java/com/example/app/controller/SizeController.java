@@ -1,6 +1,6 @@
 package com.example.app.controller;
 
-import com.example.app.model.SizeModel;
+import com.example.app.model.SizeEntity;
 import com.example.app.repository.SizeRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -30,7 +30,7 @@ public class SizeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> add(@Valid @RequestBody SizeModel entity, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> add(@Valid @RequestBody SizeEntity entity, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -41,12 +41,12 @@ public class SizeController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody SizeModel entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody SizeEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        SizeModel model = sizeRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        SizeEntity model = sizeRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(sizeRepository.save(model));
     }
@@ -54,7 +54,7 @@ public class SizeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {
-        SizeModel model = sizeRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        SizeEntity model = sizeRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         sizeRepository.delete(model);
         return ResponseEntity.ok("");
     }

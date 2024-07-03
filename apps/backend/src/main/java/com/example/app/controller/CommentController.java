@@ -1,7 +1,7 @@
 package com.example.app.controller;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.example.app.model.ProductModel;
+import com.example.app.model.ProductEntity;
 import com.example.app.repository.CommentRepository;
 import com.example.app.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class CommentController {
 
     @GetMapping("product/{id}")
     public ResponseEntity<?> getCommentsOfProduct(@PathVariable int id){
-        ProductModel productModel = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found product"));
+        ProductEntity productModel = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found product"));
         return ResponseEntity.ok(commentRepository.findAllByProduct(productModel));
     }
     

@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "order_details")
-public class OrderDetailModel extends BaseModel{
+public class OrderDetailEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private OrderModel order;
+    private OrderEntity order;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private ProductDetailModel productDetail;
+    private ProductDetailEntity productDetail;
     @NotNull
     private int quantity;
 }

@@ -1,9 +1,8 @@
 package com.example.app.controller;
 
-import com.example.app.model.CollectionModel;
-import com.example.app.model.SizeModel;
+import com.example.app.model.CollectionEntity;
+import com.example.app.model.SizeEntity;
 import com.example.app.repository.CollectionRepository;
-import com.example.app.repository.SizeRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +31,7 @@ public class CollectionController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> add(@Valid @RequestBody CollectionModel entity, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> add(@Valid @RequestBody CollectionEntity entity, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -43,12 +42,12 @@ public class CollectionController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody SizeModel entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody SizeEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        CollectionModel model = collectionRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        CollectionEntity model = collectionRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(collectionRepository.save(model));
     }
@@ -56,7 +55,7 @@ public class CollectionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {
-        CollectionModel model = collectionRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        CollectionEntity model = collectionRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         collectionRepository.delete(model);
         return ResponseEntity.ok("");
     }

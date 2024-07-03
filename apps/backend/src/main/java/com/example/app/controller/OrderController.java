@@ -1,11 +1,7 @@
 package com.example.app.controller;
 
-import com.example.app.common.Status;
 import com.example.app.dto.OrderDto;
-import com.example.app.model.OrderDetailModel;
-import com.example.app.model.OrderModel;
-import com.example.app.model.UserModel;
-import com.example.app.repository.OrderDetailRepository;
+import com.example.app.model.OrderEntity;
 import com.example.app.repository.OrderRepository;
 import com.example.app.repository.UserRepository;
 import com.example.app.repository.VoucherRepository;
@@ -16,14 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin("*")
 @Controller
@@ -53,7 +45,7 @@ public class OrderController {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        OrderModel entity = new OrderModel();
+        OrderEntity entity = new OrderEntity();
         BeanUtils.copyProperties(dto, entity);
         System.out.println(entity);
         entity.setUser(userRepository.findById(dto.getUser()).orElse(null));
@@ -62,19 +54,19 @@ public class OrderController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody OrderModel entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody OrderEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        OrderModel model = orderRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        OrderEntity model = orderRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(orderRepository.save(model));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {
-        OrderModel model = orderRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        OrderEntity model = orderRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         orderRepository.delete(model);
         return ResponseEntity.ok("");
     }

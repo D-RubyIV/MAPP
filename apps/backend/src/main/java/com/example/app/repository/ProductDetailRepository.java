@@ -1,12 +1,12 @@
 package com.example.app.repository;
 
-import com.example.app.model.ProductDetailModel;
-import com.example.app.model.ProductModel;
+import com.example.app.model.ProductDetailEntity;
+import com.example.app.model.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductDetailRepository extends JpaRepository<ProductDetailModel, Integer> {
-    ProductDetailModel findByCode(String code);
-    List<ProductDetailModel> findAllByProduct(ProductModel productModel);
+public interface ProductDetailRepository extends JpaRepository<ProductDetailEntity, Integer> {
+    ProductDetailEntity findByCode(String code);
+    List<ProductDetailEntity> findAllByProduct(ProductEntity productModel);
 }

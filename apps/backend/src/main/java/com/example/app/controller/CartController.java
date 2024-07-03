@@ -1,7 +1,7 @@
 package com.example.app.controller;
 
-import com.example.app.model.CartModel;
-import com.example.app.model.UserModel;
+import com.example.app.model.CartEntity;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @CrossOrigin("*")
 @RequestMapping("api/manage/carts")
 @RestController
@@ -23,12 +21,12 @@ public class CartController {
     private CartRepository cartRepository;
 
     @GetMapping("me")
-    public ResponseEntity<CartModel> handleCart(){
+    public ResponseEntity<CartEntity> handleCart(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(authentication);
 
         if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)){
-            UserModel currentUser = (UserModel) authentication.getPrincipal();
+            UserEntity currentUser = (UserEntity) authentication.getPrincipal();
             return ResponseEntity.ok(cartRepository.findByUser(currentUser).orElse(null));
         } else {
             return ResponseEntity.ok(null);

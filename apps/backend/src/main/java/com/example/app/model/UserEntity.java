@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
-public class UserModel extends BaseModel implements UserDetails{
+public class UserEntity extends BaseEntity implements UserDetails{
     @JsonIgnore
     @NotBlank
     private String password;

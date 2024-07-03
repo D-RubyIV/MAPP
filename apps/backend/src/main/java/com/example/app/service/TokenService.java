@@ -1,6 +1,6 @@
 package com.example.app.service;
 
-import com.example.app.model.UserModel;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.UserRepository;
 import com.example.app.response.TokenResponse;
 import io.jsonwebtoken.Claims;
@@ -66,7 +66,7 @@ public class TokenService {
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserModel userModel,
+            UserEntity userModel,
             long expiration
     ) {
         return Jwts
@@ -80,7 +80,7 @@ public class TokenService {
                 .compact();
     }
 
-    public String generateAccessToken(UserModel userModel) {
+    public String generateAccessToken(UserEntity userModel) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
         String token = buildToken(extraClaims, userModel, expiration_short);
@@ -88,14 +88,14 @@ public class TokenService {
         return token;
     }
 
-    public String generateRefreshToken(UserModel userModel) {
+    public String generateRefreshToken(UserEntity userModel) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
         String token = buildToken(extraClaims, userModel, expiration_long);
         userRepository.save(userModel);
         return token;
     }
-    public TokenResponse generate(UserModel userModel){
+    public TokenResponse generate(UserEntity userModel){
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setAccessToken(generateAccessToken(userModel));
         tokenResponse.setRefreshToken(generateRefreshToken(userModel));

@@ -1,9 +1,9 @@
 package com.example.app.service;
 
 import com.example.app.common.Status;
-import com.example.app.model.OrderDetailModel;
-import com.example.app.model.OrderModel;
-import com.example.app.model.UserModel;
+import com.example.app.model.OrderDetailEntity;
+import com.example.app.model.OrderEntity;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.OrderDetailRepository;
 import com.example.app.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +21,17 @@ public class CommonService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    public List<OrderDetailModel> getNearestPendingOrderDetails(UserModel userModel){
-        List<OrderDetailModel> listPendingOrderDetails = new ArrayList<>();
-        Optional<OrderModel> currentOrderOptional = orderRepository.findTopByUserAndStatusOrderByIdDesc(userModel, Status.Pending);
+    public List<OrderDetailEntity> getNearestPendingOrderDetails(UserEntity userModel){
+        List<OrderDetailEntity> listPendingOrderDetails = new ArrayList<>();
+        Optional<OrderEntity> currentOrderOptional = orderRepository.findTopByUserAndStatusOrderByIdDesc(userModel, Status.Pending);
         // IF EXIST PENDING ORDER
         if (currentOrderOptional.isPresent()){
-            OrderModel currentOrder = currentOrderOptional.get();
+            OrderEntity currentOrder = currentOrderOptional.get();
             listPendingOrderDetails = orderDetailRepository.findByOrder(currentOrder);
         }
         // CREATE NEW ORDER IF NOT EXIST PENDING ORDER
         else{
-            OrderModel currentOrderCreated = new OrderModel();
+            OrderEntity currentOrderCreated = new OrderEntity();
             currentOrderCreated.setUser(userModel);
             currentOrderCreated.setStatus(Status.Pending);
             orderRepository.save(currentOrderCreated);

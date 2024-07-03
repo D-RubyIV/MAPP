@@ -2,17 +2,15 @@ package com.example.app.config;
 
 
 import com.example.app.common.Provider;
-import com.example.app.model.UserModel;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.UserRepository;
 import com.example.app.service.TokenService;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.BadRequestException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +22,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class TokenRequestFilter extends OncePerRequestFilter {
     @Autowired
@@ -37,7 +36,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String myAuthorization = request.getHeader("Authorization");
         if (!(myAuthorization != null && myAuthorization.startsWith("Bearer"))) {
-            System.out.println("NOT HAVE AUTHORIZATION");
+            log.debug("NOT HAVE AUTHORIZATION");
             filterChain.doFilter(request, response);
             return;
         }
@@ -45,7 +44,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 
         try {
             if (tokenService.extractUsername(tokenClient) == null) {
-                System.out.println("TOKEN NULL");
+                log.debug("TOKEN NULL");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -53,11 +52,9 @@ public class TokenRequestFilter extends OncePerRequestFilter {
             Map<String, Object> map = tokenService.getMapClaimsFromToken(tokenClient);
             String providerString = (String) map.get("provider");
             Provider provider = Provider.valueOf(providerString);
-            System.out.println("PROVIDER: " + provider.toString());
-            UserModel userModel = userRepository.findByEmailAndProvider(email, provider);
-            System.out.println(userModel);
+            UserEntity userModel = userRepository.findByEmailAndProvider(email, provider);
             if (userModel == null) {
-                System.out.println("USER NOT FOUND");
+                log.debug("USER NOT FOUND");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -73,8 +70,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationContext(UserDetails userDetails, HttpServletRequest request) {
-        System.out.println("USER DETAIL");
-        System.out.println(userDetails);
+        log.info(String.format("REQUESTS FROM USER: %s", userDetails.getUsername()));
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,

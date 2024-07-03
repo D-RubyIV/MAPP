@@ -1,7 +1,7 @@
 package com.example.app.controller;
 
 import com.example.app.common.Provider;
-import com.example.app.model.UserModel;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.UserRepository;
 import com.example.app.requests.SignInRequests;
 import com.example.app.requests.SignUpRequests;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -51,7 +50,7 @@ public class AuthController {
             } else if (userRepository.findByEmailAndProvider(email, provider) == null) {
                 throw new BadRequestException("User not exist");
             } else {
-                UserModel userModelFound = userRepository.findByEmailAndProvider(email, provider);
+                UserEntity userModelFound = userRepository.findByEmailAndProvider(email, provider);
                 System.out.println(userModelFound);
                 if (bCryptPasswordEncoder.matches(password, userModelFound.getPassword())){
                     TokenResponse tokenResponse = tokenService.generate(userModelFound);
@@ -72,7 +71,7 @@ public class AuthController {
         if (userRepository.findByEmailAndProvider(signUpRequests.getEmail(), Provider.Local) != null) {
             throw new BadRequestException("Email is used");
         }
-        UserModel userModel = authService.register(signUpRequests);
+        UserEntity userModel = authService.register(signUpRequests);
         return ResponseEntity.ok(userModel);
     }
 
@@ -87,7 +86,7 @@ public class AuthController {
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestParam("token") String token) {
         String username = tokenService.extractUsername(token);
-        UserModel userModel = userRepository.findByEmail(username).orElse(null);
+        UserEntity userModel = userRepository.findByEmail(username).orElse(null);
         TokenResponse tokenResponse = new TokenResponse();
         if (userModel != null){
             tokenResponse = tokenService.generate(userModel);

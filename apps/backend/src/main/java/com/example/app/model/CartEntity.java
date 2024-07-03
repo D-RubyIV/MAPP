@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "carts")
-public class CartModel extends BaseModel{
+public class CartEntity extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
-    private UserModel user;
+    private UserEntity user;
 }

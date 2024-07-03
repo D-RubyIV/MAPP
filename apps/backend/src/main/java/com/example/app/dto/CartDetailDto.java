@@ -1,8 +1,5 @@
 package com.example.app.dto;
 
-import com.example.app.model.CartModel;
-import com.example.app.model.ProductDetailModel;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -6,7 +6,7 @@ import OverviewProductCard from "../card/OverviewProductCard";
 const ProductComponent = () => {
     const collectionRefs = useRef<(HTMLLIElement | null)[]>([]);
     const { t } = useTranslation()
-    const [categories, setCategories] = useState<any[]>([])
+    const [categories, setCategories] = useState<Category[]>([])
     const [productOverviews, setProductOverviews] = useState<OverviewProduct[]>([])
     const [collections, setCollections] = useState<Collection[]>([])
     const [collectionsSelected, setCollectionsSelected] = useState<Collection>()
@@ -86,7 +86,7 @@ const ProductComponent = () => {
                         {
                             productOverviews.map((item, index) => (
                                 <Fragment key={index}>
-                                    <OverviewProductCard item={item}/>
+                                    <OverviewProductCard item={item} />
                                 </Fragment>
                             ))
                         }

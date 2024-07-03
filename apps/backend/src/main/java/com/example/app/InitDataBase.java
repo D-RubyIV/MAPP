@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Set;
+
 @Component
 public class InitDataBase {
     @Autowired
@@ -51,7 +51,7 @@ public class InitDataBase {
         List<String> listColorCode = List.of("xanh", "do", "den", "vang", "tim");
         listColorCode.forEach(s -> {
             if(colorRepository.findByCode(s).isEmpty()){
-                ColorModel colorModel = new ColorModel();
+                ColorEntity colorModel = new ColorEntity();
                 colorModel.setCode(s);
                 colorModel.setName(s.toUpperCase());
                 colorRepository.save(colorModel);
@@ -60,14 +60,14 @@ public class InitDataBase {
         List<String> listSizeCode = List.of("36", "37", "38", "39", "40");
         listSizeCode.forEach(s -> {
             if(sizeRepository.findByCode(s).isEmpty()){
-                SizeModel sizeModel = new SizeModel();
+                SizeEntity sizeModel = new SizeEntity();
                 sizeModel.setCode(s);
                 sizeModel.setName(s.toUpperCase());
                 sizeRepository.save(sizeModel);
             }
         });
         if (userRepository.findByEmailAndProvider("phah04@gmail.com", Provider.Local) == null) {
-            UserModel userModel = new UserModel();
+            UserEntity userModel = new UserEntity();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
             userModel.setEmail("phah04@gmail.com");
             userModel.setPhone("84833486936");
@@ -77,7 +77,7 @@ public class InitDataBase {
             userRepository.save(userModel);
         }
         if (userRepository.findByEmailAndProvider("moderator@gmail.com", Provider.Local) == null) {
-            UserModel userModel = new UserModel();
+            UserEntity userModel = new UserEntity();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
             userModel.setEmail("moderator@gmail.com");
             userModel.setName("Quản trị viên");
@@ -88,7 +88,7 @@ public class InitDataBase {
             userRepository.save(userModel);
         }
         if (userRepository.findByEmailAndProvider("user1@gmail.com", Provider.Local) == null) {
-            UserModel userModel = new UserModel();
+            UserEntity userModel = new UserEntity();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
             userModel.setEmail("user1@gmail.com");
             userModel.setPhone("84833486936");
@@ -99,7 +99,7 @@ public class InitDataBase {
             userRepository.save(userModel);
         }
         if (userRepository.findByEmailAndProvider("user2@gmail.com", Provider.Local) == null) {
-            UserModel userModel = new UserModel();
+            UserEntity userModel = new UserEntity();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
             userModel.setEmail("user2@gmail.com");
             userModel.setPhone("84833486936");
@@ -110,7 +110,7 @@ public class InitDataBase {
             userRepository.save(userModel);
         }
         if (userRepository.findByEmailAndProvider("user3@gmail.com", Provider.Local) == null) {
-            UserModel userModel = new UserModel();
+            UserEntity userModel = new UserEntity();
             userModel.setPassword(bCryptPasswordEncoder.encode("123"));
             userModel.setEmail("use3r@gmail.com");
             userModel.setPhone("84833486936");
@@ -123,7 +123,7 @@ public class InitDataBase {
         for (int i = 0; i < 100; i++) {
             String email = "user" + i + "@example.com";
             if (userRepository.findByEmailAndProvider(email, Provider.Local) == null) {
-                UserModel userModel = new UserModel();
+                UserEntity userModel = new UserEntity();
                 userModel.setPassword(bCryptPasswordEncoder.encode("123"));
                 userModel.setEmail(email);
                 userModel.setPhone("84833486936");
@@ -135,120 +135,120 @@ public class InitDataBase {
         }
         // COLLECTIONS
         if (collectionRepository.findById(1).isEmpty()){
-            CollectionModel collectionModel = new CollectionModel();
-            collectionModel.setName("Sản phẩm nổi bật");
-            collectionModel.setCode("san-pham-noi-bat");
-            collectionRepository.save(collectionModel);
+            CollectionEntity collectionEntity = new CollectionEntity();
+            collectionEntity.setName("Sản phẩm nổi bật");
+            collectionEntity.setCode("san-pham-noi-bat");
+            collectionRepository.save(collectionEntity);
         }
         if (collectionRepository.findById(2).isEmpty()){
-            CollectionModel collectionModel = new CollectionModel();
-            collectionModel.setName("Đồ xuân hè");
-            collectionModel.setCode("do-xuan-he");
-            collectionRepository.save(collectionModel);
+            CollectionEntity collectionEntity = new CollectionEntity();
+            collectionEntity.setName("Đồ xuân hè");
+            collectionEntity.setCode("do-xuan-he");
+            collectionRepository.save(collectionEntity);
         }
         if (collectionRepository.findById(3).isEmpty()){
-            CollectionModel collectionModel = new CollectionModel();
-            collectionModel.setName("Đồ công sở");
-            collectionModel.setCode("do-cong-so");
-            collectionRepository.save(collectionModel);
+            CollectionEntity collectionEntity = new CollectionEntity();
+            collectionEntity.setName("Đồ công sở");
+            collectionEntity.setCode("do-cong-so");
+            collectionRepository.save(collectionEntity);
         }
         if (collectionRepository.findById(4).isEmpty()){
-            CollectionModel collectionModel = new CollectionModel();
-            collectionModel.setName("Đồ thể thao");
-            collectionModel.setCode("do-the-thao");
-            collectionRepository.save(collectionModel);
+            CollectionEntity collectionEntity = new CollectionEntity();
+            collectionEntity.setName("Đồ thể thao");
+            collectionEntity.setCode("do-the-thao");
+            collectionRepository.save(collectionEntity);
         }
         if (collectionRepository.findById(5).isEmpty()){
-            CollectionModel collectionModel = new CollectionModel();
-            collectionModel.setName("Khác");
-            collectionModel.setCode("khac");
-            collectionRepository.save(collectionModel);
+            CollectionEntity collectionEntity = new CollectionEntity();
+            collectionEntity.setName("Khác");
+            collectionEntity.setCode("khac");
+            collectionRepository.save(collectionEntity);
         }
         // TAG
         if (tagRepository.findById(1).isEmpty()){
-            TagModel tagModel = new TagModel();
+            TagEntity tagModel = new TagEntity();
             tagModel.setName("Đồ xuân hè");
             tagModel.setCode("do-xuan-he");
             tagRepository.save(tagModel);
         }
         if (tagRepository.findById(2).isEmpty()){
-            TagModel tagModel = new TagModel();
+            TagEntity tagModel = new TagEntity();
             tagModel.setName("Đồ công sở");
             tagModel.setCode("do-cong-so");
             tagRepository.save(tagModel);
         }
         if (tagRepository.findById(3).isEmpty()){
-            TagModel tagModel = new TagModel();
+            TagEntity tagModel = new TagEntity();
             tagModel.setName("Đồ thể thao");
             tagModel.setCode("do-the-thao");
             tagRepository.save(tagModel);
         }
         if (tagRepository.findById(4).isEmpty()){
-            TagModel tagModel = new TagModel();
+            TagEntity tagModel = new TagEntity();
             tagModel.setName("Sản phẩm nổi bật");
             tagModel.setCode("san-pham-noi-bat");
             tagRepository.save(tagModel);
         }
         // CATEGORY
         if (categoryRepository.findById(1).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Ao Polo");
             categoryModel.setCode("polo");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(2).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Áo Phông");
             categoryModel.setCode("ao-phong");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(3).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Quần Short");
             categoryModel.setCode("quan-short");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(4).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Quần Jeans");
             categoryModel.setCode("quan-jeans");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(5).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Quần Kaki");
             categoryModel.setCode("quan-kaki");
             categoryRepository.save(categoryModel);
         }
         if (categoryRepository.findById(6).isEmpty()){
-            CategoryModel categoryModel = new CategoryModel();
+            CategoryEntity categoryModel = new CategoryEntity();
             categoryModel.setName("Sơ mi");
             categoryModel.setCode("so-mi");
             categoryRepository.save(categoryModel);
         }
         // SIZE
         if (sizeRepository.findById(1).isEmpty()){
-            SizeModel sizeModel = new SizeModel();
+            SizeEntity sizeModel = new SizeEntity();
             sizeModel.setName("L");
             sizeModel.setCode("SZO1");
             sizeRepository.save(sizeModel);
         }
         if (sizeRepository.findById(2).isEmpty()){
-            SizeModel sizeModel = new SizeModel();
+            SizeEntity sizeModel = new SizeEntity();
             sizeModel.setName("XL");
             sizeModel.setCode("SZO2");
             sizeRepository.save(sizeModel);
         }
         // PRODUCT
         if (productRepository.findById(1).isEmpty()){
-            ProductModel productModel = new ProductModel();
+            ProductEntity productModel = new ProductEntity();
             productModel.setName("Áo Polo họa tiết Refine and shine 09 FSTP070 - Đen nhạt");
             productModel.setCode("FSTP070");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(3).orElse(null));
-            productModel.setCollection(collectionRepository.findById(1).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(1, 2))));
             productModel.setSuggest(true);
-            productModel.setTagModels(tagRepository.findAllById(List.of(1, 2)));
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(List.of(1, 2))));
             productModel.setDescription("""
                     <!DOCTYPE html>
                     <html>
@@ -263,14 +263,14 @@ public class InitDataBase {
             productRepository.save(productModel);
         }
         if (productRepository.findById(2).isEmpty()){
-            ProductModel productModel = new ProductModel();
-            productModel.setName("Áo T shirt họa tiết in Refine and Shine FSTS050 - Xanh lá cây");
-            productModel.setCode("FSTS050");
+            ProductEntity productModel = new ProductEntity();
+            productModel.setName("Áo T shirt họa tiết in Refine and Shine FSTS055 - Xanh lá cây");
+            productModel.setCode("FSTS055");
             productModel.setPrice(45000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
-            productModel.setCollection(collectionRepository.findById(2).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(1, 2))));
             productModel.setSuggest(true);
-            productModel.setTagModels(tagRepository.findAllById(List.of(2, 3)));
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(Set.of(1, 2))));
             productModel.setDescription("""
                     <!DOCTYPE html>
                     <html>
@@ -285,48 +285,52 @@ public class InitDataBase {
             productRepository.save(productModel);
         }
         if (productRepository.findById(3).isEmpty()){
-            ProductModel productModel = new ProductModel();
+            ProductEntity productModel = new ProductEntity();
             productModel.setName("Áo Polo trơn basic thêu logo ngực ESTP038 - Xanh đá đậm");
-            productModel.setCode("FSTP070");
+            productModel.setCode("ESTP038");
             productModel.setPrice(35000);
             productModel.setCategory(categoryRepository.findById(3).orElse(null));
-            productModel.setCollection(collectionRepository.findById(1).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(1, 2))));
             productModel.setSuggest(true);
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(List.of(2, 3))));
             productRepository.save(productModel);
         }
         if (productRepository.findById(4).isEmpty()){
-            ProductModel productModel = new ProductModel();
+            ProductEntity productModel = new ProductEntity();
             productModel.setName("Áo Polo thể thao can vai FSTP001");
             productModel.setCode("FSTP001");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
-            productModel.setCollection(collectionRepository.findById(1).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(1, 3))));
             productModel.setSuggest(true);
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(List.of(3, 4))));
             productRepository.save(productModel);
         }
         if (productRepository.findById(5).isEmpty()){
-            ProductModel productModel = new ProductModel();
-            productModel.setName("Áo Polo họa tiết Refine and shine 09 FSTP070 - Xanh lá cây");
-            productModel.setCode("FSTP070");
+            ProductEntity productModel = new ProductEntity();
+            productModel.setName("Áo Polo họa tiết Refine and shine 09 FSTP071 - Xanh lá cây");
+            productModel.setCode("FSTP071");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
-            productModel.setCollection(collectionRepository.findById(2).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(4, 2))));
             productModel.setSuggest(true);
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(List.of(4, 5))));
             productRepository.save(productModel);
         }
         if (productRepository.findById(6).isEmpty()){
-            ProductModel productModel = new ProductModel();
+            ProductEntity productModel = new ProductEntity();
             productModel.setName("Áo T shirt họa tiết in Refine and Shine FSTS050 - Đen nhạt");
             productModel.setCode("FSTS050");
             productModel.setPrice(25000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
-            productModel.setCollection(collectionRepository.findById(2).orElse(null));
+            productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(3, 4))));
             productModel.setSuggest(true);
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(List.of(2, 5))));
             productRepository.save(productModel);
         }
         // PRODUCT DETAIL
         if (productDetailRepository.findByCode("PDT01") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT01");
             productDetailModel.setQuantity(40);
             productDetailModel.setPrice(1000);
@@ -336,7 +340,7 @@ public class InitDataBase {
             productDetailRepository.save(productDetailModel);
         }
         if (productDetailRepository.findByCode("PDT02") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT02");
             productDetailModel.setQuantity(20);
             productDetailModel.setPrice(20000);
@@ -346,7 +350,7 @@ public class InitDataBase {
             productDetailRepository.save(productDetailModel);
         }
         if (productDetailRepository.findByCode("PDT03") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT03");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(20000);
@@ -356,7 +360,7 @@ public class InitDataBase {
             productDetailRepository.save(productDetailModel);
         }
         if (productDetailRepository.findByCode("PDT04") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT04");
             productDetailModel.setQuantity(60);
             productDetailModel.setPrice(20000);
@@ -366,7 +370,7 @@ public class InitDataBase {
             productDetailRepository.save(productDetailModel);
         }
         if (productDetailRepository.findByCode("PDT05") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT05");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(40000);
@@ -376,7 +380,7 @@ public class InitDataBase {
             productDetailRepository.save(productDetailModel);
         }
         if (productDetailRepository.findByCode("PDT06") == null){
-            ProductDetailModel productDetailModel = new ProductDetailModel();
+            ProductDetailEntity productDetailModel = new ProductDetailEntity();
             productDetailModel.setCode("PDT06");
             productDetailModel.setQuantity(25);
             productDetailModel.setPrice(25000);
@@ -418,7 +422,7 @@ public class InitDataBase {
         }
         // ORDER
         if (orderRepository.findById(1).isEmpty()){
-            OrderModel orderModel = new OrderModel();
+            OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Pending);
             orderModel.setUser(userRepository.findById(1).orElse(null));
@@ -426,7 +430,7 @@ public class InitDataBase {
             orderRepository.save(orderModel);
         }
         if (orderRepository.findById(2).isEmpty()){
-            OrderModel orderModel = new OrderModel();
+            OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Pending);
             orderModel.setUser(userRepository.findById(2).orElse(null));
@@ -434,7 +438,7 @@ public class InitDataBase {
             orderRepository.save(orderModel);
         }
         if (orderRepository.findById(3).isEmpty()){
-            OrderModel orderModel = new OrderModel();
+            OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Success);
             orderModel.setUser(userRepository.findById(3).orElse(null));
@@ -443,7 +447,7 @@ public class InitDataBase {
         }
 
         if (orderRepository.findById(4).isEmpty()){
-            OrderModel orderModel = new OrderModel();
+            OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
             orderModel.setStatus(Status.Success);
             orderModel.setUser(userRepository.findById(1).orElse(null));
@@ -452,14 +456,14 @@ public class InitDataBase {
         }
         // ORDER DETAIL
         if (orderDetailRepository.findById(1).isEmpty()){
-            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            OrderDetailEntity orderDetailModel = new OrderDetailEntity();
             orderDetailModel.setProductDetail(productDetailRepository.findById(1).orElse(null));
             orderDetailModel.setQuantity(5);
             orderDetailModel.setOrder(orderRepository.findById(2).orElse(null));
             orderDetailRepository.save(orderDetailModel);
         }
         if (orderDetailRepository.findById(2).isEmpty()){
-            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            OrderDetailEntity orderDetailModel = new OrderDetailEntity();
             orderDetailModel.setProductDetail(productDetailRepository.findById(2).orElse(null));
             orderDetailModel.setQuantity(10);
             orderDetailModel.setOrder(orderRepository.findById(1).orElse(null));
@@ -467,7 +471,7 @@ public class InitDataBase {
         }
         // COMMENT
         if(commentRepository.findById(1).isEmpty()){
-            CommentModel commentModel = new CommentModel();
+            CommentEntity commentModel = new CommentEntity();
             commentModel.setUser(userRepository.findById(3).orElse(null));
             commentModel.setTime(LocalDateTime.now());
             commentModel.setProduct(productRepository.findById(2).orElse(null));
@@ -477,7 +481,7 @@ public class InitDataBase {
         }
 
         if(commentRepository.findById(2).isEmpty()){
-            CommentModel commentModel = new CommentModel();
+            CommentEntity commentModel = new CommentEntity();
             commentModel.setUser(userRepository.findById(2).orElse(null));
             commentModel.setTime(LocalDateTime.now());
             commentModel.setProduct(productRepository.findById(2).orElse(null));
@@ -487,7 +491,7 @@ public class InitDataBase {
             commentRepository.save(commentModel);
         }
         if(commentRepository.findById(3).isEmpty()){
-            CommentModel commentModel = new CommentModel();
+            CommentEntity commentModel = new CommentEntity();
             commentModel.setUser(userRepository.findById(3).orElse(null));
             commentModel.setTime(LocalDateTime.now());
             commentModel.setProduct(productRepository.findById(2).orElse(null));
@@ -496,7 +500,7 @@ public class InitDataBase {
             commentRepository.save(commentModel);
         }
         if(commentRepository.findById(4).isEmpty()){
-            CommentModel commentModel = new CommentModel();
+            CommentEntity commentModel = new CommentEntity();
             commentModel.setUser(userRepository.findById(3).orElse(null));
             commentModel.setTime(LocalDateTime.now());
             commentModel.setProduct(productRepository.findById(2).orElse(null));

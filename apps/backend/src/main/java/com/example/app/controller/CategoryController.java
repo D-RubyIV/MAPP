@@ -1,6 +1,6 @@
 package com.example.app.controller;
 
-import com.example.app.model.CategoryModel;
+import com.example.app.model.CategoryEntity;
 import com.example.app.repository.CategoryRepository;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -30,7 +30,7 @@ public class CategoryController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> add(@Valid @RequestBody CategoryModel entity, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> add(@Valid @RequestBody CategoryEntity entity, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
@@ -41,12 +41,12 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody CategoryModel entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody CategoryEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
-        CategoryModel model = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        CategoryEntity model = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         BeanUtils.copyProperties(entity, model);
         return ResponseEntity.ok(categoryRepository.save(model));
     }
@@ -54,7 +54,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) throws Exception {
-        CategoryModel model = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
+        CategoryEntity model = categoryRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         categoryRepository.delete(model);
         return ResponseEntity.ok("");
     }

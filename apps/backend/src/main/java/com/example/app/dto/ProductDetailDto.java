@@ -1,11 +1,5 @@
 package com.example.app.dto;
 
-import com.example.app.model.ColorModel;
-import com.example.app.model.ProductModel;
-import com.example.app.model.SizeModel;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

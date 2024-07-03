@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "sizes")
-public class SizeModel extends BaseModel{
+public class SizeEntity extends BaseEntity {
     private String name;
     private String code;
 }

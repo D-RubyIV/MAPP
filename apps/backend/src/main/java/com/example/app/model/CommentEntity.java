@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "comments")
-public class CommentModel extends BaseModel{
+public class CommentEntity extends BaseEntity {
     private String content;
     private int star;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserModel user;
+    private UserEntity user;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private ProductModel product;
+    private ProductEntity product;
     private LocalDateTime time;
     @ManyToOne(optional = true)
     @JoinColumn(name = "parent_comment_id", referencedColumnName = "id")
-    private CommentModel commentModel;
+    private CommentEntity commentModel;
 
 }

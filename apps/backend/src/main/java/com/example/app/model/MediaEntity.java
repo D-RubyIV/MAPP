@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "medias")
-public class MediaModel extends BaseModel{
+public class MediaEntity extends BaseEntity {
     private String name;
 
 }

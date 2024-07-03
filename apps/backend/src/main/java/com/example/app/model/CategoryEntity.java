@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "categoríes")
-public class CategoryModel extends BaseModel{
+public class CategoryEntity extends BaseEntity {
     @NotNull
     @NotBlank
     private String name;
