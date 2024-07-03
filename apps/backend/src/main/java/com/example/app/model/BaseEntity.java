@@ -1,5 +1,6 @@
 package com.example.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +18,10 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createAt;
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime updateAt;
 }

@@ -4,7 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import { Link } from "react-router-dom";
 
 
-const OverviewProductCard = ({ item }: { item: OverviewProduct }) => {
+const OverviewProductCard = ({ item }: { item: OverviewProductV3 }) => {
     const [loaded, setLoaded] = useState<boolean>(false);
     const baseImage = "https://product.hstatic.net/200000690725/product/social_post_3_-_12.06-04_58b026e298c9484c8baa13a1ef538757_master.jpg";
     return (
@@ -19,12 +19,12 @@ const OverviewProductCard = ({ item }: { item: OverviewProduct }) => {
                 <img
                     className="object-cover w-full h-full"
                     onLoad={() => setLoaded(true)}
-                    src={item?.image || baseImage}
+                    src={item?.product?.media?.name || baseImage}
                     alt="Product Image"
                 />
             </div>
             <div className="mt-2">
-                <span className="font-sans text-[13px] line-clamp-3 min-h-14">{item.name}</span>
+                <span className="font-sans text-[13px] line-clamp-3 min-h-14">{item.product.name}</span>
             </div>
             <div className="flex justify-between text-[13px] py-0.5 tracking-tighter font-thin">
                 <div>
@@ -36,7 +36,7 @@ const OverviewProductCard = ({ item }: { item: OverviewProduct }) => {
             </div>
             <div className="flex justify-between mt-1">
                 <div>
-                    <span className="font-semibold tracking-tight">{`${item.price.toLocaleString('de-DE')}₫` || "Chưa niêm giá"}</span>
+                    <span className="font-semibold tracking-tight">{`${item.product.price.toLocaleString('de-DE')}₫` || "Chưa niêm giá"}</span>
                 </div>
                 <div>
                     <Link to={""} className="p-1 rounded-full bg-gray-200 items-center inline-flex ring-1">

@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Transactional
 @Component
 public class InitDataBase {
     @Autowired
@@ -46,6 +48,7 @@ public class InitDataBase {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
+    @Transactional
     @PostConstruct
     public void init() {
         List<String> listColorCode = List.of("xanh", "do", "den", "vang", "tim");
@@ -268,9 +271,12 @@ public class InitDataBase {
             productModel.setCode("FSTS055");
             productModel.setPrice(45000);
             productModel.setCategory(categoryRepository.findById(2).orElse(null));
+            System.out.println("===========================");
+            System.out.println(collectionRepository.findAllById(List.of(1, 2)));
+            System.out.println("===========================");
+            productModel.setTags(new HashSet<>(tagRepository.findAllById(Set.of(1, 2))));
             productModel.setCollections(new HashSet<>(collectionRepository.findAllById(List.of(1, 2))));
             productModel.setSuggest(true);
-            productModel.setTags(new HashSet<>(tagRepository.findAllById(Set.of(1, 2))));
             productModel.setDescription("""
                     <!DOCTYPE html>
                     <html>

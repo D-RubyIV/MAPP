@@ -6,6 +6,7 @@ import com.example.app.model.ProductEntity;
 import com.example.app.repository.MediaRepository;
 import com.example.app.repository.ProductRepository;
 import com.example.app.response.OverviewProductResponse;
+import com.example.app.response.OverviewProductResponseV3;
 import com.example.app.service.CloudService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +37,6 @@ public class ProductController {
     @Autowired
     private MediaRepository mediaRepository;
 
-
-
     @GetMapping("")
     public ResponseEntity<?> findAll(
             @RequestParam(name = "limit", defaultValue = "5") int limit,
@@ -49,21 +49,24 @@ public class ProductController {
     @GetMapping("custom")
     public ResponseEntity<?> custom(
             @RequestParam(name = "limit", defaultValue = "5") int limit,
+            @RequestParam(name = "offset", defaultValue = "0") int offset,
+            @RequestParam("ids") Collection<Integer> ids
+    ) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<OverviewProductResponseV3> page = productRepository.findAllOverViewProductV4(pageable, ids);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("v3/overview")
+    public ResponseEntity<?> overviewV3(
+            @RequestParam(name = "limit", defaultValue = "5") int limit,
             @RequestParam(name = "offset", defaultValue = "0") int offset
     ) {
         Pageable pageable = PageRequest.of(offset, limit);
-        List<Object> list = productRepository.findCustom();
-        return ResponseEntity.ok(list);
+        Page<OverviewProductResponseV3> page = productRepository.findOverviewV3(pageable);
+        return ResponseEntity.ok(page);
     }
 
-    @GetMapping("overview")
-    public ResponseEntity<Page<OverviewProductResponse>> findAllCustom(
-            @RequestParam(name = "limit", defaultValue = "5") int limit,
-            @RequestParam(name = "offset", defaultValue = "0") int offset
-    ){
-        Pageable pageable = PageRequest.of(offset, limit);
-        return ResponseEntity.ok(productRepository.findWithPropOverview(pageable));
-    }
 
     @GetMapping("isSuggest")
     public ResponseEntity<?> findAllSuggest(

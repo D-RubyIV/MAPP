@@ -7,7 +7,7 @@ const ProductComponent = () => {
     const collectionRefs = useRef<(HTMLLIElement | null)[]>([]);
     const { t } = useTranslation()
     const [categories, setCategories] = useState<Category[]>([])
-    const [productOverviews, setProductOverviews] = useState<OverviewProduct[]>([])
+    const [productOverviews, setProductOverviews] = useState<OverviewProductV3[]>([])
     const [collections, setCollections] = useState<Collection[]>([])
     const [collectionsSelected, setCollectionsSelected] = useState<Collection>()
 
@@ -25,7 +25,7 @@ const ProductComponent = () => {
 
             }).catch(function () {
             })
-            await instance.get("api/manage/products/overview?limit=6&offset=0").then(function (response) {
+            await instance.get("api/manage/products/v3/overview?limit=6&offset=0").then(function (response) {
                 if (response.status == 200) {
                     setProductOverviews(response.data.content)
                 }
@@ -84,7 +84,7 @@ const ProductComponent = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {
-                            productOverviews.map((item, index) => (
+                            Array.isArray(productOverviews) && productOverviews.map((item, index) => (
                                 <Fragment key={index}>
                                     <OverviewProductCard item={item} />
                                 </Fragment>

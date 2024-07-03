@@ -1,23 +1,33 @@
 package com.example.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Data
-@Table
-public class CollectionEntity extends BaseEntity {
+@Table(name = "collections")
+public class CollectionEntity extends BaseEntity{
+
     @NotBlank
     @NotNull
     private String name;
-    @NotNull
+
     @NotBlank
+    @NotNull
     private String code;
+
+    @JsonIgnore
+    @JsonBackReference
+    @ManyToMany(mappedBy = "collections", fetch = FetchType.EAGER)
+    private Set<ProductEntity> productSet = new HashSet<>();
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "categoríes")
+@Table(name = "categories")
 public class CategoryEntity extends BaseEntity {
     @NotNull
     @NotBlank
