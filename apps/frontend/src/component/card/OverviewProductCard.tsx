@@ -8,9 +8,9 @@ const OverviewProductCard = ({ item }: { item: OverviewProductV3 }) => {
     const [loaded, setLoaded] = useState<boolean>(false);
     const baseImage = "https://product.hstatic.net/200000690725/product/social_post_3_-_12.06-04_58b026e298c9484c8baa13a1ef538757_master.jpg";
     return (
-        <div className="shadow-xl p-1.5 rounded-md text-sm relative">
+        <div className="shadow-xl p-1.5 md:p-6 rounded-md text-sm relative">
             {item.quantity === 0 && (
-                <div className="absolute mt-1 font-thin bg-gray-800 text-white py-1 px-2 text-[12.5px] rounded-2xl inline-flex items-center">
+                <div className="absolute mt-1 z-20 font-thin bg-gray-800 text-white py-1 px-2 text-[12px] rounded-2xl inline-flex items-center">
                     <span>Hết hàng</span>
                 </div>
             )}

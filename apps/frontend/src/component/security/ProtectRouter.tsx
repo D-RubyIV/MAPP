@@ -27,7 +27,7 @@ const ProtectRouter = () => {
     };
 
     useEffect(() => {
-        const intervalId = setInterval(refreshToken, 10000);
+        const intervalId = setInterval(refreshToken, 100000);
         return () => clearInterval(intervalId);
     }, []);
 

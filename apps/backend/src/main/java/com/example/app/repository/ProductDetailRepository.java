@@ -9,4 +9,5 @@ import java.util.List;
 public interface ProductDetailRepository extends JpaRepository<ProductDetailEntity, Integer> {
     ProductDetailEntity findByCode(String code);
     List<ProductDetailEntity> findAllByProduct(ProductEntity productModel);
+    long countByQuantity(ProductDetailEntity entity);
 }

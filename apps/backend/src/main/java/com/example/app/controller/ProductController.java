@@ -8,6 +8,7 @@ import com.example.app.repository.ProductRepository;
 import com.example.app.response.OverviewProductResponse;
 import com.example.app.response.OverviewProductResponseV3;
 import com.example.app.service.CloudService;
+import com.example.app.service.ProductService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +36,9 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private MediaRepository mediaRepository;
 
     @GetMapping("")
@@ -46,14 +50,14 @@ public class ProductController {
         return ResponseEntity.ok(productRepository.findAll(pageable));
     }
 
-    @GetMapping("custom")
+    @GetMapping("collection/overview")
     public ResponseEntity<?> custom(
             @RequestParam(name = "limit", defaultValue = "5") int limit,
             @RequestParam(name = "offset", defaultValue = "0") int offset,
-            @RequestParam("ids") Collection<Integer> ids
+            @RequestParam("code") String code
     ) {
         Pageable pageable = PageRequest.of(offset, limit);
-        Page<OverviewProductResponseV3> page = productRepository.findAllOverViewProductV4(pageable, ids);
+        Page<OverviewProductResponseV3> page = productRepository.findAllOverViewProductV4(pageable, code);
         return ResponseEntity.ok(page);
     }
 
@@ -67,6 +71,16 @@ public class ProductController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("collection")
+    public ResponseEntity<?> test(
+            @RequestParam(name = "limit", defaultValue = "5") int limit,
+            @RequestParam(name = "offset", defaultValue = "0") int offset,
+            @RequestParam(name = "code", defaultValue = "") String code
+    ) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<ProductEntity> list = productService.findByCollections(code, pageable);
+        return ResponseEntity.ok(list);
+    }
 
     @GetMapping("isSuggest")
     public ResponseEntity<?> findAllSuggest(

@@ -20,4 +20,5 @@ public class OverviewProductResponseV3 {
     private ProductEntity product;
     private long totalColor;
     private long totalSize;
+    private long quantity;
 }
