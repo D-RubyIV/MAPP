@@ -3,7 +3,7 @@ import instance from "../../axios/Instance";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion"
 import SmallCardProductDetail from "./SmallCardProductDetail";
-import { Add, Remove, Star, StarBorder, StarBorderOutlined, StarOutlineOutlined } from "@mui/icons-material";
+import { Add, Remove, Star, StarOutlineOutlined } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import { useAppContext } from "../../store/AppContext";
 
@@ -73,19 +73,21 @@ const DetailComponent = () => {
         handleGetComments()
     }, [object])
 
-
     useEffect(() => {
-        instance.get(`/api/manage/product-details/product/${id}`).then(function (reponse) {
-            if (reponse.status === 200 && reponse.data) {
-                setProductDetails(reponse.data)
-                setObject(reponse.data[0])
-            }
-        })
-        instance.get('/api/manage/carts/me').then(function (reponse) {
-            if (reponse.status === 200 && reponse.data) {
-                setMyCart(reponse.data)
-            }
-        })
+        const fetchData = async () => {
+            await instance.get(`/api/manage/product-details/product/${id}`).then(function (reponse) {
+                if (reponse.status === 200 && reponse.data) {
+                    setProductDetails(reponse.data)
+                    setObject(reponse.data[0])
+                }
+            })
+            await instance.get('/api/manage/carts/me').then(function (reponse) {
+                if (reponse.status === 200 && reponse.data) {
+                    setMyCart(reponse.data)
+                }
+            })
+        }
+        fetchData();
     }, [])
 
     return (
@@ -274,7 +276,7 @@ const ReviewComponent = ({ listComment }: { listComment: ModelModule.Comment[] }
 const TittleComponent = ({ object }: { object: ProductDetail }) => {
     return (
         <div className="">
-            <p className="text-[20px] font-medium">{object?.name}</p>
+            <p className="text-[20px] font-medium">{object?.name || (object?.product as Product)?.name}</p>
             <p className="text-[16px] text-orange-600 font-semibold">{object?.price} VND</p>
         </div>
     )

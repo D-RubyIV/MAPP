@@ -6,19 +6,20 @@ import { useEffect, useState } from "react";
 import instance from "../../axios/Instance";
 import { useAppContext } from "../../store/AppContext";
 import ToogleTheme from "../../ui/ToogleTheme";
+import CartComponent from "../cart/CartComponent";
 
 const NavbarComponent = () => {
-    const { effLoadingBag } = useAppContext();
+    const { effLoadingBag, isOpenCart, setIsOpenCart } = useAppContext();
     const [coutItemInBag, setCoutItemInBag] = useState(0);
     const [openMenu, setOpenMenu] = useState(false);
 
     useEffect(() => {
-        if (!openMenu) {
+        if (!openMenu && !isOpenCart) {
             document.body.style.overflow = "scroll";
         } else {
             document.body.style.overflow = "hidden";
         }
-    }, [openMenu]);
+    }, [openMenu, isOpenCart]);
 
     const listItem = [
         { "name": "Home", "link": "/" },
@@ -65,7 +66,7 @@ const NavbarComponent = () => {
                         <div className="flex gap-1.5 items-center justify-center">
                             <button onClick={() => { }}><PersonOutline /></button>
                             <div className="relative">
-                                <Link to={"/cart"}><ShoppingBagOutlined /></Link>
+                                <button onClick={() => setIsOpenCart(true)}><ShoppingBagOutlined /></button>
                                 <div className="absolute p-[8px] -top-0.5 -right-1 bg-red-300 sha0dow-2xl rounded-full w-4 h-4 flex justify-center items-center">
                                     <span className="text-[12px] font-semibold tracking-tighter">{coutItemInBag}</span>
                                 </div>
@@ -120,6 +121,7 @@ const NavbarComponent = () => {
                     </div>
                 </div>
             </div>
+            <CartComponent />
         </Fragment>
     );
 }

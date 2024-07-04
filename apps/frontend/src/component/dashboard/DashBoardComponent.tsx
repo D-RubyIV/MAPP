@@ -1,4 +1,5 @@
 import BenefitsComponent from "../body/BenefitsComponen";
+import CartComponent from "../cart/CartComponent";
 import PolicyComponent from "../footer/PolicyComponent";
 import RegisterNotification from "../footer/RegisterNotification";
 import ProductComponent from "./ProductComponent";
@@ -12,6 +13,7 @@ const DashBoardComponent = () => {
             <RegisterNotification />
             {/* <FooterComponent/> */}
             <PolicyComponent />
+            
         </div>
     );
 }

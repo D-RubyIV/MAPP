@@ -16,7 +16,6 @@ import SettingComponent from './component/setting/SettingComponent.tsx'
 import NotFoundComponent from './component/common/NotFoundComponent.tsx'
 import ProfileComponent from './component/profile/ProfileComponent.tsx'
 import DetailComponent from './component/dashboard/DetailComponent.tsx'
-import CartComponent from './component/cart/CartComponent.tsx'
 import UserComponent from './component/manage/table/UserComponent.tsx'
 import '@radix-ui/themes/styles.css';
 import ProductComponent from './component/manage/table/ProductComponent.tsx'
@@ -26,7 +25,6 @@ import ProductDetailComponent from './component/manage/table/ProductDetailCompon
 import VoucherComponent from './component/manage/table/VoucherComponent.tsx'
 import OrderComponent from './component/manage/table/OrderComponent.tsx'
 import OrderDetailComponent from './component/manage/table/OrderDetailComponent.tsx'
-import ProtectComponent from './component/common/ProtectComponent.tsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,7 +43,6 @@ const router = createBrowserRouter(
           <Route path='product-details' element={<ProductDetailComponent />} />
         </Route>
         <Route path='product/:id' element={<DetailComponent />} />
-        <Route path='cart' element={<ProtectComponent><CartComponent /></ProtectComponent>} />
         <Route path='setting' element={<SettingComponent />} />
         <Route path='profile' element={<ProfileComponent />} />
       </Route>

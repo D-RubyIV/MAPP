@@ -11,7 +11,7 @@ const CollectionComponent = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-         
+
             await instance.get("api/manage/collections?limit=1000&offset=0").then(function (response) {
                 if (response.status == 200) {
                     setCollections(response?.data?.content)
@@ -25,7 +25,7 @@ const CollectionComponent = () => {
     }, [])
 
     useEffect(() => {
-        const fetchOverview = async() => {
+        const fetchOverview = async () => {
             await instance.get(`api/manage/products/collection/overview?code=${collectionsSelected?.code}&limit=6&offset=0`).then(function (response) {
                 if (response.status == 200) {
                     setProductOverviews(response.data.content)
@@ -35,7 +35,7 @@ const CollectionComponent = () => {
         }
         fetchOverview()
     }, [collectionsSelected])
-    
+
 
     const handleClick = (item: Collection, index: number) => {
         setCollectionsSelected(item);
