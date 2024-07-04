@@ -83,6 +83,7 @@ public class TokenService {
     public String generateAccessToken(UserEntity userModel) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
+        extraClaims.put("role", userModel.getRole().name());
         String token = buildToken(extraClaims, userModel, expiration_short);
         userRepository.save(userModel);
         return token;
@@ -91,6 +92,7 @@ public class TokenService {
     public String generateRefreshToken(UserEntity userModel) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("provider", userModel.getProvider());
+        extraClaims.put("role", userModel.getRole().name());
         String token = buildToken(extraClaims, userModel, expiration_long);
         userRepository.save(userModel);
         return token;

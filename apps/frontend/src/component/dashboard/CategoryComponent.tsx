@@ -25,10 +25,10 @@ const CategoryComponent = () => {
                 <div>
                     <p className="text-xl font-bold tracking-tight">{t('our_product')}</p>
                 </div>
-                <ul className="flex flex-row gap-1.5 overflow-y-auto">
+                <ul className="flex flex-row gap-1.5 overflow-y-auto mt-1.5">
                     {
                         Array.isArray(categories) && categories.map((item, index) => (
-                            <li key={index} className={`border-2 whitespace-nowrap py-1.5 px-3 text-[12px] rounded-2xl border-spacing-2 border-gray-300 shadow-sm text-gray-600`}>
+                            <li key={index} className={`border-2 whitespace-nowrap py-1.5 px-3 text-[12px] rounded-2xl border-spacing-2 border-gray-300 shadow-sm text-gray-400`}>
                                 {item.name}
                             </li>))
                     }

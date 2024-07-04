@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import toast from 'react-hot-toast';
 import instance from "../../axios/Instance";
-import { useAuth } from "../security/AuthProvider";
+import { useAppContext } from "../../store/AppContext";
 
 const UrlSearchComponent = () => {
     const urlHash = window.location.search || window.location.hash
     const queryString = urlHash.startsWith("#") ? urlHash.substring(1) : urlHash
     const urlParams = new URLSearchParams(queryString);
-    const { setIsLoading } = useAuth()
+    const { setIsLoading } = useAppContext()
     const stateParam = urlParams.get("state");
     console.log("STATE PARAM: ", stateParam)
 

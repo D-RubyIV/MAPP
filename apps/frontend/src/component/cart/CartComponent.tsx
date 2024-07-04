@@ -2,7 +2,7 @@ import { Add, CloseOutlined, ConfirmationNumberOutlined, Delete, DeleteOutline, 
 import { useEffect, useState, Fragment } from "react";
 import instance from "../../axios/Instance";
 import toast from "react-hot-toast";
-import { useAuth } from "../security/AuthProvider";
+import { useAppContext } from "../../store/AppContext";
 import SelectVoucherComponent from "./SelectVoucherComponent";
 import { useNavigate } from "react-router-dom";
 
@@ -198,7 +198,7 @@ const NotEmptyBag = ({ listObject, fetchCartItems }: { listObject: GroupCartDeta
 }
 
 const SmallCardOrderDetail = ({ object, fetchCartItems }: { object: CartDetail, fetchCartItems: () => void }) => {
-    const { effLoadingBag, setEffLoadingBag } = useAuth();
+    const { effLoadingBag, setEffLoadingBag } = useAppContext();
     const [mediaLink, setMediaLink] = useState("");
     useEffect(() => {
         if (((object.productDetail as ProductDetail)?.media as Media)?.name) {

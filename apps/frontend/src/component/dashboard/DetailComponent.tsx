@@ -5,10 +5,10 @@ import { motion } from "framer-motion"
 import SmallCardProductDetail from "./SmallCardProductDetail";
 import { Add, Remove, Star, StarBorder, StarBorderOutlined, StarOutlineOutlined } from "@mui/icons-material";
 import toast from "react-hot-toast";
-import { useAuth } from "../security/AuthProvider";
+import { useAppContext } from "../../store/AppContext";
 
 const DetailComponent = () => {
-    const { effLoadingBag, setEffLoadingBag } = useAuth();
+    const { effLoadingBag, setEffLoadingBag } = useAppContext();
 
     const [listComment, setListComment] = useState<ModelModule.Comment[]>([])
     const [myCart, setMyCart] = useState<Cart>();

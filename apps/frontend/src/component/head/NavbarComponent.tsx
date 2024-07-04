@@ -4,10 +4,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { CloseOutlined, PersonOutline, ShoppingBagOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import instance from "../../axios/Instance";
-import { useAuth } from "../security/AuthProvider";
+import { useAppContext } from "../../store/AppContext";
+import ToogleTheme from "../../ui/ToogleTheme";
 
 const NavbarComponent = () => {
-    const { effLoadingBag } = useAuth();
+    const { effLoadingBag } = useAppContext();
     const [coutItemInBag, setCoutItemInBag] = useState(0);
     const [openMenu, setOpenMenu] = useState(false);
 
@@ -70,9 +71,9 @@ const NavbarComponent = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`fixed h-[100vh] xl:px-20 z-50 top-0 bg-gray-500 bg-opacity-30 rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
+                        <div className={`fixed h-[100vh] xl:px-20 z-50 top-0 from-indigo-900 bg-gradient-to-r rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
                             <div className="grid grid-cols-5 h-full">
-                                <div className="col-start-1 col-end-5 bg-white px-8 md:px-10 py-4 flex flex-col h-full">
+                                <div className="col-start-1 col-end-5 bg-gradient-to-t from-gray-200 to-gray-100 px-8 md:px-10 py-4 flex flex-col h-full">
                                     <div className="flex justify-between py-3 md:py-4 row-span-4">
                                         <div className="inline-flex">
                                             <Link to={"/"}>
@@ -80,29 +81,36 @@ const NavbarComponent = () => {
                                                 <label htmlFor="" className="hidden">My Project</label>
                                             </Link>
                                         </div>
-                                        <button onClick={() => setOpenMenu(false)}>
+                                        <button onClick={() => setOpenMenu(false)} className="text-gray-400">
                                             <CloseOutlined />
                                         </button>
                                     </div>
                                     <div className="h-full flex flex-col justify-between">
                                         <div>
-                                            <ul className="flex gap-4 flex-col mt-2">
+                                            <ul className="flex  flex-col mt-2">
                                                 {listItem.map((item, index) => (
-                                                    <li key={index} className="text-left py-0.5">
-                                                        <Link className="font-normal text-[15px]" to={item.link} onClick={() => setOpenMenu(false)}>{item.name}</Link>
+                                                    <li key={index} className="text-left border-b px-2 py-3 border-dashed border-gray-400 active:bg-gray-300 active:text-xl active:text-white ease-in-out">
+                                                        <Link className="font-normal text-[15px] " to={item.link} onClick={() => setOpenMenu(false)}>{item.name}</Link>
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
-                                        <div>
-                                            <ul className="flex gap-4 flex-col mt-2">
-                                                <li className="text-left py-0.5">
-                                                    <Link to={"/setting"} className="font-normal text-[15px]">Setting</Link>
-                                                </li>
-                                                <li className="text-left py-0.5">
-                                                    <Link to={"/logout"} className="font-normal text-[15px]">Logout</Link>
-                                                </li>
-                                            </ul>
+                                        <div className="flex items-center justify-between relative">
+                                            <div>
+                                                <ul className="flex gap-4 flex-col mt-2">
+                                                    <li className="text-left py-0.5">
+                                                        <Link to={"/setting"} className="font-normal text-[15px]">Setting</Link>
+                                                    </li>
+                                                    <li className="text-left py-0.5">
+                                                        <Link to={"/logout"} className="font-normal text-[15px]">Logout</Link>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <div className="absolute right-0 bottom-0   ">
+                                                    <ToogleTheme />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 

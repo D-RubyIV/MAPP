@@ -1,9 +1,9 @@
 
-import { useAuth } from "../security/AuthProvider";
+import { useAppContext } from "../../store/AppContext";
 import { PuffLoader } from "react-spinners";
 
 const LoadingComponent = () => {
-    const { isLoading } = useAuth()
+    const { isLoading } = useAppContext()
 
     return (
         <div className={`fixed top-1/2 left-1/2 flex justify-center flex-col items-center bg-white z-40 w-full h-full -translate-x-1/2 -translate-y-1/2 sweet-loading ${isLoading ? "block" : "hidden"}`}>

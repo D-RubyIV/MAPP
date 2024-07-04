@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
+import { useAppContext } from "../../store/AppContext";
 import instance from "../../axios/Instance";
 import { Fragment, useEffect } from "react";
 import Toast from "../../toast/Toast";
@@ -8,7 +8,7 @@ import axios from "axios";
 
 const ProtectRouter = () => {
 
-    const { setIsLoading } = useAuth()
+    const { setIsLoading } = useAppContext()
 
     const refreshToken = async () => {
         const tokenString = localStorage.getItem("token");

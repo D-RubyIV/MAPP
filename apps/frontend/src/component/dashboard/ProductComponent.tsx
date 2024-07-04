@@ -12,7 +12,9 @@ const ProductComponent = () => {
             </Fragment>
             {/* PRODUCT */}
             <Fragment>
-                <CollectionComponent />
+                <div className="mt-3">
+                    <CollectionComponent />
+                </div>
             </Fragment>
         </Fragment>
     );

@@ -9,9 +9,9 @@ const DashBoardComponent = () => {
             <BenefitsComponent />
             <ProductComponent />
             {/* <BlogComponent/> */}
-            <RegisterNotification/>
+            <RegisterNotification />
             {/* <FooterComponent/> */}
-            <PolicyComponent/>
+            <PolicyComponent />
         </div>
     );
 }
