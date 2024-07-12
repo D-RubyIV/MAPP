@@ -54,7 +54,7 @@ const CollectionComponent = () => {
                                 key={index}
                                 ref={(el) => (collectionRefs.current[index] = el)}
                                 className={`underline-transition whitespace-nowrap transition-colors duration-300 ease-in-out uppercase py-1.5 font-semibold tracking-tighter ${item.id === collectionsSelected?.id
-                                    ? 'underline-transition-active text-gray-500'
+                                    ? 'underline-transition-active text-gray-800'
                                     : 'text-gray-400'
                                     }`}
                             >

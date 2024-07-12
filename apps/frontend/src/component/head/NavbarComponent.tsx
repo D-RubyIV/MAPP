@@ -122,6 +122,7 @@ const NavbarComponent = () => {
                 </div>
             </div>
             <CartComponent />
+      
         </Fragment>
     );
 }

@@ -5,6 +5,7 @@
 * {
   @apply transition-colors duration-200
 }
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -27,6 +28,7 @@ a {
   color: #4e4f60;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -41,7 +43,8 @@ h1 {
   line-height: 1.1;
 }
 
-td, th{
+td,
+th {
   padding: 5px 2px 5px 2px;
   text-align: center;
 }
@@ -70,22 +73,51 @@ td, th{
 
 /* Thanh cuộn chung */
 ::-webkit-scrollbar {
-  width: 1px; /* Chiều rộng của thanh cuộn */
-  height: 0px; /* Chiều cao của thanh cuộn ngang */
+  width: 1px;
+  /* Chiều rộng của thanh cuộn */
+  height: 0px;
+  /* Chiều cao của thanh cuộn ngang */
 }
 
 /* Track của thanh cuộn */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Màu nền của track */
+  background: #f1f1f1;
+  /* Màu nền của track */
 }
 
 /* Thumb của thanh cuộn */
 ::-webkit-scrollbar-thumb {
-  background: #888; /* Màu của thumb */
-  border-radius: 10px; /* Bo tròn các góc của thumb */
+  background: #888;
+  /* Màu của thumb */
+  border-radius: 10px;
+  /* Bo tròn các góc của thumb */
 }
 
 /* Thumb khi hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Màu của thumb khi hover */
+  background: #555;
+  /* Màu của thumb khi hover */
+}
+
+
+
+input[type="checkbox"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  width: 1em;
+  height: 1em;
+  margin-left: 2.5px;
+  border-radius: 100%;
+  border: 0.15em solid #007a7e;
+  outline: 1px solid gray;
+  outline-offset: 2px;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  width: 1em;
+  background-color: #007e19;
+  position: relative;
 }

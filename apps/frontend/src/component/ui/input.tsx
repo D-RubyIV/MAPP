@@ -7,8 +7,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
     label: string
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, label, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, label, ...props }, ref) => {
         return (
             <div>
                 <Label>{label}</Label>
