@@ -1,5 +1,5 @@
 import { Fragment } from "react/jsx-runtime";
-import CommonCardComponent from "../card/CommonCardComponent";
+import CommonCardComponent from "../../card/CommonCardComponent";
 import { Link } from "react-router-dom";
 
 

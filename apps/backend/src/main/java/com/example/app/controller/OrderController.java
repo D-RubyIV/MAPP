@@ -5,6 +5,7 @@ import com.example.app.model.OrderEntity;
 import com.example.app.repository.OrderRepository;
 import com.example.app.repository.UserRepository;
 import com.example.app.repository.VoucherRepository;
+import com.example.app.service.OrderService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +18,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin("*")
 @Controller
 @RequestMapping("/api/manage/orders")
@@ -27,6 +30,8 @@ public class OrderController {
     private UserRepository userRepository;
     @Autowired
     private VoucherRepository voucherRepository;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
@@ -36,9 +41,6 @@ public class OrderController {
         Pageable pageable = PageRequest.of(offset, limit);
         return ResponseEntity.ok(orderRepository.findAll(pageable));
     }
-
-
-
 
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody OrderDto dto, BindingResult bindingResult) throws Exception {
@@ -69,5 +71,10 @@ public class OrderController {
         OrderEntity model = orderRepository.findById(id).orElseThrow(() -> new BadRequestException("No entity found"));
         orderRepository.delete(model);
         return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/checkout")
+    public ResponseEntity<?> checkout(@RequestParam(name = "ids", value = "") List<Integer> ids){
+        return ResponseEntity.ok(orderService.checkout(ids));
     }
 }

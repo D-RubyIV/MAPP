@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Route, RouterProvider } from 'react-router-dom'
-import DashBoardComponent from './component/dashboard/DashBoardComponent.tsx'
+import DashBoardComponent from './component/pages/dashboard/DashBoardComponent.tsx'
 import { createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import RootComponent from './component/RootComponent.tsx'
 import ManageComponent from './component/manage/ManageComponent.tsx'
@@ -14,8 +14,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import './language/I18Next.tsx'
 import SettingComponent from './component/setting/SettingComponent.tsx'
 import NotFoundComponent from './component/common/NotFoundComponent.tsx'
-import ProfileComponent from './component/profile/ProfileComponent.tsx'
-import DetailComponent from './component/dashboard/DetailComponent.tsx'
+import ProfileComponent from './component/pages/profile/ProfileComponent.tsx'
+import DetailComponent from './component/pages/dashboard/DetailComponent.tsx'
 import UserComponent from './component/manage/table/UserComponent.tsx'
 import '@radix-ui/themes/styles.css';
 import ProductComponent from './component/manage/table/ProductComponent.tsx'
@@ -25,6 +25,7 @@ import ProductDetailComponent from './component/manage/table/ProductDetailCompon
 import VoucherComponent from './component/manage/table/VoucherComponent.tsx'
 import OrderComponent from './component/manage/table/OrderComponent.tsx'
 import OrderDetailComponent from './component/manage/table/OrderDetailComponent.tsx'
+import CheckOutComponent from './component/pages/checkout/CheckOutComponent.tsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
         <Route path='setting' element={<SettingComponent />} />
         <Route path='profile' element={<ProfileComponent />} />
       </Route>
+      <Route path='checkout' element={<CheckOutComponent />} />
       <Route path='auth' element={<AuthComponent />} />
       <Route path='oauth' element={<UrlSearchComponent />} />
       <Route path='logout' element={<LogoutComponet />} />

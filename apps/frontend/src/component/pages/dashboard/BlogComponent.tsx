@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { fadeIn } from "../common/variants"
+import { fadeIn } from "../../common/variants"
 const posts = [
   {
     id: 1,

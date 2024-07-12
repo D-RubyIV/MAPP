@@ -1,4 +1,4 @@
-import BenefitsComponent from "../body/BenefitsComponen";
+import BenefitsComponent from "../../body/BenefitsComponen";
 import PolicyComponent from "../footer/PolicyComponent";
 import RegisterNotification from "../footer/RegisterNotification";
 import ProductComponent from "./ProductComponent";

@@ -3,9 +3,9 @@ import { Fragment } from "react/jsx-runtime";
 import MenuIcon from '@mui/icons-material/Menu';
 import { CloseOutlined, PersonOutline, ShoppingBagOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import instance from "../../axios/Instance";
-import { useAppContext } from "../../store/AppContext";
-import ToogleTheme from "../../ui/ToogleTheme";
+import instance from "../../../axios/Instance";
+import { useAppContext } from "../../../store/AppContext";
+import ToogleTheme from "../../../ui/ToogleTheme";
 import CartComponent from "../cart/CartComponent";
 
 const NavbarComponent = () => {

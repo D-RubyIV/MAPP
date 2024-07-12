@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
-import instance from "../../axios/Instance";
-import OverviewProductCard from "../card/OverviewProductCard";
+import instance from "../../../axios/Instance";
+import OverviewProductCard from "../../card/OverviewProductCard";
 
 const CollectionComponent = () => {
     const collectionRefs = useRef<(HTMLLIElement | null)[]>([]);

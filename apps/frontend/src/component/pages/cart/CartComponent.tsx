@@ -1,7 +1,8 @@
 import { AddCircleOutline, CloseOutlined, DeleteOutlineRounded, RemoveCircleOutline } from "@mui/icons-material";
 import { useEffect, useState, Fragment, useRef } from "react";
-import instance from "../../axios/Instance";
-import { useAppContext } from "../../store/AppContext";
+import instance from "../../../axios/Instance";
+import { useAppContext } from "../../../store/AppContext";
+import { useNavigate } from "react-router-dom";
 
 type GroupCartDetail = {
     id: number;
@@ -9,6 +10,8 @@ type GroupCartDetail = {
 };
 
 const CartComponent = () => {
+
+    const navigate = useNavigate()
 
     const [listCartDetail, setListCartDetail] = useState<CartDetail[]>([]);
     const { isOpenCart, setIsOpenCart } = useAppContext();
@@ -89,11 +92,36 @@ const CartComponent = () => {
         });
     };
 
+    const handleCheckout = async () => {
+        var ids = listSelectedId.join(",")
+        var url = `${import.meta.env.VITE_SERVERURL}/api/manage/orders/checkout?ids=${ids}`
+
+        await instance.get(url).then(function (response) {
+            console.log(response)
+        })
+        setIsOpenCart(false)
+        setTimeout(() => {
+            navigate("/checkout")
+        }, 200);
+    }
+
+    const handleSelectAll = () => {
+        setListSelectedId(pre => [...pre, ...listCartDetail.map((s) => s.id)]);
+    }
+    const handleUnSelectAll = () => {
+        setListSelectedId([]);
+    }
+
+
     useEffect(() => {
         if (isOpenCart === true) {
             fetchCartItems();
         }
     }, [isOpenCart]);
+    useEffect(() => {
+        console.log("LIST ID: ")
+        console.log(listSelectedId)
+    }, [listSelectedId]);
 
     return (
         <Fragment>
@@ -108,14 +136,18 @@ const CartComponent = () => {
                             </div>
                             {/* CENTER */}
                             <div className={`overflow-y-auto h-[calc(100vh-10.75rem)]`}>
-                                {listGroupCardDetail.map((item, index) => (
+                                <div className="flex justify-between">
+                                    <button onClick={() => handleSelectAll()} className="underline underline-offset-2 font-thin text-[13.5px] text-blue-700">Chọn tất cả</button>
+                                    <button onClick={() => handleUnSelectAll()} className="underline underline-offset-2 font-thin text-[13.5px] text-red-700">Hủy chọn tất cả</button>
+                                </div>
+                                {listGroupCardDetail.length > 0 && listGroupCardDetail.map((item, index) => (
                                     <Fragment key={index}>
                                         {item.carts.map((cart, cartIndex) => (
                                             <Fragment key={cartIndex}>
                                                 <div className="text-[13.5px] grid grid-cols-12 gap-2 border-b border-dashed border-gray-400 py-3">
                                                     <div className="inline-flex justify-center items-center col-span-4 gap-1">
                                                         <div className="flex items-center justify-center">
-                                                            <input type="checkbox" onChange={(event) => handleSelectCartDetail(event, cart.id)} />
+                                                            <input type="checkbox" checked={listSelectedId.includes(cart.id) ? true : false} onChange={(event) => handleSelectCartDetail(event, cart.id)} />
                                                         </div>
                                                         <div>
                                                             <img src={baseImage} className="w-[25vw] object-cover" alt="Product" />
@@ -147,16 +179,34 @@ const CartComponent = () => {
                                                                 <span className="font-semibold">{(cart.productDetail as ProductDetail)?.price.toLocaleString("vi-VN") + "₫"}</span>
                                                             </div>
                                                         </div>
+                                                        <div className="flex justify-end">
+                                                            <span className="text-[12.5px]">Kho: {(cart.productDetail as ProductDetail).quantity}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </Fragment>
                                         ))}
                                     </Fragment>
-                                ))}
+                                ))
+                                    ||
+                                    (
+                                        <Fragment>
+                                            <div className="flex flex-col justify-center items-center h-full">
+                                                <div>
+                                                    <img className="w-24 h-24 object-cover" src="./OIP-removebg-preview.png"></img>
+                                                </div>
+                                                <div>
+                                                    <span className="font-thin">No have any product in your cart</span>
+                                                </div>
+                                            </div>
+                                        </Fragment>
+                                    )
+                                }
                             </div>
                         </div>
                         {/* BOTTOM */}
-                        <div className="text-center text-sm">
+                        <div className="text-sm">
+
                             <div className="py-2 flex justify-between">
                                 <span>Tổng tiền:</span>
                                 <span className="text-red-500 font-semibold">
@@ -169,7 +219,7 @@ const CartComponent = () => {
                                     })()}
                                 </span>
                             </div>
-                            <button className="bg-black w-full py-2 font-thin rounded-md text-white">Thanh toán</button>
+                            <button onClick={() => { handleCheckout() }} className="bg-black w-full py-2 font-thin rounded-md text-white">Thanh toán</button>
                         </div>
                     </div>
                 </div>

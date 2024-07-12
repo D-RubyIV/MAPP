@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import NavbarComponent from "./head/NavbarComponent";
+import NavbarComponent from "./pages/head/NavbarComponent";
 import ScrollToTop from "react-scroll-to-top";
 import { useAppContext } from "../store/AppContext";
 const RootComponent = () => {

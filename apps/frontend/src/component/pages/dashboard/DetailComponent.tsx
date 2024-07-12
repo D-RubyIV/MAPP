@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
-import instance from "../../axios/Instance";
+import instance from "../../../axios/Instance";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion"
 import SmallCardProductDetail from "./SmallCardProductDetail";
 import { Add, Remove, Star, StarOutlineOutlined } from "@mui/icons-material";
 import toast from "react-hot-toast";
-import { useAppContext } from "../../store/AppContext";
+import { useAppContext } from "../../../store/AppContext";
 
 const DetailComponent = () => {
     const { effLoadingBag, setEffLoadingBag } = useAppContext();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
-import instance from "../../axios/Instance";
+import instance from "../../../axios/Instance";
 
 const SmallCardProductDetail = ({ productDetail }: { productDetail: ProductDetail }) => {
 
