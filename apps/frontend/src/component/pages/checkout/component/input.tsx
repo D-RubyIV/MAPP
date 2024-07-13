@@ -3,11 +3,12 @@ import React, { useRef, useState } from 'react';
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     children?: React.ReactNode;
-    required?: boolean
+    required?: boolean,
+    isValidation?: boolean
 }
 
 const InputWithFocusDiv = React.forwardRef<HTMLInputElement, IProps>(
-    ({ label, required, children, ...props }, ref) => {
+    ({ label, isValidation, required, children, ...props }, ref) => {
         const divRef = useRef<HTMLDivElement>(null);
         const [isFocused, setIsFocused] = useState(false);
 
@@ -22,7 +23,7 @@ const InputWithFocusDiv = React.forwardRef<HTMLInputElement, IProps>(
         return (
             <div
                 ref={divRef}
-                className={`p-2 mt-2 rounded-md flex flex-col border-2 ${isFocused ? 'ring-1 ring-blue-500' : ''}`}
+                className={`p-2 mt-2 rounded-md flex flex-col border-2 ${isFocused ? 'ring-1 ring-blue-500' : ''} ${isValidation? "":"ring-1 ring-red-300"}`}
             >
                 <label className='text-[12.5px] font-semibold text-gray-500'>
                     <span>{label}</span>

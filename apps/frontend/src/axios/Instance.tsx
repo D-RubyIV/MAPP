@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 
@@ -28,7 +27,7 @@ else {
 instance.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token');
     const accessToken = token ? JSON.parse(token)["accessToken"] : ''
-    const refreshToken = token ? JSON.parse(token)["refreshToken"] : ''
+    // const refreshToken = token ? JSON.parse(token)["refreshToken"] : ''
     config.headers.Authorization = token ? `Bearer ${accessToken}` : '';
 
 

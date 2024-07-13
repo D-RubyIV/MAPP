@@ -5,10 +5,48 @@ import { Fragment } from "react/jsx-runtime";
 import InputWithFocusDiv from "./component/input";
 import { Country, State, City, IState, ICity, ICountry } from 'country-state-city';
 import SelectWithFocusDiv from "./component/select";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-console.log(Country.getAllCountries())
+
+
+const schema: yup.ObjectSchema<IForm> = yup.object({
+    fullName: yup.string().required(),
+    address: yup.string().required(),
+    email: yup.string().required(),
+    phone: yup.string().required(),
+    deliveryType: yup.string().required(),
+    paymentMethod: yup.string().required(),
+  });
+
+interface IForm {
+    fullName?: string,
+    address?: string,
+    email?: string,
+    phone?: string,
+    deliveryType?: string,
+    paymentMethod?: string,
+}
 
 const CheckOutComponent = () => {
+    const { register, handleSubmit, getValues, setValue, formState: { errors } } = useForm<IForm>({
+        resolver: yupResolver(schema)
+    });
+
+    useEffect(() => {
+        setValue("fullName", "");
+        setValue("address", "");
+        setValue("email", "");
+        setValue("phone", "");
+        setValue("deliveryType", "Giao hàng tận nơi"); // Set default delivery type
+        setValue("paymentMethod", "Thanh toán khi nhận hàng"); // Set default payment method
+    }, [])
+
+    const onSubmitCheckout = () => {
+        console.log(getValues())
+    }
+
     const [address, setAddress] = useState<string>("")
     const [countrys, setCountrys] = useState<ICountry[]>([])
     const [states, setStates] = useState<IState[]>([])
@@ -39,7 +77,6 @@ const CheckOutComponent = () => {
     useEffect(() => {
         setCountrys(Country.getAllCountries())
     }, [])
-
 
     return (
         <Fragment>
@@ -74,10 +111,10 @@ const CheckOutComponent = () => {
                         </div>
                     </div>
                     <div>
-                        <InputWithFocusDiv required={true} label="Họ tên" placeholder="Vui lòng nhập họ tên"></InputWithFocusDiv>
-                        <InputWithFocusDiv required={true} label="Email" placeholder="Vui lòng nhập email"></InputWithFocusDiv>
-                        <InputWithFocusDiv required={true} label="Số điện thoại" placeholder="Vui lòng số điện thoại"></InputWithFocusDiv>
-                        <InputWithFocusDiv required={true} label="Địa chỉ" placeholder="Vui lòng nhập địa chỉ">
+                        <InputWithFocusDiv isValidation={errors.fullName ? false:true} required={true} {...register("fullName")} label="Họ tên" placeholder="Vui lòng nhập họ tên"></InputWithFocusDiv>
+                        <InputWithFocusDiv isValidation={errors.email ? false:true} required={true} {...register("email")} label="Email" placeholder="Vui lòng nhập email"></InputWithFocusDiv>
+                        <InputWithFocusDiv isValidation={errors.phone ? false:true} required={true} {...register("phone")} label="Số điện thoại" placeholder="Vui lòng nhập số điện thoại"></InputWithFocusDiv>
+                        <InputWithFocusDiv isValidation={errors.address ? false:true} required={true} {...register("address")} label="Địa chỉ" placeholder="Vui lòng nhập địa chỉ">
                             <span className="text-sm">{address}</span>
                         </InputWithFocusDiv>
                         <SelectWithFocusDiv value={countrySelected?.name} onChange={(el) => setCountrySelected(countrys.filter((s) => s.name === el.target.value)[0])} options={countrys} label="Nước"></SelectWithFocusDiv>
@@ -90,11 +127,22 @@ const CheckOutComponent = () => {
                     <div className="text-[15px] border-2 p-2 rounded-md">
                         <form>
                             <div className="flex gap-2 py-1">
-                                <input type="radio" id="rdo1" name="deliveryType" checked />
+                                <input
+                                    type="radio"
+                                    id="rdo1"
+                                    {...register("deliveryType")}
+                                    value="Giao hàng tận nơi"
+                                    defaultChecked
+                                />
                                 <label htmlFor="rdo1">Giao hàng tận nơi</label>
                             </div>
                             <div className="flex gap-2 py-1">
-                                <input type="radio" id="rdo2" name="deliveryType" />
+                                <input
+                                    type="radio"
+                                    id="rdo2"
+                                    {...register("deliveryType")}
+                                    value="Đồng giá nội thành"
+                                />
                                 <label htmlFor="rdo2">Đồng giá nội thành</label>
                             </div>
                         </form>
@@ -105,21 +153,32 @@ const CheckOutComponent = () => {
                     <div className="text-[15px] border-2 p-2 rounded-md">
                         <div className="flex flex-col gap-2 py-1">
                             <div className="flex gap-2 py-1">
-                                <input type="radio" id="rdoPayment1" name="paymentMethod" checked />
+                                <input
+                                    type="radio"
+                                    id="rdoPayment1"
+                                    {...register("paymentMethod")}
+                                    value="Thanh toán khi nhận hàng"
+                                    defaultChecked
+                                />
                                 <label htmlFor="rdoPayment1">Thanh toán khi nhận hàng</label>
                             </div>
                             <div className="flex gap-2 py-1">
-                                <input type="radio" id="rdoPayment2" name="paymentMethod" />
+                                <input
+                                    type="radio"
+                                    id="rdoPayment2"
+                                    {...register("paymentMethod")}
+                                    value="Chuyển khoản ngân hàng"
+                                />
                                 <label htmlFor="rdoPayment2">Chuyển khoản ngân hàng</label>
                             </div>
                         </div>
                     </div>
                     <div className="mt-2">
-                        <button className="bg-black w-full py-4 font-thin rounded-md text-white text-sm">Hoàn tất đơn hàng</button>
+                        <button onClick={handleSubmit(onSubmitCheckout)} className="bg-black w-full py-4 font-thin rounded-md text-white text-sm">Hoàn tất đơn hàng</button>
                     </div>
                 </div>
             </div>
-        </Fragment >
+        </Fragment>
     );
 };
 

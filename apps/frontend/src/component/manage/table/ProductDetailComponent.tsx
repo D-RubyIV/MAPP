@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 
 const ProductDetailComponent = () => {
     const { t } = useTranslation();
-    const { register, handleSubmit, setValue, reset, formState: { errors }, } = useForm<ProductDetail>();
+    const { register, handleSubmit, setValue, reset } = useForm<ProductDetail>();
 
     const [disableForm, setDisableForm] = useState<boolean>(false);
 

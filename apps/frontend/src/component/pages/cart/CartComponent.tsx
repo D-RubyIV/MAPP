@@ -1,5 +1,5 @@
 import { AddCircleOutline, CloseOutlined, DeleteOutlineRounded, RemoveCircleOutline } from "@mui/icons-material";
-import { useEffect, useState, Fragment, useRef } from "react";
+import { useEffect, useState, Fragment} from "react";
 import instance from "../../../axios/Instance";
 import { useAppContext } from "../../../store/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -100,9 +100,7 @@ const CartComponent = () => {
             console.log(response)
         })
         setIsOpenCart(false)
-        setTimeout(() => {
-            navigate("/checkout")
-        }, 200);
+        navigate("/checkout")
     }
 
     const handleSelectAll = () => {

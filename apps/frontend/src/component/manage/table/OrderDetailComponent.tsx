@@ -15,7 +15,6 @@ import { Select } from "../../ui/select";
 const OrderDetailComponent = () => {
     const { register, handleSubmit, setValue, reset } = useForm<OrderDetail>();
     const [disableForm, setDisableForm] = useState<boolean>(false);
-    const [listVoucher, setListVoucher] = useState<Voucher[]>()
     const [listOrder, setListOrder] = useState<Order[]>()
     const [listDetailProduct, setListDetailProduct] = useState<ProductDetail>()
     const [method, setMethod] = useState<Method>(Method.DETAIL);

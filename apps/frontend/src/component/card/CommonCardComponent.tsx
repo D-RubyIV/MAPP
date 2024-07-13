@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react"
 import instance from "../../axios/Instance"
-import { Star, StarOutline, StarRateTwoTone } from "@mui/icons-material"
+import { Star, StarOutline } from "@mui/icons-material"
 import Skeleton from "react-loading-skeleton"
 
 
