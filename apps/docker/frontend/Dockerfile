@@ -3,4 +3,4 @@ WORKDIR /apps/frontend
 COPY ./apps/frontend .
 RUN npm install
 EXPOSE 4173
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "preview"]
