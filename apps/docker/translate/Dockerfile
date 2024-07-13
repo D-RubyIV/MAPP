@@ -1,4 +1,4 @@
-FROM node:18-alpine as BUILD
+FROM node:18-alpine AS build
 WORKDIR /apps/translate
 COPY ./apps/translate .
 RUN npm install

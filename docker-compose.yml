@@ -36,6 +36,7 @@ services:
         restart: true
     networks:
       - dev
+      
   client:
     build:
       context: .
@@ -47,9 +48,6 @@ services:
     networks:
       - dev
     environment:
-      - VITE_SERVERURL=https://itemjunction.net
-      - VITE_CLIENTURL=https://itemjunction.net
-      - VITE_LANGUAURL=https://itemjunction.net
   
   translate:
     build:
@@ -61,7 +59,6 @@ services:
       - server
     networks:
       - dev
-      
       
   nginx:
     image: nginx:latest
