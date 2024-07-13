@@ -30,6 +30,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/product
       SPRING_DATASOURCE_USERNAME: product
       SPRING_DATASOURCE_PASSWORD: password
+      #VNPAY
+      PAY_URL: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      TMN_CODE: 58X4B4HP
+      SECRET_KEY: VRLDWNVWDNPCOEPBZUTWSEDQAGXJCNGZ
+      RETURN_URL: http://localhost:8080/api/v1/payment/vn-pay-callback
+      VERSION: 2.1.0
+      COMMAND: pay
+      ORDER_TYPE: other
+      #API
+      API_PREFIX: /api/v1
     depends_on:
       database:
         condition: service_healthy
@@ -50,19 +60,7 @@ services:
       VITE_SERVERURL: https://itemjunction.net
       VITE_CLIENTURL: https://itemjunction.net
       VITE_LANGUAURL: https://itemjunction.net
-      SPRING_DATASOURCE_UR: jdbc:mysql://localhost:3306/mydatabase?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 123456
-      #VNPAY
-      PAY_URL: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-      TMN_CODE: 58X4B4HP
-      SECRET_KEY: VRLDWNVWDNPCOEPBZUTWSEDQAGXJCNGZ
-      RETURN_URL: http://localhost:8080/api/v1/payment/vn-pay-callback
-      VERSION: 2.1.0
-      COMMAND: pay
-      ORDER_TYPE: other
-      #API
-      API_PREFIX: /api/v1
+   
 
   
   translate:
