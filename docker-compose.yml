@@ -3,7 +3,6 @@ version: '3.9'
 services:
   database:
     image: mysql:8
-    command: --max_allowed_packet:1024000000
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: product
