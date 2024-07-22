@@ -1,4 +1,4 @@
-package com.example.app.response;
+package com.example.app.requests.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class OverviewBillResponse {
-    private double total;
+public class CartQuantity {
+    private int idCart;
+    private int quantity;
 }

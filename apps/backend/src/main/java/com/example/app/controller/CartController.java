@@ -3,15 +3,14 @@ package com.example.app.controller;
 import com.example.app.model.CartEntity;
 import com.example.app.model.UserEntity;
 import com.example.app.repository.CartRepository;
+import com.example.app.requests.ConfirmCardRequests;
+import com.example.app.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
 @RequestMapping("api/manage/carts")
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("me")
     public ResponseEntity<CartEntity> handleCart(){
@@ -32,5 +33,6 @@ public class CartController {
             return ResponseEntity.ok(null);
         }
     }
+
 
 }

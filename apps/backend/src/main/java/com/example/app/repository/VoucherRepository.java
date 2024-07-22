@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface VoucherRepository extends JpaRepository<VoucherModel, Integer> {
     Optional<VoucherModel> findByNameOrCode(String name, String code);
+    Optional<VoucherModel> findByCode(String code);
 }

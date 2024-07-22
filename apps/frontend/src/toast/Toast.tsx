@@ -12,7 +12,8 @@ const Toast = () => {
                         border: '1px solid #713200',
                         padding: '3px',
                         color: '#713200',
-                        fontSize: '12px'
+                        fontSize: '12px',
+                        alignContent: "text-center",
                     },
                 }}
                 containerStyle={{

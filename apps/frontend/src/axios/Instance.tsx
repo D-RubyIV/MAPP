@@ -1,7 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-
 const parseJwt = (token: string) => {
     try {
         return JSON.parse(atob(token.split(".")[1]));
@@ -55,11 +54,16 @@ instance.interceptors.response.use(function (response) {
             window.location.href = "/auth";
         }
         else {
-            toast("User not have permission")
+            toast("Người dùng không có quyền")
         }
     }
     if (error.response.status === 400) {
-        toast(error.response.data.message || error.response.request.responseText)
+        if(error.response.data.message === "Cart not found"){
+            toast("Vui lòng đăng nhập")
+        }
+        else{
+            toast(error.response.data.message || error.response.request.responseText)
+        }
     }
     return Promise.reject(error);
 });

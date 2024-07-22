@@ -23,15 +23,15 @@ const InputWithFocusDiv = React.forwardRef<HTMLInputElement, IProps>(
         return (
             <div
                 ref={divRef}
-                className={`p-2 mt-2 rounded-md flex flex-col border-2 ${isFocused ? 'ring-1 ring-blue-500' : ''} ${isValidation? "":"ring-1 ring-red-300"}`}
+                className={`p-1 mt-2 rounded-md flex flex-col border-2 ${isFocused ? 'ring-1 ring-blue-500' : ''} ${isValidation ? "" : "ring-1 ring-red-400"}`}
             >
                 <label className='text-[12.5px] font-semibold text-gray-500'>
                     <span>{label}</span>
-                    <span>{required ? " (*)": ""}</span>
+                    <span>{required ? " (*)" : ""}</span>
                 </label>
                 <input
                     ref={ref}
-                    className="focus:outline-none text-sm"
+                    className="focus:outline-none text-sm py-1 px-0.5"
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     {...props}

@@ -41,6 +41,8 @@ public class InitDataBase {
     private TagRepository tagRepository;
     @Autowired
     private CollectionRepository collectionRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
@@ -51,6 +53,18 @@ public class InitDataBase {
     @Transactional
     @PostConstruct
     public void init() {
+        // PAYMENT
+        if (paymentRepository.findById(1).isEmpty()){
+            PaymentEntity payment = new PaymentEntity();
+            payment.setName("Thanh toán khi nhận hàng");
+            paymentRepository.save(payment);
+        }
+        if (paymentRepository.findById(2).isEmpty()){
+            PaymentEntity payment = new PaymentEntity();
+            payment.setName("Chuyển khoản khi nhận hàng");
+            paymentRepository.save(payment);
+        }
+        // COLOR
         List<String> listColorCode = List.of("xanh", "do", "den", "vang", "tim");
         listColorCode.forEach(s -> {
             if(colorRepository.findByCode(s).isEmpty()){
@@ -401,7 +415,8 @@ public class InitDataBase {
             voucherModel.setName("Sale 05");
             voucherModel.setCode("VCH01");
             voucherModel.setPercent(20);
-            voucherModel.setMinimize(50);
+            voucherModel.setMinimize(200000);
+            voucherModel.setMaximum(50000);
             voucherModel.setStartDate(LocalDate.now());
             voucherModel.setEndDate(LocalDate.now().plusDays(5));
             voucherRepository.save(voucherModel);
@@ -410,8 +425,9 @@ public class InitDataBase {
             VoucherModel voucherModel = new VoucherModel();
             voucherModel.setName("Sale 10");
             voucherModel.setCode("VCH02");
-            voucherModel.setPercent(25);
-            voucherModel.setMinimize(20);
+            voucherModel.setPercent(20);
+            voucherModel.setMinimize(200000);
+            voucherModel.setMaximum(20000);
             voucherModel.setStartDate(LocalDate.now());
             voucherModel.setEndDate(LocalDate.now().plusDays(2));
             voucherRepository.save(voucherModel);
@@ -421,7 +437,8 @@ public class InitDataBase {
             voucherModel.setName("Flash Sale");
             voucherModel.setCode("VCH03");
             voucherModel.setPercent(15);
-            voucherModel.setMinimize(50);
+            voucherModel.setMinimize(300000);
+            voucherModel.setMaximum(40000);
             voucherModel.setStartDate(LocalDate.now());
             voucherModel.setEndDate(LocalDate.now().plusDays(8));
             voucherRepository.save(voucherModel);
@@ -433,6 +450,7 @@ public class InitDataBase {
             orderModel.setStatus(Status.Pending);
             orderModel.setUser(userRepository.findById(1).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(1).orElse(null));
+            orderModel.setAddress("Dia chi 1");
             orderRepository.save(orderModel);
         }
         if (orderRepository.findById(2).isEmpty()){
@@ -441,23 +459,26 @@ public class InitDataBase {
             orderModel.setStatus(Status.Pending);
             orderModel.setUser(userRepository.findById(2).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(2).orElse(null));
+            orderModel.setAddress("Dia chi 2");
             orderRepository.save(orderModel);
         }
         if (orderRepository.findById(3).isEmpty()){
             OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
-            orderModel.setStatus(Status.Success);
+            orderModel.setStatus(Status.Delivered);
             orderModel.setUser(userRepository.findById(3).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(3).orElse(null));
+            orderModel.setAddress("Dia chi 3");
             orderRepository.save(orderModel);
         }
 
         if (orderRepository.findById(4).isEmpty()){
             OrderEntity orderModel = new OrderEntity();
             orderModel.setOrderDate(LocalDate.now());
-            orderModel.setStatus(Status.Success);
+            orderModel.setStatus(Status.Delivered);
             orderModel.setUser(userRepository.findById(1).orElse(null));
             orderModel.setVoucher(voucherRepository.findById(1).orElse(null));
+            orderModel.setAddress("Dia chi 4");
             orderRepository.save(orderModel);
         }
         // ORDER DETAIL

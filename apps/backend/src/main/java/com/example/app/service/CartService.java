@@ -3,6 +3,8 @@ package com.example.app.service;
 import com.example.app.model.CartEntity;
 import com.example.app.model.UserEntity;
 import com.example.app.repository.CartRepository;
+import com.example.app.requests.ConfirmCardRequests;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,5 @@ public class CartService {
             newCart.setUser(userModel);
             return cartRepository.save(newCart);
         }
-
     }
 }

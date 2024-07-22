@@ -32,6 +32,8 @@ public class VoucherModel {
     @NotNull
     private int minimize;
     @NotNull
+    private int maximum;
+    @NotNull
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;

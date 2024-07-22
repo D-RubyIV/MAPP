@@ -1,10 +1,14 @@
 package com.example.app.controller;
 
 import com.example.app.dto.OrderDto;
+import com.example.app.encode.AESDecryption;
+import com.example.app.encode.AESEncryption;
 import com.example.app.model.OrderEntity;
+import com.example.app.model.UserEntity;
 import com.example.app.repository.OrderRepository;
 import com.example.app.repository.UserRepository;
 import com.example.app.repository.VoucherRepository;
+import com.example.app.requests.order.OrderCheckoutRequests;
 import com.example.app.service.OrderService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -13,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -32,6 +39,10 @@ public class OrderController {
     private VoucherRepository voucherRepository;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private AESEncryption aesEncryption;
+    @Autowired
+    private AESDecryption aesDecryption;
 
     @GetMapping("")
     public ResponseEntity<?> findAll(
@@ -55,6 +66,8 @@ public class OrderController {
         return ResponseEntity.ok(orderRepository.save(entity));
     }
 
+
+
     @PutMapping("{id}")
     public ResponseEntity<?> update(@Valid @RequestBody OrderEntity entity, @PathVariable int id, BindingResult bindingResult) throws Exception {
         System.out.println("UPDATE");
@@ -73,8 +86,28 @@ public class OrderController {
         return ResponseEntity.ok("");
     }
 
-    @GetMapping("/checkout")
-    public ResponseEntity<?> checkout(@RequestParam(name = "ids", value = "") List<Integer> ids){
+    @PostMapping("/confirm")
+    public ResponseEntity<?> checkout_encode(@RequestBody List<Integer> ids) throws Exception {
         return ResponseEntity.ok(orderService.checkout(ids));
+    }
+
+    @GetMapping("/checkout")
+    public ResponseEntity<?> checkout_decode(@RequestParam String code) throws Exception {
+        return ResponseEntity.ok(orderService.getDecodeCheckout(code));
+    }
+
+    @PostMapping("/give")
+    public ResponseEntity<?> orderOnline(@Valid @RequestBody OrderCheckoutRequests dto, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)){
+            UserEntity currentUser = (UserEntity) authentication.getPrincipal();
+            return ResponseEntity.ok(orderService.orderOnline(dto ,currentUser));
+        } else {
+            throw new BadRequestException("Order failed");
+        }
     }
 }

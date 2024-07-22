@@ -5,6 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum Status {
     @JsonProperty("Pending")
     Pending,
-    @JsonProperty("Success")
-    Success,
+    @JsonProperty("Confirmed")
+    Confirmed,
+    @JsonProperty("Processing")
+    Processing,
+    @JsonProperty("Shipped")
+    Shipped,
+    @JsonProperty("Delivered")
+    Delivered,
+    @JsonProperty("Cancelled")
+    Cancelled,
+    @JsonProperty("Returned")
+    Returned,
 }

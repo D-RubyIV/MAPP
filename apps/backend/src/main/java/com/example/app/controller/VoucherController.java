@@ -30,6 +30,12 @@ public class VoucherController {
         return ResponseEntity.ok(voucherRepository.findAll(pageable));
     }
 
+    @GetMapping("{code}")
+    public ResponseEntity<?> findOne(@PathVariable String code) throws BadRequestException {
+        return ResponseEntity.ok(voucherRepository.findByCode(code).orElseThrow(()-> new BadRequestException("Mã giảm giá không tồn tại")));
+    }
+
+
     @PostMapping("")
     public ResponseEntity<?> add(@Valid @RequestBody VoucherModel entity, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {

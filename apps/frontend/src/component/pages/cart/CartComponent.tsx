@@ -1,17 +1,15 @@
 import { AddCircleOutline, CloseOutlined, DeleteOutlineRounded, RemoveCircleOutline } from "@mui/icons-material";
-import { useEffect, useState, Fragment} from "react";
+import { useEffect, useState, Fragment } from "react";
 import instance from "../../../axios/Instance";
 import { useAppContext } from "../../../store/AppContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-type GroupCartDetail = {
-    id: number;
-    carts: CartDetail[];
-};
+
 
 const CartComponent = () => {
-
     const navigate = useNavigate()
+    const [me, setMe] = useState(localStorage.getItem("me"))
 
     const [listCartDetail, setListCartDetail] = useState<CartDetail[]>([]);
     const { isOpenCart, setIsOpenCart } = useAppContext();
@@ -46,6 +44,9 @@ const CartComponent = () => {
             console.log(object);
             setListGroupCardDetail((prev) => [...prev, object]);
         });
+
+        console.log("listCartDetail")
+        console.log(listCartDetail)
     }, [listCartDetail]);
 
 
@@ -65,20 +66,22 @@ const CartComponent = () => {
         });
     };
 
-    const handleAddQuantity = (id: number) => {
-        setListCartDetail((prevListCartDetail) =>
-            prevListCartDetail.map((cart) =>
-                cart.id === id ? { ...cart, quantity: cart.quantity + 1 } : cart
-            )
-        );
+    const handleAddQuantity = async (id: number) => {
+   
+        await instance.get(`api/manage/cart-details/increase/${id}`).then((response) => {
+            if (response?.status === 200) {
+                fetchCartItems();
+            }
+        });
     };
 
-    const handleMinusQuantity = (id: number) => {
-        setListCartDetail((prevListCartDetail) =>
-            prevListCartDetail.map((cart) =>
-                cart.id === id && cart.quantity > 0 ? { ...cart, quantity: cart.quantity - 1 } : cart
-            )
-        );
+    const handleMinusQuantity = async (id: number) => {
+
+        await instance.get(`api/manage/cart-details/decrease/${id}`).then((response) => {
+            if (response?.status === 200) {
+                fetchCartItems();
+            }
+        });
     };
 
     const handleSelectCartDetail = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
@@ -90,18 +93,28 @@ const CartComponent = () => {
                 return prev.filter(selectedId => selectedId !== id);
             }
         });
+    
     };
 
     const handleCheckout = async () => {
-        var ids = listSelectedId.join(",")
-        var url = `${import.meta.env.VITE_SERVERURL}/api/manage/orders/checkout?ids=${ids}`
-
-        await instance.get(url).then(function (response) {
-            console.log(response)
-        })
-        setIsOpenCart(false)
-        navigate("/checkout")
-    }
+        const url = `${import.meta.env.VITE_SERVERURL}/api/manage/orders/confirm`;
+        console.log(listSelectedId.length)
+        if(listSelectedId.length === 0){
+            toast("Vui lòng chọn sản phẩm")
+        }
+        else{
+            try {
+                const response = await instance.post(url, listSelectedId);
+                console.log(response);
+                setIsOpenCart(false);
+                if(response?.data?.code){
+                    navigate(`/checkout?code=${response?.data?.code}`);
+                }
+            } catch (error) {
+                console.error("Error during checkout:", error);
+            }
+        }
+    };
 
     const handleSelectAll = () => {
         setListSelectedId(pre => [...pre, ...listCartDetail.map((s) => s.id)]);
@@ -109,7 +122,6 @@ const CartComponent = () => {
     const handleUnSelectAll = () => {
         setListSelectedId([]);
     }
-
 
     useEffect(() => {
         if (isOpenCart === true) {

@@ -6,4 +6,5 @@ type Voucher = {
     endDate: Date,
     percent:  number,
     minimize: number,
+    maximum: number,
 }

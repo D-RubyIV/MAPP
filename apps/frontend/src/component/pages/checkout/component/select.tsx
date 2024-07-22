@@ -1,4 +1,3 @@
-import { ICity, ICountry, IState } from 'country-state-city';
 import React, { useState } from 'react';
 import { cn } from '../../../../lib/util';
 import { LockOpenOutlined, LockOutlined } from '@mui/icons-material';
@@ -6,7 +5,7 @@ import { LockOpenOutlined, LockOutlined } from '@mui/icons-material';
 
 interface IProps extends React.InputHTMLAttributes<HTMLSelectElement> {
     label: string
-    options: IState[] | ICity[] | ICountry[],
+    options: IProvince[] | IDistrict[] | IWard[],
     locked?: boolean
 }
 
@@ -29,17 +28,29 @@ const SelectWithFocusDiv = React.forwardRef<HTMLSelectElement, IProps>(
             >
                 <label className='text-[12.5px] font-semibold text-gray-500 flex justify-between items-center'>
                     <span>{label}</span>
-                    <span className='text-sm'>{locked ? <LockOutlined color="disabled" sx={{ fontSize: 20 }} /> : <LockOpenOutlined color="primary" sx={{ fontSize: 20 }}/>}</span>
+                    <span className='text-sm'>{locked ? <LockOutlined color="error" sx={{ fontSize: 20 }} /> : <LockOpenOutlined color="primary" sx={{ fontSize: 20 }} />}</span>
                 </label>
-                <select disabled={locked} ref={ref} {...props} className={cn("focus:outline-none text-sm ", className)} onFocus={handleFocus} onBlur={handleBlur}>
+                <select title='title' disabled={locked} ref={ref} {...props} className={cn("focus:outline-none text-sm ", className)} onFocus={handleFocus} onBlur={handleBlur}>
                     <option defaultChecked>
                         ---------
                     </option>
                     {options.map((option, index) => (
-                        <option key={index} value={option.name}>
-                            {option.name}
+                        <option
+                            key={index}
+                            value={
+                                (option as IWard)?.WardCode ||
+                                (option as IDistrict)?.DistrictID ||
+                                (option as IProvince)?.ProvinceID
+                            }
+                        >
+                            {
+                                (option as IDistrict)?.DistrictName ||
+                                (option as IProvince)?.ProvinceName ||
+                                (option as IWard)?.WardName
+                            }
                         </option>
                     ))}
+
                 </select>
             </div>
         );

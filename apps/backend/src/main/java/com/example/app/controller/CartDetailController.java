@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/manage/cart-details")
 @RestController
 public class CartDetailController {
+
     @Autowired
     private ProductDetailRepository productDetailRepository;
     @Autowired
@@ -62,4 +63,26 @@ public class CartDetailController {
         return ResponseEntity.status(200).build();
     }
 
+    @GetMapping("increase/{id}")
+    public ResponseEntity<CartDetailEntity> increase(@PathVariable int id) throws BadRequestException {
+        CartDetailEntity entity = cartDetailRepository.findById(id).orElseThrow(() -> new BadRequestException("Cart not found"));
+        if (entity.getQuantity() + 1 <= entity.getProductDetail().getQuantity()){
+            entity.setQuantity(entity.getQuantity() + 1);
+            cartDetailRepository.save(entity);
+        }
+        return ResponseEntity.ok(entity);
+    }
+
+    @GetMapping("decrease/{id}")
+    public ResponseEntity<CartDetailEntity> decrease(@PathVariable int id) throws BadRequestException {
+        CartDetailEntity entity = cartDetailRepository.findById(id).orElseThrow(() -> new BadRequestException("Cart not found"));
+        if (entity.getQuantity() - 1 > 0){
+            entity.setQuantity(entity.getQuantity() - 1);
+            cartDetailRepository.save(entity);
+        }
+        else{
+            cartDetailRepository.deleteById(id);
+        }
+        return ResponseEntity.ok(entity);
+    }
 }
