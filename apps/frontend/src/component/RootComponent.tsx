@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import NavbarComponent from "./pages/head/NavbarComponent";
 import ScrollToTop from "react-scroll-to-top";
 import { useAppContext } from "../store/AppContext";
+import ChatRoomComponent from "./pages/chat/ChatRoomComponent";
 const RootComponent = () => {
     const { isDarkMode } = useAppContext();
     return (
@@ -9,6 +10,7 @@ const RootComponent = () => {
             <div className={`relative px-8 py-4 md:px-10 xl:px-20 dark:bg-[#18191a] dark:text-white min-h-screen`}>
                 <ScrollToTop smooth top={60} width="18" height="15" style={{ "borderRadius": 100 }} className="flex items-center justify-center border-2 !bg-slate-200 !ring-1 !bg-opacity-75" />
                 <NavbarComponent />
+                <ChatRoomComponent/>
                 <Outlet />
             </div>
         </div>
