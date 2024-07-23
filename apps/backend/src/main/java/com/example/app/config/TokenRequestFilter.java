@@ -64,6 +64,7 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 //            throw new CredentialsExpiredException("Expired jwt credentials");
 
         } catch (Exception ex) {
+            log.debug("Exception");
             handlerExceptionResolver.resolveException(request, response, null, ex);
         }
 

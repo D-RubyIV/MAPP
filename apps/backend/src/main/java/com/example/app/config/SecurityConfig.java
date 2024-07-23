@@ -3,10 +3,12 @@ package com.example.app.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +19,8 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-@Component
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig {
     @Autowired
     private TokenRequestFilter jwtFilter;
@@ -43,6 +46,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
+                                .requestMatchers(mvcMatcherBuilder.pattern("ws/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/oauth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()
@@ -65,6 +69,4 @@ public class SecurityConfig {
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
-
-
 }
