@@ -26,7 +26,7 @@ const LoadedComponent = () => {
 }
 
 const LoadedableComponent = lazy(async () => {
-    await sleep(3000);
+    await sleep(1000);
     return { default: LoadedComponent };
 });
 

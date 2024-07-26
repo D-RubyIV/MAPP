@@ -1,14 +1,22 @@
-import React, { Fragment, Suspense, useEffect, useRef } from 'react';
-import { Client } from '@stomp/stompjs';
-import { AddReactionOutlined, CloseOutlined, UploadFileOutlined } from '@mui/icons-material';
+import React, { Fragment, Suspense, useEffect, useRef, useState } from 'react';
+import { Client, Message } from '@stomp/stompjs';
+import { AddReactionOutlined, CloseOutlined, SendOutlined, UploadFileOutlined } from '@mui/icons-material';
 import { useAppContext } from '../../../store/AppContext';
 
 const ChatRoom: React.FC = () => {
   const { isOpenChat, setIsOpenChat, setIsConnectWebsocket, isConnectWebsocket } = useAppContext();
+  const [messages, setMessages] = useState<string[]>([]);
+  const [message, setMessage] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
     connect();
+    return () => {
+      if (clientRef.current) {
+        clientRef.current.deactivate();
+      }
+    };
   }, []);
 
   const connect = () => {
@@ -16,32 +24,34 @@ const ChatRoom: React.FC = () => {
     const token = tokenString ? JSON.parse(tokenString) : null;
     const accessToken = token ? token.accessToken : "";
 
-    console.log(accessToken);
-
     if (accessToken) {
       const client = new Client({
         brokerURL: `${import.meta.env.VITE_SERVERURL}/ws`,
         connectHeaders: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`, // Gửi token trong header
         },
         debug: function (str) {
           console.log(str);
         },
-        reconnectDelay: 5000,
+        reconnectDelay: 150000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
 
       client.onConnect = function (frame) {
-        console.log("Connected !!!" + frame.body);
-        setIsConnectWebsocket(true)
+        console.log("Connected: " + frame.body);
+        setIsConnectWebsocket(true);
+        client.subscribe('/topic/messages', (message: Message) => {
+          setMessages(prevMessages => [...prevMessages, message.body]);
+        });
       };
 
       client.onStompError = function (frame) {
-        console.log('Broker reported error: ' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
+        console.error('Broker reported error: ' + frame.headers['message']);
+        console.error('Additional details: ' + frame.body);
       };
 
+      clientRef.current = client;
       client.activate();
     }
   };
@@ -53,10 +63,21 @@ const ChatRoom: React.FC = () => {
     }
   };
 
+  const handleSend = () => {
+    if (clientRef.current && message.trim()) {
+      const tokenString = localStorage.getItem("token");
+      const token = tokenString ? JSON.parse(tokenString) : null;
+      const accessToken = token ? token.accessToken : "";
+
+      clientRef.current.publish({ destination: '/app/send', body: message, headers: {Authorization: `Bearer ${accessToken}`} });
+      setMessage('');
+    }
+  };
+
   return (
     <Fragment>
       <Suspense>
-        <div className={`z-10 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen left-0 transition-all duration-500 ${isOpenChat ? "block bottom-0" : "-bottom-full"}`}>
+        <div className={`z-10 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen left-0 transition-all duration-500 ${isOpenChat ? "bottom-0" : "-bottom-full"}`}>
           <div className='bg-white w-full h-full px-8 py-4 md:px-10 xl:px-20 flex flex-col'>
             <div className='py-2 flex justify-between items-center'>
               <div className='flex gap-2'>
@@ -75,23 +96,28 @@ const ChatRoom: React.FC = () => {
                 <button onClick={() => setIsOpenChat(false)} className='items-center flex'><CloseOutlined /></button>
               </div>
             </div>
-            <div className='h-full justify-between flex flex-col'>
-              <div>
-                ss
+            <div className='h-full flex flex-col'>
+              <div className='flex-1 overflow-auto p-2'>
+                {messages.map((msg, index) => (
+                  <div key={index} className='mb-2'>{msg}</div>
+                ))}
               </div>
               <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300'>
                 <div className='flex justify-around w-full items-end py-2'>
-                  <div><button><UploadFileOutlined /></button></div>
+                  <div><button><UploadFileOutlined className='text-gray-500'/></button></div>
                   <div>
                     <textarea
                       ref={textareaRef}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       className='text-sm focus:outline-none min-w-64 resize-none overflow-hidden'
                       placeholder='Gửi tin nhắn ...'
                       onInput={handleInput}
                       rows={1}
                     ></textarea>
                   </div>
-                  <div><button><AddReactionOutlined /></button></div>
+                  <div><button onClick={handleSend} className='text-gray-500'><SendOutlined/></button></div>
+                  <div><button className='text-gray-500'><AddReactionOutlined /></button></div>
                 </div>
               </div>
             </div>

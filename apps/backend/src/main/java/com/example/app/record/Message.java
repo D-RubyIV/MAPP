@@ -1,4 +1,7 @@
 package com.example.app.record;
 
-public record Message(String message) {
+import java.time.Instant;
+
+public record Message(User user, String receiverId, String comment, Action action, Instant timestamp) {
+
 }

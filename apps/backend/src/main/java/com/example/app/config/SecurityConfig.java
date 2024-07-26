@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(mvcMatcherBuilder.pattern("ws")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("ws/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/oauth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()
@@ -67,6 +67,10 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 );
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.exceptionHandling(ex -> {
+            ex.authenticationEntryPoint((request, response, authException) -> response.sendError(401, "Unauthorized"));
+            ex.accessDeniedHandler((request, response, authException) -> response.sendError(403, "Forbidden"));
+        });
         return httpSecurity.build();
     }
 }
