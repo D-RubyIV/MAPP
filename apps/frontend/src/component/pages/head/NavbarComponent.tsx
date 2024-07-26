@@ -62,7 +62,7 @@ const NavbarComponent = () => {
                         </ul>
                     </div>
                     <div className="md:hidden">
-                        <div className="flex gap-1.5 items-center justify-center">
+                        <div className="flex gap-2 items-center justify-center">
                             <button onClick={() => { }}><PersonOutline /></button>
                             <div className="relative">
                                 <button onClick={() => setIsOpenChat(true)}><InboxOutlined /></button>
