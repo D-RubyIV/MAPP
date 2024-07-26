@@ -13,7 +13,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
 @RequestMapping("api/manage/colors")
 @RestController
 public class ColorController {

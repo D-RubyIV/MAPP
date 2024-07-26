@@ -1,201 +1,103 @@
-import { Fragment } from "react/jsx-runtime";
-import React, { useEffect, useState } from 'react';
-import { over } from 'stompjs';
-import SockJS from 'sockjs-client';
+import React, { Fragment, useEffect, useRef } from 'react';
+import { Client } from '@stomp/stompjs';
+import { AddReactionOutlined, CloseOutlined, UploadFileOutlined } from '@mui/icons-material';
+import { useAppContext } from '../../../store/AppContext';
 
-var stompClient: any = null;
+const ChatRoom: React.FC = () => {
+  const { isOpenChat, setIsOpenChat, setIsConnectWebsocket, isConnectWebsocket } = useAppContext();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-interface ChatMessage {
-    senderName: string;
-    receiverName?: string;
-    message?: string;
-    status: string;
-}
+  useEffect(() => {
+    connect();
+  }, []);
 
-interface UserData {
-    username: string;
-    receivername: string;
-    connected: boolean;
-    message: string;
-}
+  const connect = () => {
+    const tokenString = localStorage.getItem("token");
+    const token = tokenString ? JSON.parse(tokenString) : null;
+    const accessToken = token ? token.accessToken : "";
 
-const ChatRoomComponent: React.FC = () => {
-    const [privateChats, setPrivateChats] = useState<Map<string, ChatMessage[]>>(new Map());
-    const [publicChats, setPublicChats] = useState<ChatMessage[]>([]);
-    const [tab, setTab] = useState<string>("CHATROOM");
-    const [userData, setUserData] = useState<UserData>({
-        username: '',
-        receivername: '',
-        connected: false,
-        message: ''
-    });
+    console.log(accessToken);
 
-    useEffect(() => {
-        console.log(userData);
-    }, [userData]);
+    if (accessToken) {
+      const client = new Client({
+        brokerURL: 'http://localhost:8080/ws',
+        connectHeaders: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        debug: function (str) {
+          console.log(str);
+        },
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+      });
 
-    const connect = () => {
-        let Sock = new SockJS('http://localhost:8080/ws');
-        stompClient = over(Sock);
-        stompClient.connect({}, onConnected, onError);
-    };
+      client.onConnect = function (frame) {
+        console.log("Connected !!!");
+        setIsConnectWebsocket(true)
+      };
 
-    const onConnected = () => {
-        setUserData({ ...userData, connected: true });
-        stompClient.subscribe('/chatroom/public', onMessageReceived);
-        stompClient.subscribe('/user/' + userData.username + '/private', onPrivateMessage);
-        userJoin();
-    };
+      client.onStompError = function (frame) {
+        console.log('Broker reported error: ' + frame.headers['message']);
+        console.log('Additional details: ' + frame.body);
+      };
 
-    const userJoin = () => {
-        const chatMessage: ChatMessage = {
-            senderName: userData.username,
-            status: "JOIN"
-        };
-        stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-    };
+      client.activate();
+    }
+  };
 
-    const onMessageReceived = (payload: any) => {
-        const payloadData = JSON.parse(payload.body);
-        switch (payloadData.status) {
-            case "JOIN":
-                if (!privateChats.get(payloadData.senderName)) {
-                    privateChats.set(payloadData.senderName, []);
-                    setPrivateChats(new Map(privateChats));
-                }
-                break;
-            case "MESSAGE":
-                publicChats.push(payloadData);
-                setPublicChats([...publicChats]);
-                break;
-        }
-    };
+  const handleInput = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
 
-    const onPrivateMessage = (payload: any) => {
-        console.log(payload);
-        const payloadData = JSON.parse(payload.body);
-        if (privateChats.get(payloadData.senderName)) {
-            privateChats.get(payloadData.senderName)?.push(payloadData);
-            setPrivateChats(new Map(privateChats));
-        } else {
-            let list: ChatMessage[] = [];
-            list.push(payloadData);
-            privateChats.set(payloadData.senderName, list);
-            setPrivateChats(new Map(privateChats));
-        }
-    };
-
-    const onError = (err: any) => {
-        console.log(err);
-    };
-
-    const handleMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target;
-        setUserData({ ...userData, message: value });
-    };
-
-    const sendValue = () => {
-        if (stompClient) {
-            const chatMessage: ChatMessage = {
-                senderName: userData.username,
-                message: userData.message,
-                status: "MESSAGE"
-            };
-            console.log(chatMessage);
-            stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-            setUserData({ ...userData, message: "" });
-        }
-    };
-
-    const sendPrivateValue = () => {
-        if (stompClient) {
-            const chatMessage: ChatMessage = {
-                senderName: userData.username,
-                receiverName: tab,
-                message: userData.message,
-                status: "MESSAGE"
-            };
-
-            if (userData.username !== tab) {
-                privateChats.get(tab)?.push(chatMessage);
-                setPrivateChats(new Map(privateChats));
-            }
-            stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
-            setUserData({ ...userData, message: "" });
-        }
-    };
-
-    const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target;
-        setUserData({ ...userData, username: value });
-    };
-
-    const registerUser = () => {
-        connect();
-    };
-
-    return (
-        <Fragment>
-            <div className="bg-indigo-200 bg-opacity-50 h-screen fixed top-1/2 left-1/2 w-full z-10 -translate-x-1/2 -translate-y-1/2">
-                {userData.connected ?
-                    <div className="chat-box">
-                        <div className="member-list">
-                            <ul>
-                                <li onClick={() => { setTab("CHATROOM") }} className={`member ${tab === "CHATROOM" && "active"}`}>Chatroom</li>
-                                {[...privateChats.keys()].map((name, index) => (
-                                    <li onClick={() => { setTab(name) }} className={`member ${tab === name && "active"}`} key={index}>{name}</li>
-                                ))}
-                            </ul>
-                        </div>
-                        {tab === "CHATROOM" && <div className="chat-content">
-                            <ul className="chat-messages">
-                                {publicChats.map((chat, index) => (
-                                    <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                                        {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
-                                        <div className="message-data">{chat.message}</div>
-                                        {chat.senderName === userData.username && <div className="avatar self">{chat.senderName}</div>}
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="send-message">
-                                <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-                                <button type="button" className="send-button" onClick={sendValue}>send</button>
-                            </div>
-                        </div>}
-                        {tab !== "CHATROOM" && <div className="chat-content">
-                            <ul className="chat-messages">
-                                {privateChats.get(tab)?.map((chat, index) => (
-                                    <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                                        {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
-                                        <div className="message-data">{chat.message}</div>
-                                        {chat.senderName === userData.username && <div className="avatar self">{chat.senderName}</div>}
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="send-message">
-                                <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-                                <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
-                            </div>
-                        </div>}
-                    </div>
-                    :
-                    <div className="register">
-                        <input
-                            id="user-name"
-                            placeholder="Enter your name"
-                            name="userName"
-                            value={userData.username}
-                            onChange={handleUsername}
-                        />
-                        <button type="button" onClick={registerUser}>
-                            connect
-                        </button>
-                    </div>}
+  return (
+    <Fragment>
+      <div className={`z-10 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen top-0 left-0 ${isOpenChat ? "" : "hidden"}`}>
+        <div className='bg-white w-full h-full px-8 py-4 md:px-10 xl:px-20 flex flex-col'>
+          <div className='py-2 flex justify-between items-center'>
+            <div className='flex gap-2'>
+              <div className='flex items-center'>
+                <img className='w-[32px] aspect-square object-cover rounded-full border-black border' src='https://th.bing.com/th/id/OIP.C-CcTNtfhJ2WSf524szKLgHaHa?pid=ImgDet&w=205&h=205&c=7' alt='Nhân viên hỗ trợ'></img>
+              </div>
+              <div className='text-[12.5px]'>
+                <div className='font-semibold text-gray-700 text-[13.5px]'>
+                  <span>Nhân viên hỗ trợ</span>
+                  <span className='ml-1 text-[10px]'>{isConnectWebsocket ? "🟢" : "🔴"}</span>
+                </div>
+                <p className='font-thin'>Hoạt động 12 phút trước</p>
+              </div>
             </div>
-        </Fragment>
-    );
-}
+            <div>
+              <button onClick={() => setIsOpenChat(false)} className='items-center flex'><CloseOutlined /></button>
+            </div>
+          </div>
+          <div className='h-full justify-between flex flex-col'>
+            <div>
+              ss
+            </div>
+            <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300'>
+              <div className='flex justify-around w-full items-end py-2'>
+                <div><button><UploadFileOutlined /></button></div>
+                <div>
+                  <textarea
+                    ref={textareaRef}
+                    className='text-sm focus:outline-none min-w-64 resize-none overflow-hidden'
+                    placeholder='Gửi tin nhắn ...'
+                    onInput={handleInput}
+                    rows={1}
+                  ></textarea>
+                </div>
+                <div><button><AddReactionOutlined /></button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
-export default ChatRoomComponent;
+export default ChatRoom;

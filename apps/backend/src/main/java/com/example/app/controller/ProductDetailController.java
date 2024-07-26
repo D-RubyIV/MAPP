@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin("*")
 @RequestMapping("api/manage/product-details")
 @RestController
 public class ProductDetailController {

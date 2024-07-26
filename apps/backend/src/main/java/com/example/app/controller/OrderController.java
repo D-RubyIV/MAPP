@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
 @Controller
 @RequestMapping("/api/manage/orders")
 public class OrderController {

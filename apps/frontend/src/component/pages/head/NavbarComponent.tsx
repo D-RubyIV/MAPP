@@ -1,25 +1,24 @@
 import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import MenuIcon from '@mui/icons-material/Menu';
-import { CloseOutlined, PersonOutline, ShoppingBagOutlined } from "@mui/icons-material";
+import { CloseOutlined, InboxOutlined, PersonOutline, ShoppingBagOutlined } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import instance from "../../../axios/Instance";
 import { useAppContext } from "../../../store/AppContext";
 import ToogleTheme from "../../../ui/ToogleTheme";
 import CartComponent from "../cart/CartComponent";
-
 const NavbarComponent = () => {
-    const { effLoadingBag, isOpenCart, setIsOpenCart } = useAppContext();
+    const { effLoadingBag, isOpenCart, isOpenChat, setIsOpenCart, setIsOpenChat } = useAppContext();
     const [coutItemInBag, setCoutItemInBag] = useState(0);
     const [openMenu, setOpenMenu] = useState(false);
 
     useEffect(() => {
-        if (!openMenu && !isOpenCart) {
+        if (!openMenu && !isOpenCart && !isOpenChat) {
             document.body.style.overflow = "scroll";
         } else {
             document.body.style.overflow = "hidden";
         }
-    }, [openMenu, isOpenCart]);
+    }, [openMenu, isOpenCart, isOpenChat]);
 
     const listItem = [
         { "name": "Home", "link": "/" },
@@ -65,6 +64,12 @@ const NavbarComponent = () => {
                     <div className="md:hidden">
                         <div className="flex gap-1.5 items-center justify-center">
                             <button onClick={() => { }}><PersonOutline /></button>
+                            <div className="relative">
+                                <button onClick={() => setIsOpenChat(true)}><InboxOutlined /></button>
+                                <div className="absolute p-[8px] -top-0.5 -right-1 bg-red-300 sha0dow-2xl rounded-full w-4 h-4 flex justify-center items-center">
+                                    <span className="text-[12px] font-semibold tracking-tighter">{coutItemInBag}</span>
+                                </div>
+                            </div>
                             <div className="relative">
                                 <button onClick={() => setIsOpenCart(true)}><ShoppingBagOutlined /></button>
                                 <div className="absolute p-[8px] -top-0.5 -right-1 bg-red-300 sha0dow-2xl rounded-full w-4 h-4 flex justify-center items-center">
@@ -122,7 +127,7 @@ const NavbarComponent = () => {
                 </div>
             </div>
             <CartComponent />
-      
+
         </Fragment>
     );
 }

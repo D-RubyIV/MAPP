@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers(mvcMatcherBuilder.pattern("ws/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("ws")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/auth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/oauth/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("api/manage/files/download/**")).permitAll()

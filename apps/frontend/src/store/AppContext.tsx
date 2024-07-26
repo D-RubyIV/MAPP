@@ -9,6 +9,10 @@ type AppContextType = {
     setEffLoadingBag: React.Dispatch<React.SetStateAction<boolean>>;
     isOpenCart: boolean;
     setIsOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
+    isOpenChat: boolean;
+    setIsOpenChat: React.Dispatch<React.SetStateAction<boolean>>;
+    isConnectWebsocket: boolean;
+    setIsConnectWebsocket: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -20,6 +24,10 @@ const AppContext = createContext<AppContextType>({
     setEffLoadingBag: () => { },
     isOpenCart: false,
     setIsOpenCart: () => { },
+    isOpenChat: false,
+    setIsOpenChat: () => { },
+    isConnectWebsocket: false,
+    setIsConnectWebsocket: () => { },
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -27,9 +35,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [effLoadingBag, setEffLoadingBag] = useState(false);
     const [isOpenCart, setIsOpenCart] = useState(false);
+    const [isOpenChat, setIsOpenChat] = useState(false)
+    const [isConnectWebsocket, setIsConnectWebsocket] = useState(false)
 
     return (
-        <AppContext.Provider value={{isOpenCart, setIsOpenCart, isDarkMode, setIsDarkMode, isLoading, setIsLoading, effLoadingBag, setEffLoadingBag }}>
+        <AppContext.Provider value={{isOpenCart, setIsOpenCart, isDarkMode, setIsDarkMode, isLoading, setIsLoading, effLoadingBag, setEffLoadingBag, isOpenChat, setIsOpenChat, isConnectWebsocket, setIsConnectWebsocket }}>
             {children}
         </AppContext.Provider>
     );

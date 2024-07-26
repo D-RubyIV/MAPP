@@ -17,7 +17,6 @@ import NotFoundComponent from './component/common/NotFoundComponent.tsx'
 import ProfileComponent from './component/pages/profile/ProfileComponent.tsx'
 import DetailComponent from './component/pages/dashboard/DetailComponent.tsx'
 import UserComponent from './component/manage/table/UserComponent.tsx'
-import '@radix-ui/themes/styles.css';
 import ProductComponent from './component/manage/table/ProductComponent.tsx'
 import CategoryComponent from './component/manage/table/CategoryComponent.tsx'
 import ColorComponent from './component/manage/table/ColorComponent.tsx'

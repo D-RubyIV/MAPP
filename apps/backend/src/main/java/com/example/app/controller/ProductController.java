@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin("*")
 @RequestMapping("api/manage/products")
 @RestController
 public class ProductController {

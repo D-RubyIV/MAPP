@@ -14,7 +14,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
 @RequestMapping("api/manage/collections")
 @RestController
 public class CollectionController {

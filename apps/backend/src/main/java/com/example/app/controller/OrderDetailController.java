@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin("*")
 @Controller
 @RequestMapping("api/manage/order-details")
 public class OrderDetailController {
