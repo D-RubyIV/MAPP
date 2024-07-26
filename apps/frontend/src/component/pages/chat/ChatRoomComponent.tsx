@@ -33,7 +33,7 @@ const ChatRoom: React.FC = () => {
       });
 
       client.onConnect = function (frame) {
-        console.log("Connected !!!");
+        console.log("Connected !!!" + frame.body);
         setIsConnectWebsocket(true)
       };
 

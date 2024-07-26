@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 
 const CartComponent = () => {
     const navigate = useNavigate()
-    const [me, setMe] = useState(localStorage.getItem("me"))
 
     const [listCartDetail, setListCartDetail] = useState<CartDetail[]>([]);
     const { isOpenCart, setIsOpenCart } = useAppContext();
