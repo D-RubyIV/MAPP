@@ -20,7 +20,7 @@ const ChatRoom: React.FC = () => {
 
     if (accessToken) {
       const client = new Client({
-        brokerURL: `${import.meta.env.VITE_SERVERURL}/api/ws`,
+        brokerURL: `${import.meta.env.VITE_SERVERURL}/ws`,
         connectHeaders: {
           Authorization: `Bearer ${accessToken}`,
         },
