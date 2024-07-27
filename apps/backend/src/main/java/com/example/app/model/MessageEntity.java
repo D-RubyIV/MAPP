@@ -1,17 +1,27 @@
 package com.example.app.model;
 
-import com.example.app.common.EMessageStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.app.common.EMessageType;
+import jakarta.persistence.*;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class MessageEntity {
-    private String senderName;
-    private String receiverName;
+@Getter
+@Setter
+@Entity
+@Table(name = "messages")
+public class MessageEntity extends BaseEntity{
     private String message;
-    private String date;
-    private EMessageStatus status;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private MediaEntity media;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @Enumerated(EnumType.STRING)
+    private EMessageType type;
+
 }

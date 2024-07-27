@@ -3,9 +3,22 @@ import { Client, Message } from '@stomp/stompjs';
 import { AddReactionOutlined, CloseOutlined, SendOutlined, UploadFileOutlined } from '@mui/icons-material';
 import { useAppContext } from '../../../store/AppContext';
 
+enum ETypeMessage {
+  SEND,
+  RECEIVE
+
+}
+
+type MessageEntity = {
+  id: number,
+  message: string,
+  type: ETypeMessage,
+}
+
+
 const ChatRoom: React.FC = () => {
   const { isOpenChat, setIsOpenChat, setIsConnectWebsocket, isConnectWebsocket } = useAppContext();
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<MessageEntity[]>([]);
   const [message, setMessage] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const clientRef = useRef<Client | null>(null);
@@ -33,17 +46,25 @@ const ChatRoom: React.FC = () => {
         debug: function (str) {
           console.log(str);
         },
-        reconnectDelay: 150000,
+        reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
 
-      client.onConnect = function (frame) {
-        console.log("Connected: " + frame.body);
+      client.onConnect = function () {
         setIsConnectWebsocket(true);
-        client.subscribe('/topic/messages', (message: Message) => {
-          setMessages(prevMessages => [...prevMessages, message.body]);
+
+        client.subscribe('/send/messages', (message: Message) => {
+          console.log("BBBBBBBBBBBB")
+          setMessages(prevMessages => [...prevMessages, JSON.parse(message.body) as MessageEntity]);
+
         });
+        client.subscribe('/receive/messages', (message: Message) => {
+          console.log("AAAAAAAAAAAA")
+          console.log(JSON.parse(message.body))
+          setMessages(JSON.parse(message.body))
+        });
+        client.publish({ destination: '/app/receive', body: message });
       };
 
       client.onStompError = function (frame) {
@@ -56,6 +77,7 @@ const ChatRoom: React.FC = () => {
     }
   };
 
+
   const handleInput = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -65,11 +87,7 @@ const ChatRoom: React.FC = () => {
 
   const handleSend = () => {
     if (clientRef.current && message.trim()) {
-      const tokenString = localStorage.getItem("token");
-      const token = tokenString ? JSON.parse(tokenString) : null;
-      const accessToken = token ? token.accessToken : "";
-
-      clientRef.current.publish({ destination: '/app/send', body: message, headers: {Authorization: `Bearer ${accessToken}`} });
+      clientRef.current.publish({ destination: '/app/send', body: message });
       setMessage('');
     }
   };
@@ -77,7 +95,7 @@ const ChatRoom: React.FC = () => {
   return (
     <Fragment>
       <Suspense>
-        <div className={`z-10 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen left-0 transition-all duration-500 ${isOpenChat ? "bottom-0" : "-bottom-full"}`}>
+        <div className={`z-30 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen left-0 transition-all duration-500 ${isOpenChat ? "bottom-0" : "-bottom-full"}`}>
           <div className='bg-white w-full h-full px-8 py-4 md:px-10 xl:px-20 flex flex-col'>
             <div className='py-2 flex justify-between items-center'>
               <div className='flex gap-2'>
@@ -99,25 +117,25 @@ const ChatRoom: React.FC = () => {
             <div className='h-full flex flex-col'>
               <div className='flex-1 overflow-auto p-2'>
                 {messages.map((msg, index) => (
-                  <div key={index} className='mb-2'>{msg}</div>
+                  <div key={index} className='mb-2'>{msg.message}</div>
                 ))}
               </div>
               <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300'>
-                <div className='flex justify-around w-full items-end py-2'>
-                  <div><button><UploadFileOutlined className='text-gray-500'/></button></div>
+                <div className='flex justify-center w-full items-end py-2'>
+                  <div><button className='px-1'><UploadFileOutlined className='text-gray-500' /></button></div>
+                  <div><button className='px-1'><AddReactionOutlined className='text-gray-500' /></button></div>
                   <div>
                     <textarea
                       ref={textareaRef}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className='text-sm focus:outline-none min-w-64 resize-none overflow-hidden'
+                      className='text-sm focus:outline-none min-w-60 resize-none overflow-hidden px-1'
                       placeholder='Gửi tin nhắn ...'
                       onInput={handleInput}
                       rows={1}
                     ></textarea>
                   </div>
-                  <div><button onClick={handleSend} className='text-gray-500'><SendOutlined/></button></div>
-                  <div><button className='text-gray-500'><AddReactionOutlined /></button></div>
+                  <div><button onClick={handleSend} className='text-gray-500 px-1'><SendOutlined /></button></div>
                 </div>
               </div>
             </div>

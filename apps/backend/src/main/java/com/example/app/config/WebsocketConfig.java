@@ -4,7 +4,6 @@ import com.example.app.common.Provider;
 import com.example.app.model.UserEntity;
 import com.example.app.repository.UserRepository;
 import com.example.app.service.TokenService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.socket.config.annotation.*;
 import java.util.Map;
 
@@ -36,12 +33,14 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private TokenService tokenService;
 
+
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/send","/receive");
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -55,7 +54,6 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-//                log.info("Headers: {}", accessor);
 
                 assert accessor != null;
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
@@ -71,10 +69,10 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
                     UserEntity userModel = userRepository.findByEmailAndProvider(email, provider);
 
                     System.out.println("WS: " + userModel.getEmail());
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userModel, null, userModel.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userModel, null, userModel.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    accessor.setUser(usernamePasswordAuthenticationToken);
+                    accessor.setUser(authentication);
                 }
 
                 return message;

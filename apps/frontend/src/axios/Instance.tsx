@@ -57,11 +57,17 @@ instance.interceptors.response.use(function (response) {
             toast("Người dùng không có quyền")
         }
     }
+    if (error.response.status === 401) {
+        toast("Unauthorized")
+        localStorage.removeItem("token")
+        window.location.href = "/auth";
+
+    }
     if (error.response.status === 400) {
-        if(error.response.data.message === "Cart not found"){
+        if (error.response.data.message === "Cart not found") {
             toast("Vui lòng đăng nhập")
         }
-        else{
+        else {
             toast(error.response.data.message || error.response.request.responseText)
         }
     }
