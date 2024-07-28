@@ -4,8 +4,8 @@ import { AddReactionOutlined, CloseOutlined, SendOutlined, UploadFileOutlined } 
 import { useAppContext } from '../../../store/AppContext';
 
 enum ETypeMessage {
-  SEND,
-  RECEIVE
+  SEND = "SEND",
+  RECEIVE = "RECEIVE"
 
 }
 
@@ -115,10 +115,14 @@ const ChatRoom: React.FC = () => {
               </div>
             </div>
             <div className='h-full flex flex-col'>
-              <div className='flex-1 overflow-auto p-2'>
-                {messages.map((msg, index) => (
-                  <div key={index} className='mb-2'>{msg.message}</div>
-                ))}
+              <div className='flex-1 overflow-auto p-2 gap-2'>
+                <div className='flex flex-col gap-2'>
+                  {messages.map((msg, index) => (
+                    <div key={index} className={`flex items-center ${msg.type === "SEND" ? "justify-start":"justify-end"}`}>
+                      <span className={`bg-opacity-50 ${msg.type === "SEND" ? "bg-blue-600 py-1 px-3 rounded-2xl" : ""}`}>{msg.message}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300'>
                 <div className='flex justify-center w-full items-end py-2'>
