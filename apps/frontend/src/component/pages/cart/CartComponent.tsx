@@ -136,7 +136,7 @@ const CartComponent = () => {
         <Fragment>
             <div className={`z-40 fixed h-[100vh] xl:px-20 top-0 from-indigo-900 bg-gradient-to-l rounded-md w-full transition-all duration-500 block ${isOpenCart ? "right-0" : "-right-full"}`}>
                 <div className="grid grid-cols-6 h-full">
-                    <div className="col-end-2 col-start-7 bg-gradient-to-t from-gray-200 to-gray-100 px-6 md:px-10 py-4 flex flex-col justify-between">
+                    <div className="col-end-2 col-start-7 bg-white px-6 md:px-10 py-4 flex flex-col justify-between">
                         <div>
                             {/* TOP */}
                             <div className="flex justify-between py-3 md:py-4 row-span-4">

@@ -102,21 +102,19 @@ th {
 
 
 input[type="checkbox"] {
-  /* removing default appearance */
   -webkit-appearance: none;
   appearance: none;
-  /* creating a custom design */
   width: 1em;
   height: 1em;
   border-radius: 100%;
   border: 0.15em solid #007a7e;
-  outline: 1px solid gray;
-  outline-offset: 2px;
+  /* outline: 1px solid gray;
+  outline-offset: 2px; */
   cursor: pointer;
 }
 
 input[type="checkbox"]:checked {
   width: 1em;
-  background-color: #007e19;
+  background-color: #00397e;
   position: relative;
 }
