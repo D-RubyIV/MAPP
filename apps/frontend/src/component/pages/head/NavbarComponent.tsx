@@ -21,10 +21,11 @@ const NavbarComponent = () => {
     }, [openMenu, isOpenCart, isOpenChat]);
 
     const listItem = [
-        { "name": "Trang chủ", "link": "/" },
-        { "name": "Thông tin cá nhân", "link": "/profile" },
-        { "name": "Quản lý", "link": "/manage" },
-        { "name": "Lịch sử", "link": "/" },
+        { "name": "Home", "link": "/" },
+        { "name": "Profile", "link": "/profile" },
+        { "name": "Manage", "link": "/manage" },
+        { "name": "Fund", "link": "/" },
+        { "name": "History", "link": "/" },
 
     ];
 
@@ -76,9 +77,9 @@ const NavbarComponent = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`fixed xl:px-20 z-50 top-0 from-indigo-900 bg-gradient-to-r rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
+                        <div className={`fixed h-[100vh] xl:px-20 z-50 top-0 from-indigo-900 bg-gradient-to-r rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
                             <div className="grid grid-cols-5 h-full">
-                                <div className="col-start-1 col-end-5 bg-gradient-to-t from-gray-200 to-gray-100 px-8 md:px-10 py-4 flex flex-col">
+                                <div className="col-start-1 col-end-5 bg-gradient-to-t from-gray-200 to-gray-100 px-8 md:px-10 py-4 flex flex-col h-full">
                                     <div className="flex justify-between py-3 md:py-4 row-span-4">
                                         <div className="inline-flex">
                                             <Link to={"/"}>
