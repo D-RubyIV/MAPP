@@ -39,7 +39,8 @@ const ChatRoom: React.FC = () => {
 
     if (accessToken) {
       const client = new Client({
-        brokerURL: `${import.meta.env.VITE_SERVERURL}/ws`,
+        brokerURL: `${import.meta.env.VITE_SERVERURL}/api/ws`,
+        // brokerURL: `wss://itemjunction.net/ws`,
         connectHeaders: {
           Authorization: `Bearer ${accessToken}`, // Gửi token trong header
         },
@@ -52,6 +53,8 @@ const ChatRoom: React.FC = () => {
       });
 
       client.onConnect = function () {
+        console.log(client.brokerURL)
+
         setIsConnectWebsocket(true);
 
         client.subscribe('/send/messages', (message: Message) => {
