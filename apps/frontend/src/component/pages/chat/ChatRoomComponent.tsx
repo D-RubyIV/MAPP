@@ -2,11 +2,11 @@ import React, { Fragment, Suspense, useEffect, useRef, useState } from 'react';
 import { Client, Message } from '@stomp/stompjs';
 import { AddReactionOutlined, CloseOutlined, SendOutlined, UploadFileOutlined } from '@mui/icons-material';
 import { useAppContext } from '../../../store/AppContext';
+import SockJS from 'sockjs-client';
 
 enum ETypeMessage {
   SEND = "SEND",
   RECEIVE = "RECEIVE"
-
 }
 
 type MessageEntity = {
@@ -15,14 +15,13 @@ type MessageEntity = {
   type: ETypeMessage,
 }
 
-
 const ChatRoom: React.FC = () => {
   const { isOpenChat, setIsOpenChat, setIsConnectWebsocket, isConnectWebsocket } = useAppContext();
   const [messages, setMessages] = useState<MessageEntity[]>([]);
   const [message, setMessage] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const clientRef = useRef<Client | null>(null);
-
+  
   useEffect(() => {
     connect();
     return () => {
@@ -31,18 +30,18 @@ const ChatRoom: React.FC = () => {
       }
     };
   }, []);
-
+  
   const connect = () => {
     const tokenString = localStorage.getItem("token");
     const token = tokenString ? JSON.parse(tokenString) : null;
     const accessToken = token ? token.accessToken : "";
-
+  
     if (accessToken) {
+      const socket = new SockJS('http://localhost:8080/api/ws');
       const client = new Client({
-        brokerURL: `${import.meta.env.VITE_SERVERURL}/api/ws`,
-        // brokerURL: `wss://itemjunction.net/ws`,
+        webSocketFactory: () => socket,
         connectHeaders: {
-          Authorization: `Bearer ${accessToken}`, // Gửi token trong header
+          Authorization: `Bearer ${accessToken}`,
         },
         debug: function (str) {
           console.log(str);
@@ -51,46 +50,38 @@ const ChatRoom: React.FC = () => {
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
-
+  
       client.onConnect = function () {
-        console.log(client.brokerURL)
-
         setIsConnectWebsocket(true);
-
+  
         client.subscribe('/send/messages', (message: Message) => {
-          console.log("BBBBBBBBBBBB")
           setMessages(prevMessages => [...prevMessages, JSON.parse(message.body) as MessageEntity]);
-
         });
         client.subscribe('/receive/messages', (message: Message) => {
-          console.log("AAAAAAAAAAAA")
-          console.log(JSON.parse(message.body))
-          setMessages(JSON.parse(message.body))
+          setMessages(JSON.parse(message.body));
         });
-        client.publish({ destination: '/app/receive', body: message });
       };
-
+  
       client.onStompError = function (frame) {
         console.error('Broker reported error: ' + frame.headers['message']);
         console.error('Additional details: ' + frame.body);
       };
-
+  
       clientRef.current = client;
       client.activate();
     }
   };
-
-
+  
   const handleInput = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-
+  
   const handleSend = () => {
     if (clientRef.current && message.trim()) {
-      clientRef.current.publish({ destination: '/app/send', body: message });
+      clientRef.current.publish({ destination: '/app/send', body: JSON.stringify({ message, type: ETypeMessage.SEND }) });
       setMessage('');
     }
   };
@@ -121,8 +112,8 @@ const ChatRoom: React.FC = () => {
               <div className='flex-1 overflow-auto p-2 gap-2'>
                 <div className='flex flex-col gap-2'>
                   {messages.map((msg, index) => (
-                    <div key={index} className={`flex items-center ${msg.type === "SEND" ? "justify-start":"justify-end"}`}>
-                      <span className={`bg-opacity-50 ${msg.type === "SEND" ? "bg-blue-600 py-1 px-3 rounded-2xl" : ""}`}>{msg.message}</span>
+                    <div key={index} className={`flex items-center ${msg.type === ETypeMessage.SEND ? "justify-start" : "justify-end"}`}>
+                      <span className={`bg-opacity-50 ${msg.type === ETypeMessage.SEND ? "bg-blue-600 py-1 px-3 rounded-2xl" : ""}`}>{msg.message}</span>
                     </div>
                   ))}
                 </div>
