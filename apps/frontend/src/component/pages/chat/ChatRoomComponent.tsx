@@ -3,6 +3,7 @@ import { Client, Message } from '@stomp/stompjs';
 import { AddReactionOutlined, CloseOutlined, SendOutlined, UploadFileOutlined } from '@mui/icons-material';
 import { useAppContext } from '../../../store/AppContext';
 import SockJS from 'sockjs-client';
+import { format, parseISO } from 'date-fns';
 
 enum ETypeMessage {
   SEND = "SEND",
@@ -13,6 +14,7 @@ type MessageEntity = {
   id: number,
   message: string,
   type: ETypeMessage,
+  createAt: string
 }
 
 const ChatRoom: React.FC = () => {
@@ -21,7 +23,7 @@ const ChatRoom: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const clientRef = useRef<Client | null>(null);
-  
+
   useEffect(() => {
     connect();
     return () => {
@@ -30,12 +32,12 @@ const ChatRoom: React.FC = () => {
       }
     };
   }, []);
-  
+
   const connect = () => {
     const tokenString = localStorage.getItem("token");
     const token = tokenString ? JSON.parse(tokenString) : null;
     const accessToken = token ? token.accessToken : "";
-  
+
     if (accessToken) {
       const socket = new SockJS(`${import.meta.env.VITE_SERVERURL}/api/ws`);
       const client = new Client({
@@ -50,41 +52,55 @@ const ChatRoom: React.FC = () => {
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
-  
+
       client.onConnect = function () {
         setIsConnectWebsocket(true);
-  
+
         client.subscribe('/send/messages', (message: Message) => {
           setMessages(prevMessages => [...prevMessages, JSON.parse(message.body) as MessageEntity]);
         });
         client.subscribe('/receive/messages', (message: Message) => {
+          console.log(JSON.parse(message.body))
           setMessages(JSON.parse(message.body));
         });
+
+        client.publish({ destination: '/app/receive', body: message });
       };
-  
+
       client.onStompError = function (frame) {
         console.error('Broker reported error: ' + frame.headers['message']);
         console.error('Additional details: ' + frame.body);
       };
-  
+
       clientRef.current = client;
       client.activate();
     }
   };
-  
+
   const handleInput = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-  
+
   const handleSend = () => {
     if (clientRef.current && message.trim()) {
-      clientRef.current.publish({ destination: '/app/send', body: JSON.stringify({ message, type: ETypeMessage.SEND }) });
+      clientRef.current.publish({ destination: '/app/send', body: message });
       setMessage('');
     }
   };
+
+  const timeDisplay = (isoString: string) => {
+    const date = parseISO(isoString);
+    const formattedDate = format(date, 'yyyy-MM-dd HH:mm');
+
+    return (
+        <div>
+            <p>{formattedDate}</p>
+        </div>
+    );
+};
 
   return (
     <Fragment>
@@ -108,35 +124,39 @@ const ChatRoom: React.FC = () => {
                 <button onClick={() => setIsOpenChat(false)} className='items-center flex'><CloseOutlined /></button>
               </div>
             </div>
-            <div className='h-full flex flex-col'>
-              <div className='flex-1 overflow-auto p-2 gap-2'>
-                <div className='flex flex-col gap-2'>
-                  {messages.map((msg, index) => (
-                    <div key={index} className={`flex items-center ${msg.type === ETypeMessage.SEND ? "justify-start" : "justify-end"}`}>
-                      <span className={`bg-opacity-50 ${msg.type === ETypeMessage.SEND ? "bg-blue-600 py-1 px-3 rounded-2xl" : ""}`}>{msg.message}</span>
+
+            <div className='flex-1 overflow-y-auto p-2 gap-2'>
+              <div className='flex flex-col gap-2'>
+                {messages.map((msg, index) => (
+                  <div key={index} className={`flex w-5/6 break-words items-center ${msg.type === ETypeMessage.SEND ? "justify-start" : "justify-end"}`}>
+                    <div className={`bg-opacity-30 w-full ${msg.type === ETypeMessage.SEND ? "bg-blue-600 py-1 px-3 rounded-r-xl" : ""}`}>
+                      <div className='text-[14px]'><span>{msg.message}</span></div>
+                      <div className='flex w-full justify-end text-[12px] font-semibold text-gray-600'><span>{timeDisplay(msg.createAt)}</span></div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-              <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300'>
-                <div className='flex justify-center w-full items-end py-2'>
-                  <div><button className='px-1'><UploadFileOutlined className='text-gray-500' /></button></div>
-                  <div><button className='px-1'><AddReactionOutlined className='text-gray-500' /></button></div>
-                  <div>
+            </div>
+
+            <div className='bg-white border-t-2 border-b-2 border-dotted border-gray-300 min-h-12'>
+              <div className='flex justify-center w-full items-end py-2'>
+                <div><button className='px-1'><UploadFileOutlined className='text-gray-500' /></button></div>
+                <div><button className='px-1'><AddReactionOutlined className='text-gray-500' /></button></div>
+                <div className='overflow-y-auto max-h-20'>
                     <textarea
                       ref={textareaRef}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className='text-sm focus:outline-none min-w-60 resize-none overflow-hidden px-1'
+                      className='max-h-24 text-[14px] focus:outline-none min-w-60 resize-none overflow-hidden px-1'
                       placeholder='Gửi tin nhắn ...'
                       onInput={handleInput}
                       rows={1}
-                    ></textarea>
-                  </div>
-                  <div><button onClick={handleSend} className='text-gray-500 px-1'><SendOutlined /></button></div>
+                    />
                 </div>
+                <div><button onClick={handleSend} className='text-gray-500 px-1'><SendOutlined /></button></div>
               </div>
             </div>
+
           </div>
         </div>
       </Suspense>

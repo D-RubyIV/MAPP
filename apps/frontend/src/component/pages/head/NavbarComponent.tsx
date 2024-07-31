@@ -76,7 +76,7 @@ const NavbarComponent = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className={`fixed h-[100vh] xl:px-20 z-50 top-0 from-indigo-900 bg-gradient-to-r rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
+                        <div className={`fixed h-[100svh] xl:px-20 z-50 top-0 from-indigo-900 bg-gradient-to-r rounded-md w-full transition-all duration-500 ${openMenu ? "block left-0" : "-left-full"}`}>
                             <div className="grid grid-cols-5 h-full">
                                 <div className="col-start-1 col-end-5 bg-white px-8 md:px-10 py-4 flex flex-col h-full">
                                     <div className="flex justify-between py-3 md:py-4 row-span-4">

@@ -11,6 +11,8 @@ import lombok.*;
 @Entity
 @Table(name = "messages")
 public class MessageEntity extends BaseEntity{
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String message;
 
     @ManyToOne(fetch = FetchType.EAGER)
