@@ -134,8 +134,8 @@ const CartComponent = () => {
 
     return (
         <Fragment>
-            <div className={`z-40 fixed h-[100vh] xl:px-20 top-0 from-indigo-900 bg-gradient-to-l rounded-md w-full transition-all duration-500 block ${isOpenCart ? "right-0" : "-right-full"}`}>
-                <div className="grid grid-cols-6 h-full">
+            <div className={`z-40 fixed h-[100svh] xl:px-20 top-0 from-indigo-900 bg-gradient-to-l rounded-md w-full transition-all duration-500 block ${isOpenCart ? "right-0" : "-right-full"}`}>
+                <div className="grid grid-cols-6 h-[100svh]">
                     <div className="col-end-2 col-start-7 bg-white px-6 md:px-10 py-4 flex flex-col justify-between">
                         <div>
                             {/* TOP */}
@@ -144,7 +144,7 @@ const CartComponent = () => {
                                 <div><button onClick={() => setIsOpenCart(false)}><CloseOutlined /></button></div>
                             </div>
                             {/* CENTER */}
-                            <div className={`overflow-y-auto h-[calc(100vh-10.75rem)]`}>
+                            <div className={`overflow-y-auto h-[calc(100svh-10.75rem)]`}>
                                 <div className="flex justify-between">
                                     <button onClick={() => handleSelectAll()} className="underline underline-offset-2 font-thin text-[13.5px] text-blue-700">Chọn tất cả</button>
                                     <button onClick={() => handleUnSelectAll()} className="underline underline-offset-2 font-thin text-[13.5px] text-red-700">Hủy chọn tất cả</button>

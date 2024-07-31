@@ -105,7 +105,7 @@ const ChatRoom: React.FC = () => {
   return (
     <Fragment>
       <Suspense>
-        <div className={`z-30 min-h-screen bg-indigo-400 bg-opacity-25 w-full fixed h-screen left-0 transition-all duration-500 ${isOpenChat ? "bottom-0" : "-bottom-full"}`}>
+        <div className={`z-30 bg-indigo-400 bg-opacity-25 w-full fixed h-[100svh] left-0 transition-all duration-500 ${isOpenChat ? "bottom-0" : "-bottom-full"}`}>
           <div className='bg-white w-full h-full px-8 py-4 md:px-10 xl:px-20 flex flex-col'>
             <div className='py-2 flex justify-between items-center'>
               <div className='flex gap-2'>
