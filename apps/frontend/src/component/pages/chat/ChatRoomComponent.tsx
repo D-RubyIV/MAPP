@@ -130,7 +130,7 @@ const ChatRoom: React.FC = () => {
                 {messages.map((msg, index) => (
                   <div key={index} className={`flex w-5/6 break-words items-center ${msg.type === ETypeMessage.SEND ? "justify-start" : "justify-end"}`}>
                     <div className={`bg-opacity-30 w-full ${msg.type === ETypeMessage.SEND ? "bg-blue-600 py-1 px-3 rounded-r-xl" : ""}`}>
-                      <div className='text-[14px]'><span>{msg.message}</span></div>
+                      <div className='text-sm'><span>{msg.message}</span></div>
                       <div className='flex w-full justify-end text-[12px] font-semibold text-gray-600'><span>{timeDisplay(msg.createAt)}</span></div>
                     </div>
                   </div>
@@ -147,7 +147,7 @@ const ChatRoom: React.FC = () => {
                       ref={textareaRef}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className='max-h-24 text-[14px] focus:outline-none min-w-60 resize-none overflow-hidden px-1'
+                      className='max-h-24 text-sm focus:outline-none min-w-60 resize-none overflow-hidden px-1'
                       placeholder='Gửi tin nhắn ...'
                       onInput={handleInput}
                       rows={1}
